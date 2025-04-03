@@ -20,7 +20,7 @@
       const chatbox = document.getElementById("chatbox");
       chatbox.innerHTML += `<p><strong>Tú:</strong> ${input}</p>`;
 
-      const res = await fetch("https://TU_WEBHOOK_DE_N8N", {
+      const res = await fetch("https://nico902.app.n8n.cloud/webhook/f8944b01-d946-4cde-a71d-ba2155422db2/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
