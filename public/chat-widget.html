@@ -1,1 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Inmobiliaria</title>
+  <style>
+    body { font-family: Arial; margin: 0; }
+    #chatbox { width: 100%; height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+    input, button { width: 90%; margin: 5px; padding: 10px; }
+  </style>
+</head>
+<body>
+  <div id="chatbox"></div>
+  <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
+  <button onclick="sendMessage()">Enviar</button>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput").value;
+      const chatbox = document.getElementById("chatbox");
+      chatbox.innerHTML += `<p><strong>Tú:</strong> ${input}</p>`;
+
+      const res = await fetch("https://TU_WEBHOOK_DE_N8N", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: input })
+      });
+
+      const data = await res.json();
+      chatbox.innerHTML += `<p><strong>IA:</strong> ${data.respuesta || "Sin respuesta"}</p>`;
+      document.getElementById("userInput").value = "";
+    }
+  </script>
+</body>
+</html>
 
