@@ -14,7 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      captaciones: {
+        Row: {
+          barrio: string | null
+          celular: string | null
+          correo: string | null
+          estado: string | null
+          fecha_creacion: string
+          id: string
+          nombre: string | null
+          observaciones: string | null
+          tipo_inmueble: string | null
+          tipo_negocio: string | null
+          valor_aproximado: string | null
+        }
+        Insert: {
+          barrio?: string | null
+          celular?: string | null
+          correo?: string | null
+          estado?: string | null
+          fecha_creacion?: string
+          id?: string
+          nombre?: string | null
+          observaciones?: string | null
+          tipo_inmueble?: string | null
+          tipo_negocio?: string | null
+          valor_aproximado?: string | null
+        }
+        Update: {
+          barrio?: string | null
+          celular?: string | null
+          correo?: string | null
+          estado?: string | null
+          fecha_creacion?: string
+          id?: string
+          nombre?: string | null
+          observaciones?: string | null
+          tipo_inmueble?: string | null
+          tipo_negocio?: string | null
+          valor_aproximado?: string | null
+        }
+        Relationships: []
+      }
+      propiedades: {
+        Row: {
+          administracion: number | null
+          area_m2: number | null
+          banos: number | null
+          barrio: string | null
+          descripcion: string | null
+          direccion: string | null
+          estado: string
+          estrato: number | null
+          fecha_actualizacion: string
+          fecha_creacion: string
+          foto_portada: string | null
+          fotos: string[] | null
+          habitaciones: number | null
+          id: string
+          link_whatsapp: string | null
+          nombre_inmueble: string
+          parqueadero: string | null
+          piso: string | null
+          precio: number | null
+          tipo_inmueble: string
+          tipo_negocio: string
+          zona: string | null
+        }
+        Insert: {
+          administracion?: number | null
+          area_m2?: number | null
+          banos?: number | null
+          barrio?: string | null
+          descripcion?: string | null
+          direccion?: string | null
+          estado?: string
+          estrato?: number | null
+          fecha_actualizacion?: string
+          fecha_creacion?: string
+          foto_portada?: string | null
+          fotos?: string[] | null
+          habitaciones?: number | null
+          id?: string
+          link_whatsapp?: string | null
+          nombre_inmueble: string
+          parqueadero?: string | null
+          piso?: string | null
+          precio?: number | null
+          tipo_inmueble: string
+          tipo_negocio?: string
+          zona?: string | null
+        }
+        Update: {
+          administracion?: number | null
+          area_m2?: number | null
+          banos?: number | null
+          barrio?: string | null
+          descripcion?: string | null
+          direccion?: string | null
+          estado?: string
+          estrato?: number | null
+          fecha_actualizacion?: string
+          fecha_creacion?: string
+          foto_portada?: string | null
+          fotos?: string[] | null
+          habitaciones?: number | null
+          id?: string
+          link_whatsapp?: string | null
+          nombre_inmueble?: string
+          parqueadero?: string | null
+          piso?: string | null
+          precio?: number | null
+          tipo_inmueble?: string
+          tipo_negocio?: string
+          zona?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
