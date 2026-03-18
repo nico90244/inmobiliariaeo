@@ -4,36 +4,36 @@ import { Instagram, Facebook, MessageCircle, Phone, MapPin, Mail, ChevronDown } 
 import logo from "@/assets/logo.png";
 
 const socialLinks = [
-  { icon: Instagram, href: "https://instagram.com/inmobiliaria_eo", label: "Instagram" },
-  { icon: Facebook, href: "https://facebook.com/inmobiliariaeo", label: "Facebook" },
-  // TikTok uses custom SVG
-  { icon: MessageCircle, href: "https://wa.me/573162225604", label: "WhatsApp" },
-];
+{ icon: Instagram, href: "https://instagram.com/inmobiliaria_eo", label: "Instagram" },
+{ icon: Facebook, href: "https://facebook.com/inmobiliariaeo", label: "Facebook" },
+// TikTok uses custom SVG
+{ icon: MessageCircle, href: "https://wa.me/573162225604", label: "WhatsApp" }];
+
 
 const navLinks = [
-  { label: "Inicio", to: "/" },
-  { label: "Propiedades", to: "/propiedades" },
-  { label: "Servicios", to: "/servicios" },
-  { label: "Captar Inmueble", to: "/captacion" },
-  { label: "Contacto", to: "/contacto" },
-];
+{ label: "Inicio", to: "/" },
+{ label: "Propiedades", to: "/propiedades" },
+{ label: "Servicios", to: "/servicios" },
+{ label: "Captar Inmueble", to: "/captacion" },
+{ label: "Contacto", to: "/contacto" }];
+
 
 const serviceLinks = [
-  "Venta de inmuebles",
-  "Alquiler",
-  "Asesoría jurídica",
-  "Acompañamiento notarial",
-  "Administración de arriendos",
-];
+"Venta de inmuebles",
+"Alquiler",
+"Asesoría jurídica",
+"Acompañamiento notarial",
+"Administración de arriendos"];
 
-const AccordionSection = ({ title, children }: { title: string; children: React.ReactNode }) => {
+
+const AccordionSection = ({ title, children }: {title: string;children: React.ReactNode;}) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-white/10 lg:border-0">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between py-4 lg:hidden"
-      >
+        className="w-full flex items-center justify-between py-4 lg:hidden">
+        
         <h4 className="font-heading text-sm font-semibold tracking-widest uppercase text-primary">{title}</h4>
         <ChevronDown size={16} className={`text-primary transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
@@ -41,8 +41,8 @@ const AccordionSection = ({ title, children }: { title: string; children: React.
       <div className={`${open ? "block" : "hidden"} lg:block pb-4 lg:pb-0`}>
         {children}
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 const Footer = () => {
@@ -52,33 +52,33 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Column 1 - Brand */}
           <div>
-            <img src={logo} alt="Inmobiliaria Eliana Osorio" className="h-12 w-auto mb-4 brightness-0 invert" />
+            <img alt="Inmobiliaria Eliana Osorio" className="h-12 w-auto mb-4 brightness-0 invert" src="/lovable-uploads/96af27d1-738a-4838-981e-e98f4606ae5e.png" />
             <p className="font-body text-sm text-secondary-foreground/60 leading-relaxed mb-6">
               Más de 10 años conectando familias caleñas con su hogar ideal. Venta, alquiler y asesoría jurídica en Cali.
             </p>
             <div className="flex items-center gap-3">
-              {socialLinks.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/80 transition-colors"
-                  aria-label={s.label}
-                >
+              {socialLinks.map((s) =>
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/80 transition-colors"
+                aria-label={s.label}>
+                
                   <s.icon size={16} />
                 </a>
-              ))}
+              )}
               {/* TikTok */}
               <a
                 href="https://tiktok.com/@inmobiliaria_eo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/80 transition-colors"
-                aria-label="TikTok"
-              >
+                aria-label="TikTok">
+                
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                  <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.8a8.18 8.18 0 004.77 1.53V6.86a4.83 4.83 0 01-1-.17z"/>
+                  <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.8a8.18 8.18 0 004.77 1.53V6.86a4.83 4.83 0 01-1-.17z" />
                 </svg>
               </a>
             </div>
@@ -87,24 +87,24 @@ const Footer = () => {
           {/* Column 2 - Navigation */}
           <AccordionSection title="Navegación">
             <ul className="space-y-3">
-              {navLinks.map((l) => (
-                <li key={l.to}>
+              {navLinks.map((l) =>
+              <li key={l.to}>
                   <Link to={l.to} className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">
                     {l.label}
                   </Link>
                 </li>
-              ))}
+              )}
             </ul>
           </AccordionSection>
 
           {/* Column 3 - Services */}
           <AccordionSection title="Servicios">
             <ul className="space-y-3">
-              {serviceLinks.map((s) => (
-                <li key={s}>
+              {serviceLinks.map((s) =>
+              <li key={s}>
                   <span className="font-body text-sm text-secondary-foreground/60">{s}</span>
                 </li>
-              ))}
+              )}
             </ul>
           </AccordionSection>
 
@@ -138,8 +138,8 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
+
 };
 
 export default Footer;
