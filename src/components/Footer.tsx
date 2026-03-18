@@ -52,10 +52,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Column 1 - Brand */}
           <div>
-            <img alt="Inmobiliaria Eliana Osorio" className="h-12 w-auto mb-4 brightness-0 invert" src="/lovable-uploads/96af27d1-738a-4838-981e-e98f4606ae5e.png" />
-            <p className="font-body text-sm text-secondary-foreground/60 leading-relaxed mb-6">
-              Más de 10 años conectando familias caleñas con su hogar ideal. Venta, alquiler y asesoría jurídica en Cali.
-            </p>
+            <img alt="Inmobiliaria Eliana Osorio" className="h-12 w-auto mb-4 brightness-0 invert" src="/lovable-uploads/6e4f0656-2af2-4a4d-8c02-cb3563d235e8.png" />
+            
+
+            
             <div className="flex items-center gap-3">
               {socialLinks.map((s) =>
               <a
