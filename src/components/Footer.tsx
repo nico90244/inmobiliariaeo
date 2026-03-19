@@ -102,8 +102,7 @@ const Footer = () => {
                 <a href="mailto:info@inmobiliariaeo.com" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">info@inmobiliariaeo.com</a>
               </li>
             </ul>
-            <p className="font-heading text-xs font-semibold tracking-widest uppercase text-primary mt-6 mb-3">Redes sociales</p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mt-6">
               {socialLinks.map((s) =>
               <a
                 key={s.label}
