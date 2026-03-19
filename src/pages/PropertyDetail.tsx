@@ -293,7 +293,7 @@ const PropertyDetail = () => {
             <ArrowLeft size={16} /> Volver a propiedades
           </button>
 
-          {/* Header – above gallery */}
+          {/* Header info – left aligned */}
           <div className="mb-5">
             <Badge className="bg-primary text-primary-foreground font-heading text-[10px] font-bold tracking-widest uppercase px-3 py-1 mb-2">
               {property.tipo_negocio}
@@ -308,7 +308,7 @@ const PropertyDetail = () => {
 
         {/* Two-column layout: gallery+content left, contact right */}
         <div className="container mx-auto px-6 lg:px-10 pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 items-start">
             {/* Left column */}
             <div className="space-y-6">
               {/* Gallery */}
@@ -373,7 +373,7 @@ const PropertyDetail = () => {
 
             {/* Right column – sticky contact */}
             <div>
-              <div className="hidden lg:flex flex-col gap-4 sticky top-20" style={{ maxHeight: "calc(100vh - 100px)", overflowY: "auto", scrollbarWidth: "none" }}>
+              <div className="hidden lg:flex flex-col gap-4 sticky top-24">
                 <ContactCard property={property} />
                 <AppointmentBooking property={property} />
               </div>
