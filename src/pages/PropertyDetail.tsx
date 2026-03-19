@@ -351,7 +351,7 @@ const PropertyDetail = () => {
               {property.link_video && (
                 <div className="bg-muted/30 border border-primary/20 p-6">
                   <h2 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-                    <Play size={20} className="text-primary" /> Video de la propiedad
+                    <Play size={20} className="text-primary" /> Video
                   </h2>
                   <a
                     href={property.link_video}
