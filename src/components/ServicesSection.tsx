@@ -28,7 +28,7 @@ const ServicesSection = () => {
         <div className="section-divider mb-24" />
 
         <div className="max-w-3xl mb-16">
-          <h2 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
             Servicios
           </h2>
           <p className="font-body text-lg text-muted-foreground">

@@ -40,7 +40,7 @@ const Propiedades = () => {
       <main className="pt-20">
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
-            <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-4">{title}</h1>
+            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">{title}</h1>
             <p className="font-body text-lg text-muted-foreground mb-12">
               Encuentra el inmueble ideal en las mejores zonas de Cali y el Valle del Cauca.
             </p>

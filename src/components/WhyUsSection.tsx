@@ -10,7 +10,7 @@ const WhyUsSection = () => {
     <section className="py-24 md:py-40 bg-secondary text-secondary-foreground">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="max-w-3xl mb-16">
-          <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
             ¿Por qué elegirnos?
           </h2>
           <p className="font-body text-lg text-secondary-foreground/70">
