@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Propiedades from "./pages/Propiedades";
+import PropertyDetail from "./pages/PropertyDetail";
 import Servicios from "./pages/Servicios";
 import Captacion from "./pages/Captacion";
 import Contacto from "./pages/Contacto";
@@ -25,6 +26,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/propiedades" element={<Propiedades />} />
+            <Route path="/propiedades/:id" element={<PropertyDetail />} />
             <Route path="/venta" element={<Propiedades />} />
             <Route path="/alquiler" element={<Propiedades />} />
             <Route path="/servicios" element={<Servicios />} />

@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { MessageCircle, Loader2, AlertCircle } from "lucide-react";
 import { usePropiedades, type Propiedad } from "@/hooks/usePropiedades";
-import PropertyModal from "@/components/PropertyModal";
 import property1 from "@/assets/property-1.jpg";
 import property2 from "@/assets/property-2.jpg";
 import property3 from "@/assets/property-3.jpg";
@@ -11,12 +11,12 @@ import property6 from "@/assets/property-6.jpg";
 
 // Fallback static data when DB is empty
 const fallbackProperties: Propiedad[] = [
-  { id: "1", foto_portada: property1, tipo_inmueble: "Apartamento", barrio: "Ciudad Jardín", precio: 450000000, area_m2: 120, habitaciones: 3, banos: 2, estado: "Disponible", tipo_negocio: "Venta", nombre_inmueble: "Apartamento Ciudad Jardín", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, fecha_creacion: "", fecha_actualizacion: "" },
-  { id: "2", foto_portada: property2, tipo_inmueble: "Casa", barrio: "San Fernando", precio: 850000000, area_m2: 280, habitaciones: 4, banos: 3, estado: "Disponible", tipo_negocio: "Venta", nombre_inmueble: "Casa San Fernando", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, fecha_creacion: "", fecha_actualizacion: "" },
-  { id: "3", foto_portada: property3, tipo_inmueble: "Apartaestudio", barrio: "El Peñón", precio: 1200000, area_m2: 45, habitaciones: 1, banos: 1, estado: "Disponible", tipo_negocio: "Alquiler", nombre_inmueble: "Apartaestudio El Peñón", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, fecha_creacion: "", fecha_actualizacion: "" },
-  { id: "4", foto_portada: property4, tipo_inmueble: "Apartamento", barrio: "Oeste", precio: 680000000, area_m2: 95, habitaciones: 2, banos: 2, estado: "Disponible", tipo_negocio: "Venta", nombre_inmueble: "Apartamento Oeste", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, fecha_creacion: "", fecha_actualizacion: "" },
-  { id: "5", foto_portada: property5, tipo_inmueble: "Finca", barrio: "Jamundí", precio: 1200000000, area_m2: 5000, habitaciones: 5, banos: 4, estado: "Disponible", tipo_negocio: "Venta", nombre_inmueble: "Finca Jamundí", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, fecha_creacion: "", fecha_actualizacion: "" },
-  { id: "6", foto_portada: property6, tipo_inmueble: "Local", barrio: "Granada", precio: 3500000, area_m2: 80, habitaciones: 0, banos: 1, estado: "Disponible", tipo_negocio: "Alquiler", nombre_inmueble: "Local Granada", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, fecha_creacion: "", fecha_actualizacion: "" },
+  { id: "1", foto_portada: property1, tipo_inmueble: "Apartamento", barrio: "Ciudad Jardín", precio: 450000000, area_m2: 120, habitaciones: 3, banos: 2, estado: "Disponible", tipo_negocio: "Venta", nombre_inmueble: "Apartamento Ciudad Jardín", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, link_video: null, red_social_video: null, fecha_creacion: "", fecha_actualizacion: "" },
+  { id: "2", foto_portada: property2, tipo_inmueble: "Casa", barrio: "San Fernando", precio: 850000000, area_m2: 280, habitaciones: 4, banos: 3, estado: "Disponible", tipo_negocio: "Venta", nombre_inmueble: "Casa San Fernando", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, link_video: null, red_social_video: null, fecha_creacion: "", fecha_actualizacion: "" },
+  { id: "3", foto_portada: property3, tipo_inmueble: "Apartaestudio", barrio: "El Peñón", precio: 1200000, area_m2: 45, habitaciones: 1, banos: 1, estado: "Disponible", tipo_negocio: "Alquiler", nombre_inmueble: "Apartaestudio El Peñón", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, link_video: null, red_social_video: null, fecha_creacion: "", fecha_actualizacion: "" },
+  { id: "4", foto_portada: property4, tipo_inmueble: "Apartamento", barrio: "Oeste", precio: 680000000, area_m2: 95, habitaciones: 2, banos: 2, estado: "Disponible", tipo_negocio: "Venta", nombre_inmueble: "Apartamento Oeste", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, link_video: null, red_social_video: null, fecha_creacion: "", fecha_actualizacion: "" },
+  { id: "5", foto_portada: property5, tipo_inmueble: "Finca", barrio: "Jamundí", precio: 1200000000, area_m2: 5000, habitaciones: 5, banos: 4, estado: "Disponible", tipo_negocio: "Venta", nombre_inmueble: "Finca Jamundí", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, link_video: null, red_social_video: null, fecha_creacion: "", fecha_actualizacion: "" },
+  { id: "6", foto_portada: property6, tipo_inmueble: "Local", barrio: "Granada", precio: 3500000, area_m2: 80, habitaciones: 0, banos: 1, estado: "Disponible", tipo_negocio: "Alquiler", nombre_inmueble: "Local Granada", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, link_video: null, red_social_video: null, fecha_creacion: "", fecha_actualizacion: "" },
 ];
 
 const statusStyles: Record<string, string> = {
@@ -27,7 +27,6 @@ const statusStyles: Record<string, string> = {
 
 const PropertiesSection = () => {
   const { data, isLoading, error } = usePropiedades();
-  const [selectedProperty, setSelectedProperty] = useState<Propiedad | null>(null);
 
   const properties = data && data.length > 0 ? data : fallbackProperties;
 
@@ -58,21 +57,15 @@ const PropertiesSection = () => {
 
         <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
           {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} onViewMore={() => setSelectedProperty(property)} />
+            <PropertyCard key={property.id} property={property} />
           ))}
         </div>
       </div>
-
-      <PropertyModal
-        property={selectedProperty}
-        open={!!selectedProperty}
-        onClose={() => setSelectedProperty(null)}
-      />
     </section>
   );
 };
 
-const PropertyCard = ({ property, onViewMore }: { property: Propiedad; onViewMore: () => void }) => {
+const PropertyCard = ({ property }: { property: Propiedad }) => {
   const formatPrice = (price: number | null) => {
     if (!price) return "Consultar";
     return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(price);
@@ -114,12 +107,12 @@ const PropertyCard = ({ property, onViewMore }: { property: Propiedad; onViewMor
         </div>
 
         <div className="flex gap-3">
-          <button
-            onClick={onViewMore}
-            className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
+          <Link
+            to={`/propiedades/${property.id}`}
+            className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors text-center"
           >
             Ver más
-          </button>
+          </Link>
           <a
             href={waLink}
             target="_blank"

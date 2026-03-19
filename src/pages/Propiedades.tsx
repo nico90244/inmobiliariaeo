@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Loader2, AlertCircle, MessageCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import PropertyModal from "@/components/PropertyModal";
 import { usePropiedades, type Propiedad } from "@/hooks/usePropiedades";
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote"];
@@ -18,7 +17,6 @@ const Propiedades = () => {
   const [barrio, setBarrio] = useState("");
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
-  const [selectedProperty, setSelectedProperty] = useState<Propiedad | null>(null);
 
   const { data, isLoading, error } = usePropiedades({
     tipo_negocio: tipoNegocio || undefined,
@@ -113,7 +111,7 @@ const Propiedades = () => {
                       {(property.banos ?? 0) > 0 && <span>{property.banos} baño{(property.banos ?? 0) > 1 ? "s" : ""}</span>}
                     </div>
                     <div className="flex gap-3">
-                      <button onClick={() => setSelectedProperty(property)} className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors">Ver más</button>
+                      <Link to={`/propiedades/${property.id}`} className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors text-center">Ver más</Link>
                       <a href={property.link_whatsapp || `https://wa.me/573162225604?text=${encodeURIComponent(`Hola, me interesa ${property.nombre_inmueble}`)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="WhatsApp">
                         <MessageCircle size={16} />
                       </a>
@@ -127,7 +125,6 @@ const Propiedades = () => {
       </main>
       <Footer />
       <WhatsAppButton />
-      <PropertyModal property={selectedProperty} open={!!selectedProperty} onClose={() => setSelectedProperty(null)} />
     </>
   );
 };
