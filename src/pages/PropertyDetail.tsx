@@ -286,7 +286,7 @@ const PropertyDetail = () => {
             </BreadcrumbList>
           </Breadcrumb>
 
-          <button onClick={() => navigate("/propiedades")} className="flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors mt-2 mb-4">
+          <button onClick={() => navigate("/propiedades")} className="flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors mt-2 mb-4 ml-auto">
             <ArrowLeft size={16} /> Volver a propiedades
           </button>
 
