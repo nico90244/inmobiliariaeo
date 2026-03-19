@@ -373,7 +373,7 @@ const PropertyDetail = () => {
 
             {/* Right column – sticky contact */}
             <div>
-              <div className="hidden lg:flex flex-col gap-4 sticky top-20" style={{ maxHeight: "calc(100vh - 100px)", overflowY: "auto", scrollbarWidth: "none" }}>
+              <div className="hidden lg:flex flex-col gap-4 sticky top-24">
                 <ContactCard property={property} />
                 <AppointmentBooking property={property} />
               </div>
