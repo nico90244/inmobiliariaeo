@@ -57,8 +57,7 @@ const Footer = () => {
           <div>
             <img alt="Inmobiliaria Eliana Osorio" className="h-12 w-auto mb-4 brightness-0 invert" src="/lovable-uploads/6e4f0656-2af2-4a4d-8c02-cb3563d235e8.png" />
             
-
-            
+            <p className="font-heading text-xs font-semibold tracking-widest uppercase text-primary mb-4">Redes sociales</p>
             <div className="flex items-center gap-3">
               {socialLinks.map((s) =>
               <a
