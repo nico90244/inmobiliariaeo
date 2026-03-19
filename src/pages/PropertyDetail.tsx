@@ -187,11 +187,11 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
 
 /* ─── Feature Item ─── */
 const Feature = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | number }) => (
-  <div className="flex items-center gap-3 p-4 bg-muted/30 border border-foreground/5">
+  <div className="flex items-center gap-3 p-4 bg-background border border-[#E5E7EB]">
     <Icon size={20} className="text-primary shrink-0" />
     <div>
       <p className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">{label}</p>
-      <p className="font-heading text-sm font-bold text-foreground">{value}</p>
+      <p className="font-body text-sm font-bold text-foreground">{value}</p>
     </div>
   </div>
 );
