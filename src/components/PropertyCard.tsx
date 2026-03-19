@@ -53,7 +53,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
         </div>
 
         {/* Precio */}
-        <p className="font-heading text-xl font-bold text-primary mb-3">
+        <p className="font-body text-xl font-bold text-primary mb-3">
           {formatPrice(property.precio)}
         </p>
 
