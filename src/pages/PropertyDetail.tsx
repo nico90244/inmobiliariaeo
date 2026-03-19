@@ -162,7 +162,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
       </div>
 
       <button onClick={handleWhatsApp} className="w-full py-3 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-        <MessageCircle size={16} /> Enviar por WhatsApp
+        <WhatsAppIcon size={16} /> Enviar por WhatsApp
       </button>
 
       <div className="flex items-center gap-3 my-4">
