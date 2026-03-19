@@ -118,4 +118,10 @@
   .hover-grayscale:hover {
     filter: grayscale(100%);
   }
+  .filter-gold {
+    filter: brightness(0) saturate(100%) invert(68%) sepia(60%) saturate(430%) hue-rotate(12deg) brightness(92%) contrast(88%);
+  }
+  .filter-white {
+    filter: brightness(0) invert(1);
+  }
 }
