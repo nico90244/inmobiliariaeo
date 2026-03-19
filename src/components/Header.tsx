@@ -10,11 +10,6 @@ const Header = ({ solid = false }: { solid?: boolean }) => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const linkClass = (path: string) =>
-    `font-heading text-sm font-medium tracking-wide transition-colors duration-300 ${
-      isActive(path) ? "text-primary" : "text-foreground/70 hover:text-primary"
-    }`;
-
   const navTextClass = "text-white/80 hover:text-primary";
   const navActiveClass = "text-primary";
 
