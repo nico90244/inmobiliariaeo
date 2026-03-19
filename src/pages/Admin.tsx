@@ -6,8 +6,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
 import {
-  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video,
+  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar,
 } from "lucide-react";
+import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
+import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
