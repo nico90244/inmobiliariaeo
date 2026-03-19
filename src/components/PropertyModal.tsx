@@ -130,7 +130,7 @@ const PropertyModal = ({ property, open, onClose }: PropertyModalProps) => {
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-2 py-3 bg-[hsl(142,70%,45%)] text-white font-heading text-sm font-semibold tracking-widest uppercase hover:bg-[hsl(142,70%,40%)] transition-colors"
             >
-              <WhatsAppIcon size={18} />
+              <WhatsAppIcon size={18} className="filter-white" />
               Solicitar información por WhatsApp
             </a>
             <a

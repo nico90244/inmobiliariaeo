@@ -57,7 +57,7 @@ const WhatsAppButton = () => {
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 py-3 bg-[hsl(142,70%,45%)] text-white font-heading text-sm font-semibold tracking-widest uppercase hover:bg-[hsl(142,70%,40%)] transition-colors"
           >
-            <WhatsAppIcon size={16} />
+            <WhatsAppIcon size={16} className="filter-white" />
             Abrir WhatsApp
           </a>
 
