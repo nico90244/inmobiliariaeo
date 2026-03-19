@@ -9,8 +9,8 @@ const WhatsAppLink = ({ size = 16 }: { size?: number }) => <WhatsAppIcon size={s
 const socialLinks = [
 { icon: Instagram, href: "https://instagram.com/inmobiliaria_eo", label: "Instagram" },
 { icon: Facebook, href: "https://facebook.com/inmobiliariaeo", label: "Facebook" },
-// TikTok uses custom SVG
-{ icon: WhatsAppLink, href: "https://wa.me/573162225604", label: "WhatsApp" }];
+// TikTok uses custom SVG below
+];
 
 
 const navLinks = [
