@@ -59,6 +59,12 @@ const AdminLogin = () => {
             </div>
           )}
 
+          {signupSuccess && (
+            <div className="flex items-center gap-2 text-green-600 text-sm mb-4 p-3 bg-green-50">
+              {signupSuccess}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Email</label>
@@ -70,9 +76,17 @@ const AdminLogin = () => {
             </div>
             <button type="submit" disabled={loading} className="w-full py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
               {loading && <Loader2 size={16} className="animate-spin" />}
-              {loading ? "Ingresando..." : "Ingresar"}
+              {loading ? (mode === "signup" ? "Registrando..." : "Ingresando...") : (mode === "signup" ? "Crear cuenta" : "Ingresar")}
             </button>
           </form>
+
+          {/* TODO: Remover este botón después de crear la cuenta admin */}
+          <button
+            onClick={() => { setMode(mode === "login" ? "signup" : "login"); setError(""); setSignupSuccess(""); }}
+            className="w-full mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {mode === "login" ? "¿Primera vez? Crear cuenta admin" : "Ya tengo cuenta, iniciar sesión"}
+          </button>
         </div>
       </div>
     </div>
