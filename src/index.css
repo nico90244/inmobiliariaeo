@@ -119,7 +119,7 @@
     filter: grayscale(100%);
   }
   .filter-gold {
-    filter: brightness(0) saturate(100%) invert(68%) sepia(60%) saturate(430%) hue-rotate(12deg) brightness(92%) contrast(88%);
+    filter: brightness(0) saturate(100%) invert(72%) sepia(29%) saturate(1032%) hue-rotate(4deg) brightness(91%) contrast(86%);
   }
   .filter-white {
     filter: brightness(0) invert(1);
