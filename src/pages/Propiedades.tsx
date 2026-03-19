@@ -41,7 +41,7 @@ const Propiedades = () => {
       <Header solid />
       <main className="pt-20">
         {/* Banner */}
-        <div className="relative h-[120px] md:h-[160px] flex items-center justify-center overflow-hidden bg-background">
+        <div className="relative h-[100px] md:h-[130px] flex items-center justify-center overflow-hidden bg-background">
           <div className="relative z-10 text-center px-6">
             <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-2">{title}</h1>
             <p className="font-body text-sm md:text-base text-muted-foreground mb-3">
