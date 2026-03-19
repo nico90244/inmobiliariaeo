@@ -257,7 +257,7 @@ const Admin = () => {
                       </tr>
                     ))}
                     {propiedades.length === 0 && (
-                      <tr><td colSpan={6} className="p-8 text-center font-body text-muted-foreground">No hay propiedades registradas.</td></tr>
+                      <tr><td colSpan={7} className="p-8 text-center font-body text-muted-foreground">No hay propiedades registradas.</td></tr>
                     )}
                   </tbody>
                 </table>
