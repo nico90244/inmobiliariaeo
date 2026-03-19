@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logoGold from "@/assets/logo-gold.png";
 
 const Header = ({ solid = false }: { solid?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +21,7 @@ const Header = ({ solid = false }: { solid?: boolean }) => {
       <div className="container mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-24">
           <Link to="/" className="flex-shrink-0">
-            <img src={logo} alt="Inmobiliaria Eliana Osorio" className="h-16 w-auto brightness-0 invert" />
+            <img src={logoGold} alt="Inmobiliaria Eliana Osorio" className="h-16 w-auto" />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8">

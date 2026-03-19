@@ -8,6 +8,7 @@ export const usePropiedades = (filters?: {
   tipo_negocio?: string;
   tipo_inmueble?: string;
   barrio?: string;
+  ciudad?: string;
   precioMin?: number;
   precioMax?: number;
   allStates?: boolean;
@@ -29,6 +30,9 @@ export const usePropiedades = (filters?: {
       }
       if (filters?.barrio) {
         query = query.ilike("barrio", `%${filters.barrio}%`);
+      }
+      if (filters?.ciudad) {
+        query = query.ilike("ciudad", `%${filters.ciudad}%`);
       }
       if (filters?.precioMin) {
         query = query.gte("precio", filters.precioMin);

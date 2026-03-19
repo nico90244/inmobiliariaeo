@@ -16,6 +16,7 @@ const Propiedades = () => {
   const [tipoNegocio, setTipoNegocio] = useState(defaultTipoNegocio);
   const [tipoInmueble, setTipoInmueble] = useState("");
   const [barrio, setBarrio] = useState("");
+  const [ciudad, setCiudad] = useState("");
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
 
@@ -23,6 +24,7 @@ const Propiedades = () => {
     tipo_negocio: tipoNegocio || undefined,
     tipo_inmueble: tipoInmueble || undefined,
     barrio: barrio || undefined,
+    ciudad: ciudad || undefined,
     precioMin: precioMin ? Number(precioMin) : undefined,
     precioMax: precioMax ? Number(precioMax) : undefined,
   });
@@ -38,29 +40,27 @@ const Propiedades = () => {
     <>
       <Header solid />
       <main className="pt-20">
-        {/* Dark banner */}
-        <div className="relative bg-[#1A1A1A] h-[160px] md:h-[220px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A1A] via-[#222] to-[#1A1A1A]" />
+        {/* Banner */}
+        <div className="relative h-[120px] md:h-[160px] flex items-center justify-center overflow-hidden bg-background">
           <div className="relative z-10 text-center px-6">
-            <h1 className="font-display text-3xl md:text-5xl font-bold text-white mb-2">{title}</h1>
-            <p className="font-body text-sm md:text-base text-primary mb-3">
+            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-2">{title}</h1>
+            <p className="font-body text-sm md:text-base text-muted-foreground mb-3">
               Encuentra tu inmueble ideal en Cali y el Valle del Cauca
             </p>
-            <nav className="flex items-center justify-center gap-2 font-body text-xs text-white/60">
-              <Link to="/" className="hover:text-white transition-colors">Inicio</Link>
-              <span className="text-white/40">&gt;</span>
-              <span className="text-white/90">Propiedades</span>
+            <nav className="flex items-center justify-center gap-2 font-body text-xs text-muted-foreground">
+              <Link to="/" className="hover:text-foreground transition-colors">Inicio</Link>
+              <span className="text-muted-foreground/40">&gt;</span>
+              <span className="text-primary">Propiedades</span>
             </nav>
           </div>
-          <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary" />
         </div>
 
-        <section className="py-16 md:py-24">
+        <section className="py-10 md:py-14">
           <div className="container mx-auto px-6 lg:px-12">
 
             {/* Filters */}
             <div className="bg-muted/30 p-6 mb-12 border border-foreground/10">
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Tipo negocio</label>
                   <select value={tipoNegocio} onChange={(e) => setTipoNegocio(e.target.value)} className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
@@ -79,6 +79,10 @@ const Propiedades = () => {
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Barrio</label>
                   <input type="text" value={barrio} onChange={(e) => setBarrio(e.target.value)} placeholder="Ej: Ciudad Jardín" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
+                </div>
+                <div>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Ciudad</label>
+                  <input type="text" value={ciudad} onChange={(e) => setCiudad(e.target.value)} placeholder="Ej: Cali" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Precio mín.</label>
