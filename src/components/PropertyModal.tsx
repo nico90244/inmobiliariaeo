@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { X, ChevronLeft, ChevronRight, MapPin, Building2, Zap, Ruler, BedDouble, ShowerHead, Building, Car, DollarSign, Phone, MessageCircle } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, MapPin, Building2, Zap, Ruler, BedDouble, ShowerHead, Building, Car, DollarSign, Phone } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { Propiedad } from "@/hooks/usePropiedades";
 
@@ -129,7 +130,7 @@ const PropertyModal = ({ property, open, onClose }: PropertyModalProps) => {
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-2 py-3 bg-[hsl(142,70%,45%)] text-white font-heading text-sm font-semibold tracking-widest uppercase hover:bg-[hsl(142,70%,40%)] transition-colors"
             >
-              <MessageCircle size={18} />
+              <WhatsAppIcon size={18} />
               Solicitar información por WhatsApp
             </a>
             <a

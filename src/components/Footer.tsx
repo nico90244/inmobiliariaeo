@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, MessageCircle, Phone, MapPin, Mail, ChevronDown } from "lucide-react";
+import { Instagram, Facebook, Phone, MapPin, Mail, ChevronDown } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import logo from "@/assets/logo.png";
+
+const WhatsAppLink = ({ size = 16 }: { size?: number }) => <WhatsAppIcon size={size} />;
 
 const socialLinks = [
 { icon: Instagram, href: "https://instagram.com/inmobiliaria_eo", label: "Instagram" },
 { icon: Facebook, href: "https://facebook.com/inmobiliariaeo", label: "Facebook" },
 // TikTok uses custom SVG
-{ icon: MessageCircle, href: "https://wa.me/573162225604", label: "WhatsApp" }];
+{ icon: WhatsAppLink, href: "https://wa.me/573162225604", label: "WhatsApp" }];
 
 
 const navLinks = [
@@ -116,7 +119,7 @@ const Footer = () => {
                 <a href="tel:+573186531598" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">318 653 1598</a>
               </li>
               <li className="flex items-center gap-3">
-                <MessageCircle size={16} className="text-primary flex-shrink-0" />
+                <WhatsAppIcon size={16} className="flex-shrink-0" />
                 <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">316 222 5604</a>
               </li>
               <li className="flex items-center gap-3">

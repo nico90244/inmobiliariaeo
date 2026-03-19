@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Loader2, AlertCircle, ArrowLeft, Maximize2, Bed, Bath, Building2, Car,
   DollarSign, MapPin, Play, Video, Phone, Share2, Copy, X, ChevronLeft,
-  ChevronRight, MessageCircle,
+  ChevronRight,
 } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -161,7 +162,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
       </div>
 
       <button onClick={handleWhatsApp} className="w-full py-3 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-        <MessageCircle size={16} /> Enviar por WhatsApp
+        <WhatsAppIcon size={16} /> Enviar por WhatsApp
       </button>
 
       <div className="flex items-center gap-3 my-4">
@@ -178,7 +179,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
       <div className="mt-6 pt-4 border-t border-foreground/10 flex items-center gap-3">
         <span className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Compartir:</span>
         <button onClick={handleCopyLink} className="text-primary hover:text-primary/70 transition-colors" aria-label="Copiar link"><Copy size={18} /></button>
-        <button onClick={shareWA} className="text-primary hover:text-primary/70 transition-colors" aria-label="Compartir WhatsApp"><MessageCircle size={18} /></button>
+        <button onClick={shareWA} className="text-primary hover:text-primary/70 transition-colors" aria-label="Compartir WhatsApp"><WhatsAppIcon size={18} /></button>
         <button onClick={shareFB} className="text-primary hover:text-primary/70 transition-colors" aria-label="Compartir Facebook"><Share2 size={18} /></button>
       </div>
     </div>
@@ -304,7 +305,7 @@ const PropertyDetail = () => {
 
         {/* Two-column layout: gallery+content left, contact right */}
         <div className="container mx-auto px-6 lg:px-12 pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
             {/* Left column */}
             <div className="space-y-10">
               {/* Gallery */}

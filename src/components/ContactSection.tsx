@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Phone, MessageCircle, MapPin } from "lucide-react";
+import { Phone, MapPin } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 const ContactSection = () => {
   const [name, setName] = useState("");
@@ -88,7 +89,7 @@ const ContactSection = () => {
             </div>
 
             <div className="flex items-start gap-4">
-              <MessageCircle size={20} className="text-primary mt-1 flex-shrink-0" />
+              <WhatsAppIcon size={20} className="mt-1 flex-shrink-0" />
               <div>
                 <p className="font-heading text-sm font-semibold text-foreground">WhatsApp</p>
                 <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" className="font-body text-muted-foreground hover:text-primary transition-colors">

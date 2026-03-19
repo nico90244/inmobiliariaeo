@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { MapPin, Maximize2, Bed, Bath, Car, MessageCircle } from "lucide-react";
+import { MapPin, Maximize2, Bed, Bath, Car } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import type { Propiedad } from "@/hooks/usePropiedades";
 
 const formatPrice = (price: number | null) => {
@@ -52,7 +53,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
         </div>
 
         {/* Precio */}
-        <p className="font-heading text-xl font-bold text-primary mb-3">
+        <p className="font-body text-xl font-bold text-primary mb-3">
           {formatPrice(property.precio)}
         </p>
 
@@ -100,7 +101,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
         >
-          <MessageCircle size={14} />
+          <WhatsAppIcon size={14} />
           WhatsApp
         </a>
       </div>
