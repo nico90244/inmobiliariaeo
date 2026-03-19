@@ -162,7 +162,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
       </div>
 
       <button onClick={handleWhatsApp} className="w-full py-3 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-        <WhatsAppIcon size={16} className="brightness-0 invert" /> Enviar por WhatsApp
+        <WhatsAppIcon size={16} className="filter-white" /> Enviar por WhatsApp
       </button>
 
       <div className="flex items-center gap-3 my-4">
@@ -179,7 +179,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
       <div className="mt-6 pt-4 border-t border-foreground/10 flex items-center gap-3">
         <span className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Compartir:</span>
         <button onClick={handleCopyLink} className="text-primary hover:text-primary/70 transition-colors" aria-label="Copiar link"><Copy size={18} /></button>
-        <button onClick={shareWA} className="text-primary hover:text-primary/70 transition-colors" aria-label="Compartir WhatsApp"><WhatsAppIcon size={18} style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(60%) saturate(430%) hue-rotate(12deg) brightness(92%) contrast(88%)" }} /></button>
+        <button onClick={shareWA} className="text-primary hover:text-primary/70 transition-colors" aria-label="Compartir WhatsApp"><WhatsAppIcon size={18} className="filter-gold" /></button>
         <button onClick={shareFB} className="text-primary hover:text-primary/70 transition-colors" aria-label="Compartir Facebook"><Share2 size={18} /></button>
       </div>
     </div>

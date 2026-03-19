@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         display: ['Catchy Mager', 'serif'],
-        heading: ['Coco Gothic', 'sans-serif'],
+        heading: ['Josefin Sans', 'sans-serif'],
         body: ['DM Sans', 'sans-serif'],
       },
       colors: {
