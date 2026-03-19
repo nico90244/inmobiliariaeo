@@ -156,7 +156,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
           className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
         />
         <textarea
-          rows={3} value={mensaje} onChange={(e) => setMensaje(e.target.value)}
+          rows={5} value={mensaje} onChange={(e) => setMensaje(e.target.value)}
           className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none resize-none"
         />
       </div>
