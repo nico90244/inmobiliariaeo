@@ -304,7 +304,7 @@ const PropertyDetail = () => {
 
         {/* Two-column layout: gallery+content left, contact right */}
         <div className="container mx-auto px-6 lg:px-12 pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
             {/* Left column */}
             <div className="space-y-10">
               {/* Gallery */}

@@ -93,9 +93,9 @@ const Captacion = () => {
       <main className="pt-20">
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
               {/* Left - Benefits */}
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-start pt-0">
                 <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
                   Consigna tu inmueble con nosotros
                 </h1>
