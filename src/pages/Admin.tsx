@@ -248,6 +248,7 @@ const Admin = () => {
                         <td className="p-4 font-body">{p.tipo_inmueble}</td>
                         <td className="p-4 font-body">{p.barrio}</td>
                         <td className="p-4 font-body">{p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}</td>
+                        <td className="p-4">{p.link_video ? <Video size={16} className="text-primary" /> : <span className="text-muted-foreground">—</span>}</td>
                         <td className="p-4"><span className={`px-2 py-1 text-xs font-heading font-semibold ${p.estado === "Disponible" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>{p.estado}</span></td>
                         <td className="p-4 flex gap-2">
                           <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
