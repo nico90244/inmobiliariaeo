@@ -18,6 +18,19 @@ const AdminLogin = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSignupSuccess("");
+
+    if (mode === "signup") {
+      const { error } = await supabase.auth.signUp({ email, password });
+      setLoading(false);
+      if (error) {
+        setError(error.message);
+      } else {
+        setSignupSuccess("Cuenta creada. Ahora puedes iniciar sesión.");
+        setMode("login");
+      }
+      return;
+    }
 
     const { error } = await signIn(email, password);
     setLoading(false);
