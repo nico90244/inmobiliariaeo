@@ -17,7 +17,6 @@ const Propiedades = () => {
   const [barrio, setBarrio] = useState("");
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
-  const [selectedProperty, setSelectedProperty] = useState<Propiedad | null>(null);
 
   const { data, isLoading, error } = usePropiedades({
     tipo_negocio: tipoNegocio || undefined,
