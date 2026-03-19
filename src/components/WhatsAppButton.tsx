@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { MessageCircle, X, Bot } from "lucide-react";
+import { X, Bot } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 // TODO: Reemplazar por iframe de N8N chatbot
 
@@ -16,7 +17,7 @@ const WhatsAppButton = () => {
         className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300 flex items-center justify-center shadow-lg rounded-full"
         aria-label="Contactar por WhatsApp"
       >
-        <MessageCircle size={24} />
+        <WhatsAppIcon size={24} />
       </a>
 
       {/* Eli chatbot button - bottom left */}
@@ -56,7 +57,7 @@ const WhatsAppButton = () => {
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 py-3 bg-[hsl(142,70%,45%)] text-white font-heading text-sm font-semibold tracking-widest uppercase hover:bg-[hsl(142,70%,40%)] transition-colors"
           >
-            <MessageCircle size={16} />
+            <WhatsAppIcon size={16} />
             Abrir WhatsApp
           </a>
 
