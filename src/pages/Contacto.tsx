@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Phone, MessageCircle, MapPin, Mail } from "lucide-react";
+import { Phone, MapPin, Mail } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
