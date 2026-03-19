@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo.png";
 
-const Header = () => {
+const Header = ({ solid = false }: { solid?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [propDropdown, setPropDropdown] = useState(false);
   const location = useLocation();
@@ -16,7 +16,14 @@ const Header = () => {
     }`;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-foreground/5">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 border-b border-foreground/5 ${
+        solid
+          ? "bg-background"
+          : "bg-background/95 backdrop-blur-sm"
+      }`}
+      style={solid ? { boxShadow: "0 2px 8px rgba(0,0,0,0.08)" } : undefined}
+    >
       <div className="container mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex-shrink-0">
