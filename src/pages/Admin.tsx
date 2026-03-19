@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
 import {
-  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon,
+  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
@@ -21,7 +21,7 @@ const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca",
 const emptyForm: Partial<Propiedad> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
   area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "", estrato: 0, administracion: 0, descripcion: "",
-  estado: "Disponible", foto_portada: "", fotos: [], link_whatsapp: "",
+  estado: "Disponible", foto_portada: "", fotos: [], link_whatsapp: "", red_social_video: "", link_video: "",
 };
 
 const Admin = () => {
@@ -120,6 +120,10 @@ const Admin = () => {
   const handleSave = async () => {
     if (!form.nombre_inmueble || !form.tipo_inmueble) {
       toast({ title: "Nombre y tipo de inmueble son requeridos", variant: "destructive" });
+      return;
+    }
+    if (form.red_social_video && form.link_video && !form.link_video.startsWith("https://")) {
+      toast({ title: "El link del video debe empezar con https://", variant: "destructive" });
       return;
     }
     setSaving(true);
@@ -236,6 +240,7 @@ const Admin = () => {
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Precio</th>
+                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Video</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Acciones</th>
                     </tr>
@@ -247,6 +252,7 @@ const Admin = () => {
                         <td className="p-4 font-body">{p.tipo_inmueble}</td>
                         <td className="p-4 font-body">{p.barrio}</td>
                         <td className="p-4 font-body">{p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}</td>
+                        <td className="p-4">{p.link_video ? <Video size={16} className="text-primary" /> : <span className="text-muted-foreground">—</span>}</td>
                         <td className="p-4"><span className={`px-2 py-1 text-xs font-heading font-semibold ${p.estado === "Disponible" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>{p.estado}</span></td>
                         <td className="p-4 flex gap-2">
                           <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
@@ -255,7 +261,7 @@ const Admin = () => {
                       </tr>
                     ))}
                     {propiedades.length === 0 && (
-                      <tr><td colSpan={6} className="p-8 text-center font-body text-muted-foreground">No hay propiedades registradas.</td></tr>
+                      <tr><td colSpan={7} className="p-8 text-center font-body text-muted-foreground">No hay propiedades registradas.</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -414,6 +420,34 @@ const Admin = () => {
               <div>
                 <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link WhatsApp</label>
                 <input type="text" value={form.link_whatsapp || ""} onChange={(e) => updateField("link_whatsapp", e.target.value)} placeholder="https://wa.me/573162225604?text=..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+              </div>
+
+              {/*
+                Ejecutar en Supabase SQL Editor:
+                ALTER TABLE propiedades 
+                ADD COLUMN IF NOT EXISTS red_social_video TEXT,
+                ADD COLUMN IF NOT EXISTS link_video TEXT;
+              */}
+              {/* Video section */}
+              <div className="border-t border-foreground/10 pt-4">
+                <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4">
+                  <Video size={16} className="text-primary" /> Video de la propiedad
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Red social del video</label>
+                    <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                      <option value="">(ninguno)</option>
+                      <option value="instagram">Instagram</option>
+                      <option value="tiktok">TikTok</option>
+                      <option value="facebook">Facebook</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link del video (Reel/TikTok/Post)</label>
+                    <input type="url" value={form.link_video || ""} onChange={(e) => updateField("link_video", e.target.value || null)} placeholder="https://www.instagram.com/reel/..." disabled={!form.red_social_video} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed" />
+                  </div>
+                </div>
               </div>
 
               {/* Cover photo */}
