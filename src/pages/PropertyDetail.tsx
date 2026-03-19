@@ -274,7 +274,7 @@ const PropertyDetail = () => {
     <>
       <Header solid />
       <main className="pt-20">
-        <div className="container mx-auto px-6 lg:px-12 py-6">
+        <div className="container mx-auto px-6 lg:px-12 pt-4 pb-2">
           {/* Breadcrumb */}
           <Breadcrumb>
             <BreadcrumbList>
@@ -286,19 +286,19 @@ const PropertyDetail = () => {
             </BreadcrumbList>
           </Breadcrumb>
 
-          <button onClick={() => navigate("/propiedades")} className="flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors mt-3 mb-6">
+          <button onClick={() => navigate("/propiedades")} className="flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors mt-2 mb-4">
             <ArrowLeft size={16} /> Volver a propiedades
           </button>
 
           {/* Header – above gallery */}
-          <div className="mb-8">
-            <Badge className="bg-primary text-primary-foreground font-heading text-[10px] font-bold tracking-widest uppercase px-3 py-1 mb-3">
+          <div className="mb-5">
+            <Badge className="bg-primary text-primary-foreground font-heading text-[10px] font-bold tracking-widest uppercase px-3 py-1 mb-2">
               {property.tipo_negocio}
             </Badge>
             <p className="font-body text-sm text-muted-foreground mb-1">
               {[property.ciudad || "Cali", property.zona, property.tipo_inmueble].filter(Boolean).join(" | ")}
             </p>
-            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-3">{property.nombre_inmueble}</h1>
+            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-2">{property.nombre_inmueble}</h1>
             <p className="font-body text-2xl md:text-3xl font-bold text-primary">{formatPrice(property.precio)}</p>
           </div>
         </div>
