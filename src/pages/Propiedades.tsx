@@ -36,14 +36,27 @@ const Propiedades = () => {
 
   return (
     <>
-      <Header />
+      <Header solid />
       <main className="pt-20">
+        {/* Dark banner */}
+        <div className="relative bg-[#1A1A1A] h-[160px] md:h-[220px] flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A1A] via-[#222] to-[#1A1A1A]" />
+          <div className="relative z-10 text-center px-6">
+            <h1 className="font-display text-3xl md:text-5xl font-bold text-white mb-2">{title}</h1>
+            <p className="font-body text-sm md:text-base text-primary mb-3">
+              Encuentra tu inmueble ideal en Cali y el Valle del Cauca
+            </p>
+            <nav className="flex items-center justify-center gap-2 font-body text-xs text-white/60">
+              <Link to="/" className="hover:text-white transition-colors">Inicio</Link>
+              <span className="text-white/40">&gt;</span>
+              <span className="text-white/90">Propiedades</span>
+            </nav>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary" />
+        </div>
+
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
-            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">{title}</h1>
-            <p className="font-body text-lg text-muted-foreground mb-12">
-              Encuentra el inmueble ideal en las mejores zonas de Cali y el Valle del Cauca.
-            </p>
 
             {/* Filters */}
             <div className="bg-muted/30 p-6 mb-12 border border-foreground/10">
