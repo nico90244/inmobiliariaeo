@@ -56,6 +56,95 @@ export type Database = {
         }
         Relationships: []
       }
+      citas_disponibles: {
+        Row: {
+          activo: boolean
+          agente: string
+          estado: string
+          fecha: string
+          fecha_creacion: string
+          hora: string
+          id: string
+          propiedad_id: string | null
+        }
+        Insert: {
+          activo?: boolean
+          agente?: string
+          estado?: string
+          fecha: string
+          fecha_creacion?: string
+          hora: string
+          id?: string
+          propiedad_id?: string | null
+        }
+        Update: {
+          activo?: boolean
+          agente?: string
+          estado?: string
+          fecha?: string
+          fecha_creacion?: string
+          hora?: string
+          id?: string
+          propiedad_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "citas_disponibles_propiedad_id_fkey"
+            columns: ["propiedad_id"]
+            isOneToOne: false
+            referencedRelation: "propiedades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      citas_reservas: {
+        Row: {
+          celular_cliente: string
+          correo_cliente: string | null
+          estado: string
+          fecha_creacion: string
+          id: string
+          nombre_cliente: string
+          propiedad_id: string | null
+          slot_id: string | null
+        }
+        Insert: {
+          celular_cliente: string
+          correo_cliente?: string | null
+          estado?: string
+          fecha_creacion?: string
+          id?: string
+          nombre_cliente: string
+          propiedad_id?: string | null
+          slot_id?: string | null
+        }
+        Update: {
+          celular_cliente?: string
+          correo_cliente?: string | null
+          estado?: string
+          fecha_creacion?: string
+          id?: string
+          nombre_cliente?: string
+          propiedad_id?: string | null
+          slot_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "citas_reservas_propiedad_id_fkey"
+            columns: ["propiedad_id"]
+            isOneToOne: false
+            referencedRelation: "propiedades"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "citas_reservas_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "citas_disponibles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       propiedades: {
         Row: {
           administracion: number | null
