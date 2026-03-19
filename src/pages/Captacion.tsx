@@ -96,7 +96,7 @@ const Captacion = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
               {/* Left - Benefits */}
               <div className="flex flex-col justify-center">
-                <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
+                <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
                   Consigna tu inmueble con nosotros
                 </h1>
                 <p className="font-body text-lg text-muted-foreground mb-8">

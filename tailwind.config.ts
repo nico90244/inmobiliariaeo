@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Montserrat', 'sans-serif'],
-        body: ['Lora', 'serif'],
+        display: ['Catchy Mager', 'serif'],
+        heading: ['Coco Gothic', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

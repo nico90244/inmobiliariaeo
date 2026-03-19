@@ -17,7 +17,7 @@ const Servicios = () => {
       <main className="pt-20">
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
-            <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
               Nuestros Servicios
             </h1>
             <p className="font-body text-lg text-muted-foreground mb-16 max-w-2xl">

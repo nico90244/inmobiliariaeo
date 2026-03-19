@@ -26,7 +26,7 @@ const PropertiesSection = () => {
     <section id="propiedades" className="py-24 md:py-40">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="max-w-3xl mb-16">
-          <h2 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
             Propiedades
           </h2>
           <p className="font-body text-lg text-muted-foreground">

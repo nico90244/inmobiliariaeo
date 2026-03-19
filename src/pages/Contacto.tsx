@@ -26,7 +26,7 @@ const Contacto = () => {
           <div className="container mx-auto px-6 lg:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
               <div className="lg:col-span-7">
-                <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-4">Contáctanos</h1>
+                <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">Contáctanos</h1>
                 <p className="font-body text-lg text-muted-foreground mb-12">Cuéntanos qué buscas y te asesoramos sin compromiso.</p>
                 <form onSubmit={handleSubmit} className="space-y-8 max-w-lg">
                   <div>

@@ -288,7 +288,7 @@ const PropertyDetail = () => {
             <p className="font-body text-sm text-muted-foreground mb-1">
               {[property.zona, property.tipo_inmueble].filter(Boolean).join(" | ")}
             </p>
-            <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-3">{property.nombre_inmueble}</h1>
+            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-3">{property.nombre_inmueble}</h1>
             <p className="font-heading text-2xl md:text-3xl font-bold text-primary">{formatPrice(property.precio)}</p>
           </div>
         </div>
