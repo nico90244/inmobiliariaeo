@@ -17,7 +17,7 @@ const WhatsAppButton = () => {
         className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300 flex items-center justify-center shadow-lg rounded-full"
         aria-label="Contactar por WhatsApp"
       >
-        <WhatsAppIcon size={24} />
+        <WhatsAppIcon size={24} className="filter-white" />
       </a>
 
       {/* Eli chatbot button - bottom left */}
