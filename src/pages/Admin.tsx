@@ -418,6 +418,34 @@ const Admin = () => {
                 <input type="text" value={form.link_whatsapp || ""} onChange={(e) => updateField("link_whatsapp", e.target.value)} placeholder="https://wa.me/573162225604?text=..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
               </div>
 
+              {/*
+                Ejecutar en Supabase SQL Editor:
+                ALTER TABLE propiedades 
+                ADD COLUMN IF NOT EXISTS red_social_video TEXT,
+                ADD COLUMN IF NOT EXISTS link_video TEXT;
+              */}
+              {/* Video section */}
+              <div className="border-t border-foreground/10 pt-4">
+                <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4">
+                  <Video size={16} className="text-primary" /> Video de la propiedad
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Red social del video</label>
+                    <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                      <option value="">(ninguno)</option>
+                      <option value="instagram">Instagram</option>
+                      <option value="tiktok">TikTok</option>
+                      <option value="facebook">Facebook</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link del video (Reel/TikTok/Post)</label>
+                    <input type="url" value={form.link_video || ""} onChange={(e) => updateField("link_video", e.target.value || null)} placeholder="https://www.instagram.com/reel/..." disabled={!form.red_social_video} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed" />
+                  </div>
+                </div>
+              </div>
+
               {/* Cover photo */}
               <div>
                 <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-2">Foto portada</label>
