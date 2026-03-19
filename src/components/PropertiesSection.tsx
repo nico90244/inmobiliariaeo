@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { MessageCircle, Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { usePropiedades, type Propiedad } from "@/hooks/usePropiedades";
+import PropertyCard from "@/components/PropertyCard";
 import property1 from "@/assets/property-1.jpg";
 import property2 from "@/assets/property-2.jpg";
 import property3 from "@/assets/property-3.jpg";
@@ -19,15 +18,8 @@ const fallbackProperties: Propiedad[] = [
   { id: "6", foto_portada: property6, tipo_inmueble: "Local", barrio: "Granada", precio: 3500000, area_m2: 80, habitaciones: 0, banos: 1, estado: "Disponible", tipo_negocio: "Alquiler", nombre_inmueble: "Local Granada", direccion: null, zona: null, piso: null, parqueadero: null, estrato: null, administracion: null, descripcion: null, fotos: null, link_whatsapp: null, link_video: null, red_social_video: null, fecha_creacion: "", fecha_actualizacion: "" },
 ];
 
-const statusStyles: Record<string, string> = {
-  Disponible: "bg-primary text-primary-foreground",
-  Arrendado: "bg-rented text-primary-foreground",
-  Vendido: "bg-sold text-primary-foreground",
-};
-
 const PropertiesSection = () => {
   const { data, isLoading, error } = usePropiedades();
-
   const properties = data && data.length > 0 ? data : fallbackProperties;
 
   return (
@@ -55,76 +47,13 @@ const PropertiesSection = () => {
           </div>
         )}
 
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
         </div>
       </div>
     </section>
-  );
-};
-
-const PropertyCard = ({ property }: { property: Propiedad }) => {
-  const formatPrice = (price: number | null) => {
-    if (!price) return "Consultar";
-    return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(price);
-  };
-
-  const waLink = property.link_whatsapp ||
-    `https://wa.me/573162225604?text=${encodeURIComponent(`Hola, me interesa el ${property.tipo_inmueble} en ${property.barrio} (${formatPrice(property.precio)})`)}`;
-
-  return (
-    <div className="break-inside-avoid group border border-foreground/10 bg-background overflow-hidden">
-      <div className="relative overflow-hidden">
-        <img
-          src={property.foto_portada || "/placeholder.svg"}
-          alt={`${property.tipo_inmueble} en ${property.barrio}`}
-          className="w-full object-cover transition-all duration-500 group-hover:grayscale"
-          loading="lazy"
-        />
-        <span className={`absolute top-4 left-4 font-heading text-xs font-semibold tracking-widest uppercase px-3 py-1 ${statusStyles[property.estado] || statusStyles.Disponible}`}>
-          {property.estado}
-        </span>
-      </div>
-
-      <div className="p-6">
-        <p className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-1">
-          {property.tipo_inmueble} · {property.tipo_negocio}
-        </p>
-        <p className="font-heading text-sm font-medium text-foreground mb-3">
-          {property.barrio}
-        </p>
-
-        <p className="font-heading text-2xl font-bold text-foreground transition-colors duration-500 group-hover:text-primary mb-4">
-          {formatPrice(property.precio)}
-        </p>
-
-        <div className="flex gap-4 text-sm text-muted-foreground font-body mb-6 transition-colors duration-500 group-hover:text-primary">
-          {property.area_m2 && <span>{property.area_m2} m²</span>}
-          {(property.habitaciones ?? 0) > 0 && <span>{property.habitaciones} hab.</span>}
-          <span>{property.banos} baño{(property.banos ?? 0) > 1 ? "s" : ""}</span>
-        </div>
-
-        <div className="flex gap-3">
-          <Link
-            to={`/propiedades/${property.id}`}
-            className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors text-center"
-          >
-            Ver más
-          </Link>
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center w-10 bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
-            aria-label="Contactar por WhatsApp"
-          >
-            <MessageCircle size={16} />
-          </a>
-        </div>
-      </div>
-    </div>
   );
 };
 

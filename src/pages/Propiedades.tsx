@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
-import { Loader2, AlertCircle, MessageCircle } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { Loader2, AlertCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import PropertyCard from "@/components/PropertyCard";
 import { usePropiedades, type Propiedad } from "@/hooks/usePropiedades";
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote"];
@@ -96,28 +97,7 @@ const Propiedades = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {data?.map((property) => (
-                <div key={property.id} className="group border border-foreground/10 bg-background overflow-hidden">
-                  <div className="relative overflow-hidden">
-                    <img src={property.foto_portada || "/placeholder.svg"} alt={property.nombre_inmueble} className="w-full h-56 object-cover transition-all duration-500 group-hover:grayscale" loading="lazy" />
-                    <span className="absolute top-4 left-4 font-heading text-xs font-semibold tracking-widest uppercase px-3 py-1 bg-primary text-primary-foreground">{property.tipo_negocio}</span>
-                  </div>
-                  <div className="p-6">
-                    <p className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-1">{property.tipo_inmueble} · {property.barrio}</p>
-                    <p className="font-heading text-lg font-bold text-foreground mb-2">{property.nombre_inmueble}</p>
-                    <p className="font-heading text-2xl font-bold text-primary mb-4">{formatPrice(property.precio)}</p>
-                    <div className="flex gap-4 text-sm text-muted-foreground font-body mb-6">
-                      {property.area_m2 && <span>{property.area_m2} m²</span>}
-                      {(property.habitaciones ?? 0) > 0 && <span>{property.habitaciones} hab.</span>}
-                      {(property.banos ?? 0) > 0 && <span>{property.banos} baño{(property.banos ?? 0) > 1 ? "s" : ""}</span>}
-                    </div>
-                    <div className="flex gap-3">
-                      <Link to={`/propiedades/${property.id}`} className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors text-center">Ver más</Link>
-                      <a href={property.link_whatsapp || `https://wa.me/573162225604?text=${encodeURIComponent(`Hola, me interesa ${property.nombre_inmueble}`)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="WhatsApp">
-                        <MessageCircle size={16} />
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                <PropertyCard key={property.id} property={property} />
               ))}
             </div>
           </div>
