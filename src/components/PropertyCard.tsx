@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { MapPin, Maximize2, Bed, Bath, Car, MessageCircle } from "lucide-react";
+import { MapPin, Maximize2, Bed, Bath, Car } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import type { Propiedad } from "@/hooks/usePropiedades";
 
 const formatPrice = (price: number | null) => {
