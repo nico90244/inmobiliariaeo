@@ -125,7 +125,6 @@ const Propiedades = () => {
       </main>
       <Footer />
       <WhatsAppButton />
-      <PropertyModal property={selectedProperty} open={!!selectedProperty} onClose={() => setSelectedProperty(null)} />
     </>
   );
 };

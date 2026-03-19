@@ -65,7 +65,7 @@ const PropertiesSection = () => {
   );
 };
 
-const PropertyCard = ({ property, onViewMore }: { property: Propiedad; onViewMore: () => void }) => {
+const PropertyCard = ({ property }: { property: Propiedad }) => {
   const formatPrice = (price: number | null) => {
     if (!price) return "Consultar";
     return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(price);
@@ -107,12 +107,12 @@ const PropertyCard = ({ property, onViewMore }: { property: Propiedad; onViewMor
         </div>
 
         <div className="flex gap-3">
-          <button
-            onClick={onViewMore}
-            className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors"
+          <Link
+            to={`/propiedades/${property.id}`}
+            className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors text-center"
           >
             Ver más
-          </button>
+          </Link>
           <a
             href={waLink}
             target="_blank"
