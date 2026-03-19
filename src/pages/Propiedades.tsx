@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
-import { Loader2, AlertCircle, MessageCircle } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { Loader2, AlertCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import PropertyCard from "@/components/PropertyCard";
 import { usePropiedades, type Propiedad } from "@/hooks/usePropiedades";
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote"];
