@@ -373,10 +373,12 @@ const PropertyDetail = () => {
             <div>
               <div className="hidden lg:block sticky top-24">
                 <ContactCard property={property} />
+                <AppointmentBooking property={property} />
               </div>
-              {/* Mobile contact card */}
+              {/* Mobile */}
               <div className="lg:hidden">
                 <ContactCard property={property} />
+                <AppointmentBooking property={property} />
               </div>
             </div>
           </div>
