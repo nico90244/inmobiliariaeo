@@ -118,7 +118,7 @@ const Footer = () => {
                 <a href="tel:+573186531598" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">318 653 1598</a>
               </li>
               <li className="flex items-center gap-3">
-                <WhatsAppIcon size={16} className="flex-shrink-0" style={{ filter: "brightness(0) saturate(100%) invert(73%) sepia(50%) saturate(500%) hue-rotate(8deg) brightness(95%) contrast(87%)" }} />
+                <WhatsAppIcon size={16} className="flex-shrink-0" style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(60%) saturate(430%) hue-rotate(12deg) brightness(92%) contrast(88%)" }} />
                 <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">316 222 5604</a>
               </li>
               <li className="flex items-center gap-3">
