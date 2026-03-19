@@ -187,11 +187,11 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
 
 /* ─── Feature Item ─── */
 const Feature = ({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | number }) => (
-  <div className="flex items-center gap-3 p-4 bg-muted/30 border border-foreground/5">
+  <div className="flex items-center gap-3 p-4 bg-background border border-[#E5E7EB]">
     <Icon size={20} className="text-primary shrink-0" />
     <div>
       <p className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">{label}</p>
-      <p className="font-heading text-sm font-bold text-foreground">{value}</p>
+      <p className="font-body text-sm font-bold text-foreground">{value}</p>
     </div>
   </div>
 );
@@ -262,9 +262,16 @@ const PropertyDetail = () => {
   const allPhotos = [property.foto_portada, ...(property.fotos || [])].filter(Boolean) as string[];
   const mapQuery = encodeURIComponent(`${property.direccion || property.barrio || property.nombre_inmueble}, Cali, Colombia`);
 
+  const formatParqueadero = (val: string | null) => {
+    if (!val) return null;
+    const lower = val.toLowerCase();
+    if (lower === "no" || lower === "0" || lower === "false") return "No";
+    return "Sí";
+  };
+
   return (
     <>
-      <Header />
+      <Header solid />
       <main className="pt-20">
         <div className="container mx-auto px-6 lg:px-12 py-6">
           {/* Breadcrumb */}
@@ -284,34 +291,34 @@ const PropertyDetail = () => {
 
           {/* Header – above gallery */}
           <div className="mb-8">
-            <p className="font-heading text-sm font-semibold tracking-widest text-primary uppercase mb-2">{property.tipo_negocio}</p>
+            <Badge className="bg-primary text-primary-foreground font-heading text-[10px] font-bold tracking-widest uppercase px-3 py-1 mb-3">
+              {property.tipo_negocio}
+            </Badge>
             <p className="font-body text-sm text-muted-foreground mb-1">
               {[property.zona, property.tipo_inmueble].filter(Boolean).join(" | ")}
             </p>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-3">{property.nombre_inmueble}</h1>
-            <p className="font-heading text-2xl md:text-3xl font-bold text-primary">{formatPrice(property.precio)}</p>
+            <p className="font-body text-2xl md:text-3xl font-bold text-primary">{formatPrice(property.precio)}</p>
           </div>
         </div>
 
-        {/* Gallery */}
-        <div className="container mx-auto px-6 lg:px-12 mb-10">
-          <Gallery photos={allPhotos} />
-        </div>
-
-        {/* Content */}
+        {/* Two-column layout: gallery+content left, contact right */}
         <div className="container mx-auto px-6 lg:px-12 pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-10">
             {/* Left column */}
             <div className="space-y-10">
+              {/* Gallery */}
+              <Gallery photos={allPhotos} />
+
               {/* Features grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {property.area_m2 && <Feature icon={Maximize2} label="Área" value={`${property.area_m2} m²`} />}
                 {(property.habitaciones ?? 0) > 0 && <Feature icon={Bed} label="Habitaciones" value={property.habitaciones!} />}
                 {(property.banos ?? 0) > 0 && <Feature icon={Bath} label="Baños" value={property.banos!} />}
                 {property.piso && <Feature icon={Building2} label="Piso" value={property.piso} />}
-                {property.parqueadero && <Feature icon={Car} label="Parqueadero" value={property.parqueadero} />}
-                {property.administracion && <Feature icon={DollarSign} label="Administración" value={formatPrice(property.administracion)} />}
+                {property.parqueadero != null && <Feature icon={Car} label="Parqueadero" value={formatParqueadero(property.parqueadero)!} />}
                 {property.estrato && <Feature icon={Building2} label="Estrato" value={property.estrato} />}
+                {property.administracion && <Feature icon={DollarSign} label="Administración" value={formatPrice(property.administracion)} />}
                 {property.barrio && <Feature icon={MapPin} label="Barrio" value={property.barrio} />}
               </div>
 
@@ -360,15 +367,16 @@ const PropertyDetail = () => {
               )}
             </div>
 
-            {/* Right column */}
-            <div className="hidden lg:block">
-              <ContactCard property={property} />
+            {/* Right column – sticky contact */}
+            <div>
+              <div className="hidden lg:block sticky top-24">
+                <ContactCard property={property} />
+              </div>
+              {/* Mobile contact card */}
+              <div className="lg:hidden">
+                <ContactCard property={property} />
+              </div>
             </div>
-          </div>
-
-          {/* Mobile contact card */}
-          <div className="lg:hidden mt-10">
-            <ContactCard property={property} />
           </div>
 
           {/* Related properties */}
