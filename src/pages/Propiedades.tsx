@@ -55,7 +55,7 @@ const Propiedades = () => {
           </div>
         </div>
 
-        <section className="py-10 md:py-14">
+        <section className="py-6 md:py-10">
           <div className="container mx-auto px-6 lg:px-12">
 
             {/* Filters */}
