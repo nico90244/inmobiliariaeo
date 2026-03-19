@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { X, ChevronLeft, ChevronRight, MapPin, Building2, Zap, Ruler, BedDouble, ShowerHead, Building, Car, DollarSign, Phone, MessageCircle } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, MapPin, Building2, Zap, Ruler, BedDouble, ShowerHead, Building, Car, DollarSign, Phone } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { Propiedad } from "@/hooks/usePropiedades";
 
