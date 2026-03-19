@@ -32,7 +32,8 @@ const Admin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const [section, setSection] = useState<"propiedades" | "captaciones">("propiedades");
+  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas">("propiedades");
+  const [pendingReservas, setPendingReservas] = useState(0);
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
   const [captaciones, setCaptaciones] = useState<Captacion[]>([]);
   const [loadingData, setLoadingData] = useState(true);
