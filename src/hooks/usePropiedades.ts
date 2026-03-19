@@ -31,6 +31,9 @@ export const usePropiedades = (filters?: {
       if (filters?.barrio) {
         query = query.ilike("barrio", `%${filters.barrio}%`);
       }
+      if (filters?.ciudad) {
+        query = query.ilike("ciudad", `%${filters.ciudad}%`);
+      }
       if (filters?.precioMin) {
         query = query.gte("precio", filters.precioMin);
       }
