@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logoGold from "@/assets/logo-gold.png";
 
 const Header = ({ solid = false }: { solid?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
