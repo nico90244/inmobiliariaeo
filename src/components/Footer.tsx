@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, MessageCircle, Phone, MapPin, Mail, ChevronDown } from "lucide-react";
+import { Instagram, Facebook, Phone, MapPin, Mail, ChevronDown } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import logo from "@/assets/logo.png";
+
+const WhatsAppLink = ({ size = 16 }: { size?: number }) => <WhatsAppIcon size={size} />;
 
 const socialLinks = [
 { icon: Instagram, href: "https://instagram.com/inmobiliaria_eo", label: "Instagram" },
 { icon: Facebook, href: "https://facebook.com/inmobiliariaeo", label: "Facebook" },
 // TikTok uses custom SVG
-{ icon: MessageCircle, href: "https://wa.me/573162225604", label: "WhatsApp" }];
+{ icon: WhatsAppLink, href: "https://wa.me/573162225604", label: "WhatsApp" }];
 
 
 const navLinks = [
