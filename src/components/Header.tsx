@@ -75,27 +75,27 @@ const Header = ({ solid = false }: { solid?: boolean }) => {
       </div>
 
       {isOpen && (
-        <div className="lg:hidden bg-background border-t border-foreground/5">
+        <div className="lg:hidden bg-[#1A1A1A] border-t border-white/10">
           <nav className="container mx-auto px-6 py-6 flex flex-col gap-4">
-            <Link to="/" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-foreground/70 hover:text-primary transition-colors py-2">
+            <Link to="/" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2">
               Inicio
             </Link>
-            <Link to="/propiedades" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-foreground/70 hover:text-primary transition-colors py-2">
+            <Link to="/propiedades" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2">
               Todas las propiedades
             </Link>
-            <Link to="/venta" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-foreground/70 hover:text-primary transition-colors py-2 pl-4">
+            <Link to="/venta" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2 pl-4">
               En Venta
             </Link>
-            <Link to="/alquiler" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-foreground/70 hover:text-primary transition-colors py-2 pl-4">
+            <Link to="/alquiler" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2 pl-4">
               En Alquiler
             </Link>
-            <Link to="/servicios" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-foreground/70 hover:text-primary transition-colors py-2">
+            <Link to="/servicios" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2">
               Servicios
             </Link>
-            <Link to="/captacion" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-foreground/70 hover:text-primary transition-colors py-2">
+            <Link to="/captacion" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2">
               Captar Inmueble
             </Link>
-            <Link to="/contacto" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-foreground/70 hover:text-primary transition-colors py-2">
+            <Link to="/contacto" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2">
               Contacto
             </Link>
           </nav>
