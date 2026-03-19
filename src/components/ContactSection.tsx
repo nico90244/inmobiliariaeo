@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Phone, MessageCircle, MapPin } from "lucide-react";
+import { Phone, MapPin } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 const ContactSection = () => {
   const [name, setName] = useState("");
