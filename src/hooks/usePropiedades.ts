@@ -8,6 +8,7 @@ export const usePropiedades = (filters?: {
   tipo_negocio?: string;
   tipo_inmueble?: string;
   barrio?: string;
+  ciudad?: string;
   precioMin?: number;
   precioMax?: number;
   allStates?: boolean;
