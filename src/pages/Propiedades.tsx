@@ -111,7 +111,7 @@ const Propiedades = () => {
                       {(property.banos ?? 0) > 0 && <span>{property.banos} baño{(property.banos ?? 0) > 1 ? "s" : ""}</span>}
                     </div>
                     <div className="flex gap-3">
-                      <button onClick={() => setSelectedProperty(property)} className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors">Ver más</button>
+                      <Link to={`/propiedades/${property.id}`} className="flex-1 py-2.5 bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors text-center">Ver más</Link>
                       <a href={property.link_whatsapp || `https://wa.me/573162225604?text=${encodeURIComponent(`Hola, me interesa ${property.nombre_inmueble}`)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="WhatsApp">
                         <MessageCircle size={16} />
                       </a>
