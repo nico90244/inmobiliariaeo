@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Propiedades from "./pages/Propiedades";
+import PropertyDetail from "./pages/PropertyDetail";
 import Servicios from "./pages/Servicios";
 import Captacion from "./pages/Captacion";
 import Contacto from "./pages/Contacto";
