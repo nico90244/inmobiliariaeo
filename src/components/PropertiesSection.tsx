@@ -27,7 +27,6 @@ const statusStyles: Record<string, string> = {
 
 const PropertiesSection = () => {
   const { data, isLoading, error } = usePropiedades();
-  const [selectedProperty, setSelectedProperty] = useState<Propiedad | null>(null);
 
   const properties = data && data.length > 0 ? data : fallbackProperties;
 
@@ -58,16 +57,10 @@ const PropertiesSection = () => {
 
         <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
           {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} onViewMore={() => setSelectedProperty(property)} />
+            <PropertyCard key={property.id} property={property} />
           ))}
         </div>
       </div>
-
-      <PropertyModal
-        property={selectedProperty}
-        open={!!selectedProperty}
-        onClose={() => setSelectedProperty(null)}
-      />
     </section>
   );
 };
