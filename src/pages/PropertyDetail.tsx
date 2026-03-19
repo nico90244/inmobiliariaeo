@@ -10,6 +10,7 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AppointmentBooking from "@/components/AppointmentBooking";
 import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { usePropiedades } from "@/hooks/usePropiedades";
