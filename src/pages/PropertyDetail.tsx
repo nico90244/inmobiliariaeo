@@ -275,7 +275,7 @@ const PropertyDetail = () => {
     <>
       <Header solid />
       <main className="pt-20">
-        <div className="container mx-auto px-6 lg:px-12 pt-4 pb-2">
+        <div className="container mx-auto px-6 lg:px-10 pt-4 pb-2">
           {/* Breadcrumb */}
           <Breadcrumb>
             <BreadcrumbList>
@@ -287,7 +287,7 @@ const PropertyDetail = () => {
             </BreadcrumbList>
           </Breadcrumb>
 
-          <button onClick={() => navigate("/propiedades")} className="flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors mt-2 mb-4 ml-auto">
+          <button onClick={() => navigate("/propiedades")} className="flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors mt-2 mb-3 ml-auto">
             <ArrowLeft size={16} /> Volver a propiedades
           </button>
 
