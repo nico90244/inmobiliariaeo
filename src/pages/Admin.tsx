@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
 import {
-  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon,
+  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
