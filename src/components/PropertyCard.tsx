@@ -24,16 +24,11 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
         />
         {/* Badge */}
         <span
-          className="absolute top-3 left-3 font-heading text-[11px] font-bold tracking-widest uppercase px-2.5 py-1 rounded"
-          style={{ background: "rgba(0,0,0,0.72)" }}
+          className="absolute top-2.5 left-2.5 font-heading text-[11px] font-bold tracking-widest uppercase px-3 py-1 rounded text-white"
+          style={{ background: "#C9A84C" }}
         >
-          <span className="text-primary">{property.tipo_negocio}</span>
-          {property.zona && (
-            <>
-              <span className="text-white"> | </span>
-              <span className="text-primary">{property.zona}</span>
-            </>
-          )}
+          {property.tipo_negocio}
+          {property.zona && <> | {property.zona}</>}
         </span>
       </div>
 
