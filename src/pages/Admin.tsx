@@ -61,12 +61,22 @@ const Admin = () => {
     if (user) loadData();
   }, [user, section]);
 
+  // Load pending reservas count
+  useEffect(() => {
+    if (!user) return;
+    const loadPending = async () => {
+      const { count } = await supabase.from("citas_reservas").select("*", { count: "exact", head: true }).eq("estado", "Pendiente");
+      setPendingReservas(count || 0);
+    };
+    loadPending();
+  }, [user, section]);
+
   const loadData = async () => {
     setLoadingData(true);
     if (section === "propiedades") {
       const { data } = await supabase.from("propiedades").select("*").order("fecha_creacion", { ascending: false });
       setPropiedades(data || []);
-    } else {
+    } else if (section === "captaciones") {
       const { data } = await supabase.from("captaciones").select("*").order("fecha_creacion", { ascending: false });
       setCaptaciones(data || []);
     }
