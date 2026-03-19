@@ -156,13 +156,13 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
           className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
         />
         <textarea
-          rows={3} value={mensaje} onChange={(e) => setMensaje(e.target.value)}
+          rows={5} value={mensaje} onChange={(e) => setMensaje(e.target.value)}
           className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none resize-none"
         />
       </div>
 
       <button onClick={handleWhatsApp} className="w-full py-3 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-        <WhatsAppIcon size={16} /> Enviar por WhatsApp
+        <WhatsAppIcon size={16} className="brightness-0" /> Enviar por WhatsApp
       </button>
 
       <div className="flex items-center gap-3 my-4">
@@ -296,7 +296,7 @@ const PropertyDetail = () => {
               {property.tipo_negocio}
             </Badge>
             <p className="font-body text-sm text-muted-foreground mb-1">
-              {[property.zona, property.tipo_inmueble].filter(Boolean).join(" | ")}
+              {[property.ciudad || "Cali", property.zona, property.tipo_inmueble].filter(Boolean).join(" | ")}
             </p>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-3">{property.nombre_inmueble}</h1>
             <p className="font-body text-2xl md:text-3xl font-bold text-primary">{formatPrice(property.precio)}</p>
@@ -305,7 +305,7 @@ const PropertyDetail = () => {
 
         {/* Two-column layout: gallery+content left, contact right */}
         <div className="container mx-auto px-6 lg:px-12 pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10">
             {/* Left column */}
             <div className="space-y-10">
               {/* Gallery */}

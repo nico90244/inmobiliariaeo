@@ -62,6 +62,7 @@ export type Database = {
           area_m2: number | null
           banos: number | null
           barrio: string | null
+          ciudad: string | null
           descripcion: string | null
           direccion: string | null
           estado: string
@@ -88,6 +89,7 @@ export type Database = {
           area_m2?: number | null
           banos?: number | null
           barrio?: string | null
+          ciudad?: string | null
           descripcion?: string | null
           direccion?: string | null
           estado?: string
@@ -114,6 +116,7 @@ export type Database = {
           area_m2?: number | null
           banos?: number | null
           barrio?: string | null
+          ciudad?: string | null
           descripcion?: string | null
           direccion?: string | null
           estado?: string
