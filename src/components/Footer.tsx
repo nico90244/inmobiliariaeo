@@ -55,7 +55,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Column 1 - Brand */}
           <div>
-            <img alt="Inmobiliaria Eliana Osorio" className="h-16 w-auto mb-4 brightness-0 invert" src="/lovable-uploads/6e4f0656-2af2-4a4d-8c02-cb3563d235e8.png" />
+            <img alt="Inmobiliaria Eliana Osorio" className="h-20 w-auto mb-4" src={logoGold} />
             <p className="font-body text-sm text-secondary-foreground/60 leading-relaxed">Más de 10 años acompañando la compra, venta y arriendo de inmuebles en Cali con asesoría jurídica integral y atención personalizada dentro y fuera de Colombia.</p>
           </div>
 
