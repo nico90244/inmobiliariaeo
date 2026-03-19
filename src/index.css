@@ -51,8 +51,9 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    --font-heading: 'Montserrat', sans-serif;
-    --font-body: 'Lora', serif;
+    --font-display: 'Catchy Mager', serif;
+    --font-heading: 'Coco Gothic', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
   }
 
   .dark {
