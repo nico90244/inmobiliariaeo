@@ -16,6 +16,7 @@ const Propiedades = () => {
   const [tipoNegocio, setTipoNegocio] = useState(defaultTipoNegocio);
   const [tipoInmueble, setTipoInmueble] = useState("");
   const [barrio, setBarrio] = useState("");
+  const [ciudad, setCiudad] = useState("");
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
 
@@ -23,6 +24,7 @@ const Propiedades = () => {
     tipo_negocio: tipoNegocio || undefined,
     tipo_inmueble: tipoInmueble || undefined,
     barrio: barrio || undefined,
+    ciudad: ciudad || undefined,
     precioMin: precioMin ? Number(precioMin) : undefined,
     precioMax: precioMax ? Number(precioMax) : undefined,
   });
