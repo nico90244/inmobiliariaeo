@@ -305,10 +305,10 @@ const PropertyDetail = () => {
         </div>
 
         {/* Two-column layout: gallery+content left, contact right */}
-        <div className="container mx-auto px-6 lg:px-12 pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10">
+        <div className="container mx-auto px-6 lg:px-10 pb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8">
             {/* Left column */}
-            <div className="space-y-10">
+            <div className="space-y-6">
               {/* Gallery */}
               <Gallery photos={allPhotos} />
 
