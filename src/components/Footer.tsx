@@ -9,8 +9,8 @@ const WhatsAppLink = ({ size = 16 }: { size?: number }) => <WhatsAppIcon size={s
 const socialLinks = [
 { icon: Instagram, href: "https://instagram.com/inmobiliaria_eo", label: "Instagram" },
 { icon: Facebook, href: "https://facebook.com/inmobiliariaeo", label: "Facebook" },
-// TikTok uses custom SVG
-{ icon: WhatsAppLink, href: "https://wa.me/573162225604", label: "WhatsApp" }];
+// TikTok uses custom SVG below
+];
 
 
 const navLinks = [
@@ -57,8 +57,7 @@ const Footer = () => {
           <div>
             <img alt="Inmobiliaria Eliana Osorio" className="h-12 w-auto mb-4 brightness-0 invert" src="/lovable-uploads/6e4f0656-2af2-4a4d-8c02-cb3563d235e8.png" />
             
-
-            
+            <p className="font-heading text-xs font-semibold tracking-widest uppercase text-primary mb-4">Redes sociales</p>
             <div className="flex items-center gap-3">
               {socialLinks.map((s) =>
               <a
@@ -119,7 +118,7 @@ const Footer = () => {
                 <a href="tel:+573186531598" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">318 653 1598</a>
               </li>
               <li className="flex items-center gap-3">
-                <WhatsAppIcon size={16} className="flex-shrink-0" style={{ filter: "brightness(0) saturate(100%) invert(73%) sepia(50%) saturate(500%) hue-rotate(8deg) brightness(95%) contrast(87%)" }} />
+                <WhatsAppIcon size={16} className="flex-shrink-0" style={{ filter: "brightness(0) saturate(100%) invert(68%) sepia(60%) saturate(430%) hue-rotate(12deg) brightness(92%) contrast(88%)" }} />
                 <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">316 222 5604</a>
               </li>
               <li className="flex items-center gap-3">
