@@ -41,18 +41,19 @@ const Propiedades = () => {
       <Header solid />
       <main className="pt-20">
         {/* Banner */}
-        <div className="relative h-[100px] md:h-[130px] flex items-center justify-center overflow-hidden bg-background">
+        <div className="relative h-[200px] flex items-center justify-center overflow-hidden" style={{ background: "#1A1A1A" }}>
           <div className="relative z-10 text-center px-6">
-            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-2">{title}</h1>
-            <p className="font-body text-sm md:text-base text-muted-foreground mb-3">
+            <h1 className="font-display text-3xl md:text-5xl font-bold text-white mb-2">{title}</h1>
+            <p className="font-body text-sm md:text-base mb-3" style={{ color: "#C9A84C" }}>
               Encuentra tu inmueble ideal en Cali y el Valle del Cauca
             </p>
-            <nav className="flex items-center justify-center gap-2 font-body text-xs text-muted-foreground">
-              <Link to="/" className="hover:text-foreground transition-colors">Inicio</Link>
-              <span className="text-muted-foreground/40">&gt;</span>
-              <span className="text-primary">Propiedades</span>
+            <nav className="flex items-center justify-center gap-2 font-body text-xs text-white/60">
+              <Link to="/" className="hover:text-white transition-colors">Inicio</Link>
+              <span className="text-white/30">&gt;</span>
+              <span style={{ color: "#C9A84C" }}>Propiedades</span>
             </nav>
           </div>
+          <div className="absolute bottom-0 left-0 right-0 h-[3px]" style={{ background: "#C9A84C" }} />
         </div>
 
         <section className="py-6 md:py-10">

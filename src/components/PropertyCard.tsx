@@ -22,12 +22,18 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
           className="w-full h-full object-cover"
           loading="lazy"
         />
-        {/* Badges on image */}
-        <span className="absolute top-3 left-3 font-heading text-[10px] font-bold tracking-widest uppercase px-3 py-1 bg-foreground/70 text-background backdrop-blur-sm">
-          {property.tipo_negocio}
-        </span>
-        <span className="absolute top-3 right-3 font-heading text-[10px] font-bold tracking-widest uppercase px-3 py-1 bg-foreground/70 text-background backdrop-blur-sm">
-          {property.estado}
+        {/* Badge */}
+        <span
+          className="absolute top-3 left-3 font-heading text-[11px] font-bold tracking-widest uppercase px-2.5 py-1 rounded"
+          style={{ background: "rgba(0,0,0,0.72)" }}
+        >
+          <span className="text-primary">{property.tipo_negocio}</span>
+          {property.zona && (
+            <>
+              <span className="text-white"> | </span>
+              <span className="text-primary">{property.zona}</span>
+            </>
+          )}
         </span>
       </div>
 

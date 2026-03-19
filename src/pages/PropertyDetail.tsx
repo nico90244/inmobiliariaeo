@@ -371,12 +371,12 @@ const PropertyDetail = () => {
 
             {/* Right column – sticky contact */}
             <div>
-              <div className="hidden lg:block sticky top-24">
+              <div className="hidden lg:flex flex-col gap-4 sticky top-20" style={{ maxHeight: "calc(100vh - 100px)", overflowY: "auto", scrollbarWidth: "none" }}>
                 <ContactCard property={property} />
                 <AppointmentBooking property={property} />
               </div>
               {/* Mobile */}
-              <div className="lg:hidden">
+              <div className="lg:hidden space-y-4">
                 <ContactCard property={property} />
                 <AppointmentBooking property={property} />
               </div>
