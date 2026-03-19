@@ -72,11 +72,13 @@ export type Database = {
           fotos: string[] | null
           habitaciones: number | null
           id: string
+          link_video: string | null
           link_whatsapp: string | null
           nombre_inmueble: string
           parqueadero: string | null
           piso: string | null
           precio: number | null
+          red_social_video: string | null
           tipo_inmueble: string
           tipo_negocio: string
           zona: string | null
@@ -96,11 +98,13 @@ export type Database = {
           fotos?: string[] | null
           habitaciones?: number | null
           id?: string
+          link_video?: string | null
           link_whatsapp?: string | null
           nombre_inmueble: string
           parqueadero?: string | null
           piso?: string | null
           precio?: number | null
+          red_social_video?: string | null
           tipo_inmueble: string
           tipo_negocio?: string
           zona?: string | null
@@ -120,11 +124,13 @@ export type Database = {
           fotos?: string[] | null
           habitaciones?: number | null
           id?: string
+          link_video?: string | null
           link_whatsapp?: string | null
           nombre_inmueble?: string
           parqueadero?: string | null
           piso?: string | null
           precio?: number | null
+          red_social_video?: string | null
           tipo_inmueble?: string
           tipo_negocio?: string
           zona?: string | null
