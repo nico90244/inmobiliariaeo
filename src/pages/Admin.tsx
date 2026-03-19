@@ -349,6 +349,9 @@ const Admin = () => {
           </>
         )}
 
+        {section === "citas-disponibilidad" && <AdminCitasDisponibilidad />}
+        {section === "citas-reservas" && <AdminCitasReservas />}
+
         {/* Property form modal */}
         <Dialog open={formOpen} onOpenChange={(o) => !o && setFormOpen(false)}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
