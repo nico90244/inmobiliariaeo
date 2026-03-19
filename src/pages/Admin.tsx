@@ -6,8 +6,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
 import {
-  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video,
+  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar,
 } from "lucide-react";
+import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
+import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -30,7 +32,8 @@ const Admin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const [section, setSection] = useState<"propiedades" | "captaciones">("propiedades");
+  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas">("propiedades");
+  const [pendingReservas, setPendingReservas] = useState(0);
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
   const [captaciones, setCaptaciones] = useState<Captacion[]>([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -58,12 +61,22 @@ const Admin = () => {
     if (user) loadData();
   }, [user, section]);
 
+  // Load pending reservas count
+  useEffect(() => {
+    if (!user) return;
+    const loadPending = async () => {
+      const { count } = await supabase.from("citas_reservas").select("*", { count: "exact", head: true }).eq("estado", "Pendiente");
+      setPendingReservas(count || 0);
+    };
+    loadPending();
+  }, [user, section]);
+
   const loadData = async () => {
     setLoadingData(true);
     if (section === "propiedades") {
       const { data } = await supabase.from("propiedades").select("*").order("fecha_creacion", { ascending: false });
       setPropiedades(data || []);
-    } else {
+    } else if (section === "captaciones") {
       const { data } = await supabase.from("captaciones").select("*").order("fecha_creacion", { ascending: false });
       setCaptaciones(data || []);
     }
@@ -210,6 +223,18 @@ const Admin = () => {
           <button onClick={() => setSection("captaciones")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "captaciones" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <FileText size={18} /> Captaciones
           </button>
+          <div className="pt-2 pb-1 px-4">
+            <span className="font-heading text-[10px] font-semibold tracking-widest text-secondary-foreground/40 uppercase">Citas</span>
+          </div>
+          <button onClick={() => setSection("citas-disponibilidad")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "citas-disponibilidad" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <Calendar size={18} /> Disponibilidad
+          </button>
+          <button onClick={() => setSection("citas-reservas")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors relative ${section === "citas-reservas" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <Calendar size={18} /> Reservas
+            {pendingReservas > 0 && (
+              <span className="ml-auto bg-destructive text-destructive-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{pendingReservas}</span>
+            )}
+          </button>
         </nav>
         <div className="p-4 border-t border-secondary-foreground/10">
           <button onClick={() => signOut().then(() => navigate("/"))} className="w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium text-secondary-foreground/60 hover:text-destructive transition-colors">
@@ -323,6 +348,9 @@ const Admin = () => {
             )}
           </>
         )}
+
+        {section === "citas-disponibilidad" && <AdminCitasDisponibilidad />}
+        {section === "citas-reservas" && <AdminCitasReservas />}
 
         {/* Property form modal */}
         <Dialog open={formOpen} onOpenChange={(o) => !o && setFormOpen(false)}>
