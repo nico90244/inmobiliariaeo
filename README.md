@@ -1,73 +1,141 @@
-# Welcome to your Lovable project
+# Inmobiliaria Eliana Osorio — Sitio Web Oficial
 
-## Project info
+Sitio web oficial de **Inmobiliaria Eliana Osorio**, 
+agencia de propiedad raíz con más de 10 años de 
+experiencia en Cali, Valle del Cauca, Colombia.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Venta, alquiler y asesoría jurídica de inmuebles 
+dentro y fuera de Colombia.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## Stack tecnológico
 
-**Use Lovable**
+- React + TypeScript + Vite
+- Tailwind CSS + shadcn/ui
+- Supabase (base de datos + autenticación + storage)
+- Lucide React (iconos)
+- React Router
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## Funcionalidades actuales
 
-**Use your preferred IDE**
+- Catálogo de propiedades en venta y alquiler
+- Filtros por tipo, zona, barrio y precio
+- Página de detalle con galería de fotos
+- Modal de lightbox para fotos
+- Panel de administración privado con login
+- Subida de fotos a Supabase Storage
+- Formulario de captación de inmuebles
+- Módulo de citas con calendario
+- Botón flotante WhatsApp y chatbot placeholder
+- Footer responsivo con redes sociales
+- Integración con WhatsApp directo
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## En desarrollo
 
-Follow these steps:
+- Chatbot "Eli" con IA usando N8N
+- Portal de pagos para arrendatarios
+- CRM completo integrado
+- Confirmaciones automáticas por WhatsApp
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Cómo contribuir
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. Haz fork de este repositorio
+2. Crea tu rama: 
+```bash
+   git checkout -b feature/nombre-de-tu-mejora
+```
+3. Copia el archivo de ejemplo de variables:
+```bash
+   cp .env.example .env
+```
+4. Llena tus propias credenciales de Supabase en `.env`
+5. Instala dependencias:
+```bash
+   npm install
+```
+6. Corre el proyecto:
+```bash
+   npm run dev
+```
+7. Haz commit de tus cambios y abre un Pull Request
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+---
+
+## Variables de entorno necesarias
+
+Crea un archivo `.env` en la raíz con estas variables:
+```
+VITE_SUPABASE_URL=tu_url_de_supabase
+VITE_SUPABASE_ANON_KEY=tu_anon_key_publica
 ```
 
-**Edit a file directly in GitHub**
+Puedes obtener estas credenciales creando un 
+proyecto gratuito en supabase.com
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## Estructura de la base de datos
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+El proyecto usa dos tablas principales en Supabase:
 
-## What technologies are used for this project?
+**propiedades** — Catálogo de inmuebles con fotos,
+características, precio y estado.
 
-This project is built with:
+**captaciones** — Formularios de propietarios 
+interesados en consignar su inmueble.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+**citas_disponibles** — Slots de disponibilidad 
+para visitas a inmuebles.
 
-## How can I deploy this project?
+**citas_reservas** — Reservas de visitas 
+realizadas por clientes.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+Los scripts SQL para crear las tablas están en 
+la carpeta `/supabase`.
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## Áreas donde necesitamos ayuda
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- Mejoras de UI/UX en móvil
+- Optimización de rendimiento y carga de imágenes
+- Accesibilidad (a11y)
+- Tests automatizados
+- Documentación de componentes
+- Integración con portales como Metrocuadrado 
+  y Finca Raíz
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## Contacto
+
+- Instagram: [@inmobiliaria_eo](https://instagram.com/inmobiliaria_eo)
+- WhatsApp: +57 316 222 5604
+- Web: [www.inmobiliariaeo.com](https://www.inmobiliariaeo.com)
+- Cali, Valle del Cauca, Colombia
+
+---
+
+*Desarrollado con amor en Cali, Colombia*
+```
+
+Guarda el README con commit message: `docs: actualizar README con instrucciones de contribución`
+
+---
+
+## PASO 4 — Crear archivo .env.example
+
+En GitHub haz clic en **"Add file" → "Create new file"**, nómbralo `.env.example` y pega esto:
+```
+# Copia este archivo como .env y llena tus valores
+# Obtén estas credenciales en supabase.com
+
+VITE_SUPABASE_URL=tu_url_de_supabase_aqui
+VITE_SUPABASE_ANON_KEY=tu_anon_key_publica_aqui
