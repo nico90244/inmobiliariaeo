@@ -122,6 +122,10 @@ const Admin = () => {
       toast({ title: "Nombre y tipo de inmueble son requeridos", variant: "destructive" });
       return;
     }
+    if (form.red_social_video && form.link_video && !form.link_video.startsWith("https://")) {
+      toast({ title: "El link del video debe empezar con https://", variant: "destructive" });
+      return;
+    }
     setSaving(true);
 
     try {
