@@ -223,6 +223,18 @@ const Admin = () => {
           <button onClick={() => setSection("captaciones")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "captaciones" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <FileText size={18} /> Captaciones
           </button>
+          <div className="pt-2 pb-1 px-4">
+            <span className="font-heading text-[10px] font-semibold tracking-widest text-secondary-foreground/40 uppercase">Citas</span>
+          </div>
+          <button onClick={() => setSection("citas-disponibilidad")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "citas-disponibilidad" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <Calendar size={18} /> Disponibilidad
+          </button>
+          <button onClick={() => setSection("citas-reservas")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors relative ${section === "citas-reservas" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <Calendar size={18} /> Reservas
+            {pendingReservas > 0 && (
+              <span className="ml-auto bg-destructive text-destructive-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{pendingReservas}</span>
+            )}
+          </button>
         </nav>
         <div className="p-4 border-t border-secondary-foreground/10">
           <button onClick={() => signOut().then(() => navigate("/"))} className="w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium text-secondary-foreground/60 hover:text-destructive transition-colors">
