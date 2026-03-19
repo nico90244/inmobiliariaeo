@@ -405,8 +405,21 @@ const Admin = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Administración</label>
-                  <input type="number" value={form.administracion || 0} onChange={(e) => updateField("administracion", Number(e.target.value))} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Incluye administración?</label>
+                  <select
+                    value={(form.administracion ?? 0) > 0 ? "si" : "no"}
+                    onChange={(e) => updateField("administracion", e.target.value === "si" ? (form.administracion && form.administracion > 0 ? form.administracion : 1) : 0)}
+                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                  >
+                    <option value="no">No</option>
+                    <option value="si">Sí</option>
+                  </select>
+                  {(form.administracion ?? 0) > 0 && (
+                    <div className="mt-2">
+                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor administración</label>
+                      <input type="number" value={form.administracion || 0} onChange={(e) => updateField("administracion", Number(e.target.value))} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
