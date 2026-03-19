@@ -12,7 +12,8 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [signupSuccess, setSignupSuccess] = useState("");
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
