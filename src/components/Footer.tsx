@@ -22,11 +22,12 @@ const navLinks = [
 
 
 const serviceLinks = [
-"Venta de inmuebles",
-"Alquiler",
-"Asesoría jurídica",
-"Acompañamiento notarial",
-"Administración de arriendos"];
+  { label: "Venta de inmuebles", to: "/venta" },
+  { label: "Alquiler", to: "/alquiler" },
+  { label: "Asesoría jurídica", to: "/servicios" },
+  { label: "Acompañamiento notarial", to: "/servicios" },
+  { label: "Administración de arriendos", to: "/servicios" },
+];
 
 
 const AccordionSection = ({ title, children }: {title: string;children: React.ReactNode;}) => {
@@ -76,8 +77,10 @@ const Footer = () => {
           <AccordionSection title="Servicios">
             <ul className="space-y-3">
               {serviceLinks.map((s) =>
-              <li key={s}>
-                  <span className="font-body text-sm text-secondary-foreground/60">{s}</span>
+              <li key={s.label}>
+                  <Link to={s.to} className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">
+                    {s.label}
+                  </Link>
                 </li>
               )}
             </ul>

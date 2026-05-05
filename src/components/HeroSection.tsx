@@ -20,7 +20,7 @@ const HeroSection = () => {
       <div className="container relative z-10 mx-auto px-6 lg:px-12">
         <div className="max-w-3xl mb-16">
           <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight mb-6">
-            Tu hogar en Cali,{" "}
+            Tu hogar{" "}
             <span className="text-primary">con respaldo jurídico</span>
           </h1>
           <p className="font-body text-lg md:text-xl text-primary-foreground/80">

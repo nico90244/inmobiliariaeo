@@ -24,6 +24,7 @@ const emptyForm: Partial<Propiedad> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
   area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "", estrato: 0, administracion: 0, descripcion: "",
   estado: "Disponible", foto_portada: "", fotos: [], link_whatsapp: "", red_social_video: "", link_video: "",
+  destacada: false,
 };
 
 const Admin = () => {
@@ -388,6 +389,19 @@ const Admin = () => {
                     <option value="Vendido">Vendido</option>
                   </select>
                 </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <label className="flex items-center gap-3 border border-foreground/10 py-2 px-3 cursor-pointer hover:bg-muted/30 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={!!form.destacada}
+                    onChange={(e) => updateField("destacada" as any, e.target.checked)}
+                    className="w-4 h-4 accent-primary"
+                  />
+                  <span className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+                    Propiedad destacada (se muestra en inicio)
+                  </span>
+                </label>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div>

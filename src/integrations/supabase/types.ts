@@ -153,6 +153,7 @@ export type Database = {
           barrio: string | null
           ciudad: string | null
           descripcion: string | null
+          destacada: boolean
           direccion: string | null
           estado: string
           estrato: number | null
@@ -180,6 +181,7 @@ export type Database = {
           barrio?: string | null
           ciudad?: string | null
           descripcion?: string | null
+          destacada?: boolean
           direccion?: string | null
           estado?: string
           estrato?: number | null
@@ -207,6 +209,7 @@ export type Database = {
           barrio?: string | null
           ciudad?: string | null
           descripcion?: string | null
+          destacada?: boolean
           direccion?: string | null
           estado?: string
           estrato?: number | null

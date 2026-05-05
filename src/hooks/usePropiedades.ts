@@ -12,6 +12,7 @@ export const usePropiedades = (filters?: {
   precioMin?: number;
   precioMax?: number;
   allStates?: boolean;
+  destacada?: boolean;
 }) => {
   return useQuery({
     queryKey: ["propiedades", filters],
@@ -20,6 +21,10 @@ export const usePropiedades = (filters?: {
 
       if (!filters?.allStates) {
         query = query.eq("estado", "Disponible");
+      }
+
+      if (filters?.destacada) {
+        query = query.eq("destacada", true);
       }
 
       if (filters?.tipo_negocio) {
