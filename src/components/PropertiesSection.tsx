@@ -19,7 +19,7 @@ const fallbackProperties: Propiedad[] = [
 ];
 
 const PropertiesSection = () => {
-  const { data, isLoading, error } = usePropiedades();
+  const { data, isLoading, error } = usePropiedades({ destacada: true });
   const properties = data && data.length > 0 ? data : fallbackProperties;
 
   return (
@@ -27,7 +27,7 @@ const PropertiesSection = () => {
       <div className="container mx-auto px-6 lg:px-12">
         <div className="max-w-3xl mb-16">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
-            Propiedades
+            Propiedades Destacadas
           </h2>
           <p className="font-body text-lg text-muted-foreground">
             Descubre inmuebles seleccionados en las mejores zonas de Cali y el Valle del Cauca.
