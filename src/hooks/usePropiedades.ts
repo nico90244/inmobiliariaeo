@@ -12,6 +12,7 @@ export const usePropiedades = (filters?: {
   precioMin?: number;
   precioMax?: number;
   allStates?: boolean;
+  destacada?: boolean;
 }) => {
   return useQuery({
     queryKey: ["propiedades", filters],
