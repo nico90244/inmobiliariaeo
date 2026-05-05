@@ -23,6 +23,10 @@ export const usePropiedades = (filters?: {
         query = query.eq("estado", "Disponible");
       }
 
+      if (filters?.destacada) {
+        query = query.eq("destacada", true);
+      }
+
       if (filters?.tipo_negocio) {
         query = query.eq("tipo_negocio", filters.tipo_negocio);
       }
