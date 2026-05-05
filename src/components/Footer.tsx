@@ -77,8 +77,10 @@ const Footer = () => {
           <AccordionSection title="Servicios">
             <ul className="space-y-3">
               {serviceLinks.map((s) =>
-              <li key={s}>
-                  <span className="font-body text-sm text-secondary-foreground/60">{s}</span>
+              <li key={s.label}>
+                  <Link to={s.to} className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">
+                    {s.label}
+                  </Link>
                 </li>
               )}
             </ul>
