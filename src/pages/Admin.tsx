@@ -390,6 +390,19 @@ const Admin = () => {
                   </select>
                 </div>
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <label className="flex items-center gap-3 border border-foreground/10 py-2 px-3 cursor-pointer hover:bg-muted/30 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={!!form.destacada}
+                    onChange={(e) => updateField("destacada" as any, e.target.checked)}
+                    className="w-4 h-4 accent-primary"
+                  />
+                  <span className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+                    Propiedad destacada (se muestra en inicio)
+                  </span>
+                </label>
+              </div>
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Ciudad</label>
