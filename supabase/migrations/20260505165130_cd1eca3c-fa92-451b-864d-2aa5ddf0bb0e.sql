@@ -1,0 +1,2 @@
+ALTER TABLE public.propiedades ADD COLUMN IF NOT EXISTS destacada boolean NOT NULL DEFAULT false;
+CREATE INDEX IF NOT EXISTS idx_propiedades_destacada ON public.propiedades(destacada) WHERE destacada = true;
