@@ -22,11 +22,12 @@ const navLinks = [
 
 
 const serviceLinks = [
-"Venta de inmuebles",
-"Alquiler",
-"Asesoría jurídica",
-"Acompañamiento notarial",
-"Administración de arriendos"];
+  { label: "Venta de inmuebles", to: "/venta" },
+  { label: "Alquiler", to: "/alquiler" },
+  { label: "Asesoría jurídica", to: "/servicios" },
+  { label: "Acompañamiento notarial", to: "/servicios" },
+  { label: "Administración de arriendos", to: "/servicios" },
+];
 
 
 const AccordionSection = ({ title, children }: {title: string;children: React.ReactNode;}) => {
