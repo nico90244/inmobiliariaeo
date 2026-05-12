@@ -95,7 +95,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
 
       {/* Mobile carousel */}
       <div className="md:hidden relative">
-        <img src={photos[mobileIdx]} alt={`Foto ${mobileIdx + 1}`} className="w-full h-72 object-cover" onClick={() => setLightboxIdx(mobileIdx)} />
+        <img src={photos[mobileIdx]} alt={`Foto ${mobileIdx + 1} de la propiedad`} className="w-full h-72 object-cover" onClick={() => setLightboxIdx(mobileIdx)} />
         {photos.length > 1 && (
           <>
             <button onClick={() => setMobileIdx((i) => (i - 1 + photos.length) % photos.length)} className="absolute left-2 top-1/2 -translate-y-1/2 bg-foreground/50 text-primary-foreground p-1" aria-label="Anterior">
