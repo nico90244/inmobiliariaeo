@@ -77,7 +77,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
       {/* Desktop */}
       <div className="hidden md:grid grid-cols-5 gap-2 h-[480px]">
         <div className="col-span-3 cursor-pointer overflow-hidden" onClick={() => setLightboxIdx(0)}>
-          <img src={photos[0]} alt="Principal" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+          <img src={photos[0]} alt="Foto principal de la propiedad" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
         </div>
         <div className="col-span-2 grid grid-cols-2 grid-rows-2 gap-2">
           {photos.slice(1, maxThumbs + 1).map((p, i) => (
