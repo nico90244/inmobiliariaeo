@@ -2,6 +2,7 @@ import { Home, Key, Scale, FileCheck } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SEO from "@/components/SEO";
 
 const services = [
   { icon: Home, number: "01", title: "Venta de inmuebles", description: "Gestionamos la venta de tu propiedad con estrategia de mercado, fotografía profesional y presencia en los principales portales inmobiliarios como Metrocuadrado y Finca Raíz." },
