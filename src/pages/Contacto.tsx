@@ -4,6 +4,23 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SEO from "@/components/SEO";
+
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "Inmobiliaria Eliana Osorio",
+  image: "https://inmobiliariaeo.lovable.app/logo.png",
+  telephone: "+57 318 653 1598",
+  email: "info@inmobiliariaeo.com",
+  url: "https://inmobiliariaeo.lovable.app/contacto",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Cali",
+    addressRegion: "Valle del Cauca",
+    addressCountry: "CO",
+  },
+};
 
 const Contacto = () => {
   const [name, setName] = useState("");
