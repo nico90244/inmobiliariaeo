@@ -50,10 +50,11 @@ const HeroSection = () => {
             </div>
 
             <div>
-              <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label htmlFor="hero-inmueble" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Inmueble
               </label>
               <select
+                id="hero-inmueble"
                 value={inmueble}
                 onChange={(e) => setInmueble(e.target.value)}
                 className="w-full bg-transparent border-b border-foreground/20 py-2 font-body text-sm text-foreground focus:border-primary focus:outline-none transition-colors"
@@ -66,10 +67,11 @@ const HeroSection = () => {
             </div>
 
             <div>
-              <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label htmlFor="hero-barrio" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Barrio
               </label>
               <input
+                id="hero-barrio"
                 type="text"
                 value={barrio}
                 onChange={(e) => setBarrio(e.target.value)}
@@ -79,10 +81,11 @@ const HeroSection = () => {
             </div>
 
             <div>
-              <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label htmlFor="hero-precio-min" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Precio mín.
               </label>
               <input
+                id="hero-precio-min"
                 type="text"
                 value={precioMin}
                 onChange={(e) => setPrecioMin(e.target.value)}
@@ -92,10 +95,11 @@ const HeroSection = () => {
             </div>
 
             <div>
-              <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label htmlFor="hero-precio-max" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Precio máx.
               </label>
               <input
+                id="hero-precio-max"
                 type="text"
                 value={precioMax}
                 onChange={(e) => setPrecioMax(e.target.value)}
