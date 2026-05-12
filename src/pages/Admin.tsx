@@ -215,7 +215,7 @@ const Admin = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-secondary text-secondary-foreground flex flex-col flex-shrink-0">
         <div className="p-6 border-b border-secondary-foreground/10">
-          <img src={logo} alt="EO" className="h-10 w-auto brightness-0 invert" />
+          <img src={logo} alt="Logo Inmobiliaria EO" className="h-10 w-auto brightness-0 invert" />
         </div>
         <nav className="flex-1 p-4 space-y-1">
           <button onClick={() => setSection("propiedades")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "propiedades" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
