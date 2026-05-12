@@ -3,6 +3,7 @@ import { Check, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SEO from "@/components/SEO";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
