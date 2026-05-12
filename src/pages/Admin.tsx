@@ -515,7 +515,7 @@ const Admin = () => {
                 <div className="flex items-center gap-4">
                   {coverPreview && (
                     <div className="relative w-24 h-16 border border-foreground/10 overflow-hidden">
-                      <img src={coverPreview} alt="Portada" className="w-full h-full object-cover" />
+                      <img src={coverPreview} alt="Foto de portada del inmueble" className="w-full h-full object-cover" />
                       <button onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); }} className="absolute top-0 right-0 bg-destructive text-white p-0.5"><X size={12} /></button>
                     </div>
                   )}
