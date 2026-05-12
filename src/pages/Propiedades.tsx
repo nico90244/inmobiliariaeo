@@ -36,9 +36,12 @@ const Propiedades = () => {
   };
 
   const title = tipoNegocio === "Venta" ? "Propiedades en Venta" : tipoNegocio === "Alquiler" ? "Propiedades en Alquiler" : "Todas las Propiedades";
+  const seoTitle = tipoNegocio === "Venta" ? "Casas y apartamentos en venta en Cali | Inmobiliaria EO" : tipoNegocio === "Alquiler" ? "Inmuebles en alquiler en Cali | Inmobiliaria EO" : "Catálogo de propiedades en Cali y Valle | Inmobiliaria EO";
+  const seoDesc = tipoNegocio === "Venta" ? "Explora casas, apartamentos y locales en venta en Cali y el Valle del Cauca con asesoría jurídica integral." : tipoNegocio === "Alquiler" ? "Apartamentos, casas y locales en alquiler en Cali y el Valle del Cauca. Filtra por barrio, tipo y precio." : "Encuentra tu inmueble ideal en Cali y el Valle del Cauca. Filtra por barrio, tipo de inmueble y precio.";
 
   return (
     <>
+      <SEO title={seoTitle} description={seoDesc} path={location.pathname} />
       <Header solid />
       <main className="pt-20">
         {/* Banner */}
