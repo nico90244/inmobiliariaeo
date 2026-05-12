@@ -274,8 +274,37 @@ const PropertyDetail = () => {
     return "Sí";
   };
 
+  const seoTitle = `${property.nombre_inmueble} en ${property.tipo_negocio} | ${property.barrio || property.ciudad || "Cali"}`.slice(0, 60);
+  const seoDesc = (property.descripcion?.slice(0, 155) ||
+    `${property.tipo_inmueble} en ${property.tipo_negocio.toLowerCase()} en ${property.barrio || property.ciudad || "Cali"}. ${property.area_m2 ? property.area_m2 + " m². " : ""}${property.habitaciones ? property.habitaciones + " hab. " : ""}Precio: ${formatPrice(property.precio)}.`).slice(0, 160);
+  const propertyJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: property.nombre_inmueble,
+    description: property.descripcion || seoDesc,
+    image: allPhotos,
+    offers: property.precio
+      ? {
+          "@type": "Offer",
+          price: property.precio,
+          priceCurrency: "COP",
+          availability: "https://schema.org/InStock",
+          url: `https://inmobiliariaeo.lovable.app/propiedades/${property.id}`,
+        }
+      : undefined,
+    brand: { "@type": "Organization", name: "Inmobiliaria Eliana Osorio" },
+  };
+
   return (
     <>
+      <SEO
+        title={seoTitle}
+        description={seoDesc}
+        path={`/propiedades/${property.id}`}
+        image={property.foto_portada || undefined}
+        type="product"
+        jsonLd={propertyJsonLd}
+      />
       <Header solid />
       <main className="pt-20">
         <div className="container mx-auto px-6 lg:px-10 pt-4 pb-2">
