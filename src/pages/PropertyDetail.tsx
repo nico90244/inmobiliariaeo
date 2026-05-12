@@ -49,7 +49,7 @@ const Lightbox = ({ photos, initialIndex, onClose }: { photos: string[]; initial
       </button>
       <img
         src={photos[idx]}
-        alt={`Foto ${idx + 1}`}
+        alt={`Foto ${idx + 1} de la propiedad`}
         className="max-h-[85vh] max-w-[90vw] object-contain"
         onClick={(e) => e.stopPropagation()}
       />
