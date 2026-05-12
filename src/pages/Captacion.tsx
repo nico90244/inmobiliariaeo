@@ -90,6 +90,11 @@ const Captacion = () => {
 
   return (
     <>
+      <SEO
+        title="Capta tu inmueble con asesoría jurídica | Inmobiliaria EO"
+        description="Publica tu inmueble en venta o alquiler con publicidad en los principales portales y asesoría legal incluida en Cali y el Valle."
+        path="/captacion"
+      />
       <Header />
       <main className="pt-20">
         <section className="py-16 md:py-24">
