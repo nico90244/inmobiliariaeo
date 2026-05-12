@@ -14,6 +14,11 @@ const services = [
 const Servicios = () => {
   return (
     <>
+      <SEO
+        title="Servicios inmobiliarios y jurídicos | Inmobiliaria EO"
+        description="Venta, alquiler, asesoría jurídica y acompañamiento notarial en Cali y el Valle del Cauca. Acompañamiento integral en cada transacción."
+        path="/servicios"
+      />
       <Header />
       <main className="pt-20">
         <section className="py-16 md:py-24">
