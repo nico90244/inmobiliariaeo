@@ -82,7 +82,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
         <div className="col-span-2 grid grid-cols-2 grid-rows-2 gap-2">
           {photos.slice(1, maxThumbs + 1).map((p, i) => (
             <div key={i} className="relative cursor-pointer overflow-hidden" onClick={() => setLightboxIdx(i + 1)}>
-              <img src={p} alt={`Foto ${i + 2}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              <img src={p} alt={`Foto ${i + 2} de la propiedad`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               {i === maxThumbs - 1 && extra > 0 && (
                 <div className="absolute inset-0 bg-foreground/60 flex items-center justify-center">
                   <span className="text-primary-foreground font-heading text-sm font-semibold tracking-widest">Ver todas +{extra}</span>
