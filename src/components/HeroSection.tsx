@@ -13,7 +13,7 @@ const HeroSection = () => {
   return (
     <section id="inicio" className="relative min-h-screen flex items-end pb-24 pt-20">
       <div className="absolute inset-0 z-0">
-        <img src={heroBg} alt="" className="w-full h-full object-cover" />
+        <img src={heroBg} alt="" width={1920} height={1080} fetchPriority="high" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-secondary/60" />
       </div>
 
