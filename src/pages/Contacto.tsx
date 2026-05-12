@@ -38,6 +38,12 @@ const Contacto = () => {
 
   return (
     <>
+      <SEO
+        title="Contacto | Inmobiliaria Eliana Osorio"
+        description="Contáctanos por WhatsApp, teléfono o correo. Asesoría inmobiliaria y jurídica en Cali y el Valle del Cauca."
+        path="/contacto"
+        jsonLd={localBusinessJsonLd}
+      />
       <Header />
       <main className="pt-20">
         <section className="py-16 md:py-24">
