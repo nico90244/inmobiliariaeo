@@ -532,7 +532,7 @@ const Admin = () => {
                 <div className="flex flex-wrap gap-3 mb-3">
                   {galleryPreviews.map((url, i) => (
                     <div key={i} className="relative w-20 h-14 border border-foreground/10 overflow-hidden">
-                      <img src={url} alt="" className="w-full h-full object-cover" />
+                      <img src={url} alt={`Foto ${i + 1} de la galería`} className="w-full h-full object-cover" />
                       <button onClick={() => removeGalleryImage(i)} className="absolute top-0 right-0 bg-destructive text-white p-0.5"><X size={12} /></button>
                     </div>
                   ))}
