@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Josefin+Sans:wght@300;400;600;700&display=swap');
-@import url('https://fonts.cdnfonts.com/css/catchy-mager');
+@import url('https://fonts.cdnfonts.com/css/catchy-mager?display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -23,7 +23,7 @@
     --secondary-foreground: 43 33% 97%;
 
     --muted: 40 10% 90%;
-    --muted-foreground: 200 3% 45%;
+    --muted-foreground: 0 0% 32%;
 
     --accent: 40 47% 50%;
     --accent-foreground: 43 33% 97%;

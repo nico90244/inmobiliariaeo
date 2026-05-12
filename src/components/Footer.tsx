@@ -38,10 +38,10 @@ const AccordionSection = ({ title, children }: {title: string;children: React.Re
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-4 lg:hidden">
         
-        <h4 className="font-heading text-sm font-semibold tracking-widest uppercase text-primary">{title}</h4>
+        <h3 className="font-heading text-sm font-semibold tracking-widest uppercase text-primary">{title}</h3>
         <ChevronDown size={16} className={`text-primary transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
-      <h4 className="hidden lg:block font-heading text-sm font-semibold tracking-widest uppercase text-primary mb-6">{title}</h4>
+      <h3 className="hidden lg:block font-heading text-sm font-semibold tracking-widest uppercase text-primary mb-6">{title}</h3>
       <div className={`${open ? "block" : "hidden"} lg:block pb-4 lg:pb-0`}>
         {children}
       </div>

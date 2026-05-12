@@ -35,6 +35,7 @@ const WhatsAppButton = () => {
         <div className="fixed bottom-24 left-6 z-50 w-80 bg-background border border-foreground/10 shadow-2xl p-6 animate-fade-in-up">
           <button
             onClick={() => setChatOpen(false)}
+            aria-label="Cerrar chat de Eli"
             className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"
           >
             <X size={18} />

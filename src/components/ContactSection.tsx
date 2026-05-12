@@ -32,10 +32,11 @@ const ContactSection = () => {
 
             <form onSubmit={handleSubmit} className="space-y-8 max-w-lg">
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
+                <label htmlFor="contact-name" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
                   Nombre
                 </label>
                 <input
+                  id="contact-name"
                   type="text"
                   required
                   value={name}
@@ -45,10 +46,11 @@ const ContactSection = () => {
               </div>
 
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
+                <label htmlFor="contact-phone" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
                   Teléfono
                 </label>
                 <input
+                  id="contact-phone"
                   type="tel"
                   required
                   value={phone}
@@ -58,10 +60,11 @@ const ContactSection = () => {
               </div>
 
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
+                <label htmlFor="contact-message" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
                   Mensaje
                 </label>
                 <textarea
+                  id="contact-message"
                   required
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}

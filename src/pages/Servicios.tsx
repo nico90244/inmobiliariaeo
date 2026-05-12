@@ -2,6 +2,7 @@ import { Home, Key, Scale, FileCheck } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SEO from "@/components/SEO";
 
 const services = [
   { icon: Home, number: "01", title: "Venta de inmuebles", description: "Gestionamos la venta de tu propiedad con estrategia de mercado, fotografía profesional y presencia en los principales portales inmobiliarios como Metrocuadrado y Finca Raíz." },
@@ -13,6 +14,11 @@ const services = [
 const Servicios = () => {
   return (
     <>
+      <SEO
+        title="Servicios inmobiliarios y jurídicos | Inmobiliaria EO"
+        description="Venta, alquiler, asesoría jurídica y acompañamiento notarial en Cali y el Valle del Cauca. Acompañamiento integral en cada transacción."
+        path="/servicios"
+      />
       <Header />
       <main className="pt-20">
         <section className="py-16 md:py-24">

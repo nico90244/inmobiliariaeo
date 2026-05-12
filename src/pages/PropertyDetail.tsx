@@ -11,6 +11,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import AppointmentBooking from "@/components/AppointmentBooking";
+import SEO from "@/components/SEO";
 import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { usePropiedades } from "@/hooks/usePropiedades";
@@ -48,7 +49,7 @@ const Lightbox = ({ photos, initialIndex, onClose }: { photos: string[]; initial
       </button>
       <img
         src={photos[idx]}
-        alt={`Foto ${idx + 1}`}
+        alt={`Foto ${idx + 1} de la propiedad`}
         className="max-h-[85vh] max-w-[90vw] object-contain"
         onClick={(e) => e.stopPropagation()}
       />
@@ -76,12 +77,12 @@ const Gallery = ({ photos }: { photos: string[] }) => {
       {/* Desktop */}
       <div className="hidden md:grid grid-cols-5 gap-2 h-[480px]">
         <div className="col-span-3 cursor-pointer overflow-hidden" onClick={() => setLightboxIdx(0)}>
-          <img src={photos[0]} alt="Principal" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+          <img src={photos[0]} alt="Foto principal de la propiedad" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
         </div>
         <div className="col-span-2 grid grid-cols-2 grid-rows-2 gap-2">
           {photos.slice(1, maxThumbs + 1).map((p, i) => (
             <div key={i} className="relative cursor-pointer overflow-hidden" onClick={() => setLightboxIdx(i + 1)}>
-              <img src={p} alt={`Foto ${i + 2}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              <img src={p} alt={`Foto ${i + 2} de la propiedad`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               {i === maxThumbs - 1 && extra > 0 && (
                 <div className="absolute inset-0 bg-foreground/60 flex items-center justify-center">
                   <span className="text-primary-foreground font-heading text-sm font-semibold tracking-widest">Ver todas +{extra}</span>
@@ -94,7 +95,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
 
       {/* Mobile carousel */}
       <div className="md:hidden relative">
-        <img src={photos[mobileIdx]} alt={`Foto ${mobileIdx + 1}`} className="w-full h-72 object-cover" onClick={() => setLightboxIdx(mobileIdx)} />
+        <img src={photos[mobileIdx]} alt={`Foto ${mobileIdx + 1} de la propiedad`} className="w-full h-72 object-cover" onClick={() => setLightboxIdx(mobileIdx)} />
         {photos.length > 1 && (
           <>
             <button onClick={() => setMobileIdx((i) => (i - 1 + photos.length) % photos.length)} className="absolute left-2 top-1/2 -translate-y-1/2 bg-foreground/50 text-primary-foreground p-1" aria-label="Anterior">
@@ -273,8 +274,37 @@ const PropertyDetail = () => {
     return "Sí";
   };
 
+  const seoTitle = `${property.nombre_inmueble} en ${property.tipo_negocio} | ${property.barrio || property.ciudad || "Cali"}`.slice(0, 60);
+  const seoDesc = (property.descripcion?.slice(0, 155) ||
+    `${property.tipo_inmueble} en ${property.tipo_negocio.toLowerCase()} en ${property.barrio || property.ciudad || "Cali"}. ${property.area_m2 ? property.area_m2 + " m². " : ""}${property.habitaciones ? property.habitaciones + " hab. " : ""}Precio: ${formatPrice(property.precio)}.`).slice(0, 160);
+  const propertyJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: property.nombre_inmueble,
+    description: property.descripcion || seoDesc,
+    image: allPhotos,
+    offers: property.precio
+      ? {
+          "@type": "Offer",
+          price: property.precio,
+          priceCurrency: "COP",
+          availability: "https://schema.org/InStock",
+          url: `https://inmobiliariaeo.lovable.app/propiedades/${property.id}`,
+        }
+      : undefined,
+    brand: { "@type": "Organization", name: "Inmobiliaria Eliana Osorio" },
+  };
+
   return (
     <>
+      <SEO
+        title={seoTitle}
+        description={seoDesc}
+        path={`/propiedades/${property.id}`}
+        image={property.foto_portada || undefined}
+        type="product"
+        jsonLd={propertyJsonLd}
+      />
       <Header solid />
       <main className="pt-20">
         <div className="container mx-auto px-6 lg:px-10 pt-4 pb-2">

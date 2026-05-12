@@ -3,6 +3,7 @@ import { Check, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SEO from "@/components/SEO";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
@@ -89,6 +90,11 @@ const Captacion = () => {
 
   return (
     <>
+      <SEO
+        title="Capta tu inmueble con asesoría jurídica | Inmobiliaria EO"
+        description="Publica tu inmueble en venta o alquiler con publicidad en los principales portales y asesoría legal incluida en Cali y el Valle."
+        path="/captacion"
+      />
       <Header />
       <main className="pt-20">
         <section className="py-16 md:py-24">

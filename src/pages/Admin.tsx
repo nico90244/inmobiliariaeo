@@ -215,7 +215,7 @@ const Admin = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-secondary text-secondary-foreground flex flex-col flex-shrink-0">
         <div className="p-6 border-b border-secondary-foreground/10">
-          <img src={logo} alt="EO" className="h-10 w-auto brightness-0 invert" />
+          <img src={logo} alt="Logo Inmobiliaria EO" className="h-10 w-auto brightness-0 invert" />
         </div>
         <nav className="flex-1 p-4 space-y-1">
           <button onClick={() => setSection("propiedades")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "propiedades" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
@@ -515,7 +515,7 @@ const Admin = () => {
                 <div className="flex items-center gap-4">
                   {coverPreview && (
                     <div className="relative w-24 h-16 border border-foreground/10 overflow-hidden">
-                      <img src={coverPreview} alt="Portada" className="w-full h-full object-cover" />
+                      <img src={coverPreview} alt="Foto de portada del inmueble" className="w-full h-full object-cover" />
                       <button onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); }} className="absolute top-0 right-0 bg-destructive text-white p-0.5"><X size={12} /></button>
                     </div>
                   )}
@@ -532,7 +532,7 @@ const Admin = () => {
                 <div className="flex flex-wrap gap-3 mb-3">
                   {galleryPreviews.map((url, i) => (
                     <div key={i} className="relative w-20 h-14 border border-foreground/10 overflow-hidden">
-                      <img src={url} alt="" className="w-full h-full object-cover" />
+                      <img src={url} alt={`Foto ${i + 1} de la galería`} className="w-full h-full object-cover" />
                       <button onClick={() => removeGalleryImage(i)} className="absolute top-0 right-0 bg-destructive text-white p-0.5"><X size={12} /></button>
                     </div>
                   ))}
