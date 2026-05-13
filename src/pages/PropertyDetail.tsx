@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Loader2, AlertCircle, ArrowLeft, Maximize2, Bed, Bath, Building2, Car,
   DollarSign, MapPin, Play, Video, Phone, Share2, Copy, X, ChevronLeft,
-  ChevronRight,
+  ChevronRight, FileText,
 } from "lucide-react";
+import { generatePropertyPDF } from "@/lib/generatePropertyPDF";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
