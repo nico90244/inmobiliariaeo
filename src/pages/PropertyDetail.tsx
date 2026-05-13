@@ -179,6 +179,13 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
       </a>
       <p className="font-body text-xs text-muted-foreground text-center mt-2">Respuesta inmediata en horario laboral</p>
 
+      <button
+        onClick={() => generatePropertyPDF(property).catch(() => toast({ title: "Error", description: "No se pudo generar el PDF.", variant: "destructive" }))}
+        className="mt-4 w-full py-3 bg-foreground text-background font-heading text-xs font-semibold tracking-widest uppercase hover:bg-foreground/90 transition-colors flex items-center justify-center gap-2"
+      >
+        <FileText size={16} /> Descargar Ficha Técnica (PDF)
+      </button>
+
       <div className="mt-6 pt-4 border-t border-foreground/10 flex items-center gap-3">
         <span className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Compartir:</span>
         <button onClick={handleCopyLink} className="text-primary hover:text-primary/70 transition-colors" aria-label="Copiar link"><Copy size={18} /></button>
