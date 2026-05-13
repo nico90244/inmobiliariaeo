@@ -451,8 +451,25 @@ const Admin = () => {
                   <input type="text" value={form.piso || ""} onChange={(e) => updateField("piso", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Parqueadero</label>
-                  <input type="text" value={form.parqueadero || ""} onChange={(e) => updateField("parqueadero", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Parqueadero?</label>
+                  <select
+                    value={form.parqueadero && form.parqueadero !== "No" ? "Si" : (form.parqueadero === "No" ? "No" : "")}
+                    onChange={(e) => updateField("parqueadero", e.target.value === "Si" ? "Carro" : "No")}
+                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                  >
+                    <option value="">Seleccionar</option>
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                  {form.parqueadero && form.parqueadero !== "No" && (
+                    <select
+                      value={parqueaderoTipos.includes(form.parqueadero) ? form.parqueadero : "Carro"}
+                      onChange={(e) => updateField("parqueadero", e.target.value)}
+                      className="mt-2 w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    >
+                      {parqueaderoTipos.map((t) => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  )}
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
