@@ -37,6 +37,7 @@ const App = () => (
               <Route path="/contacto" element={<Contacto />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/mapa-del-sitio" element={<Sitemap />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
