@@ -279,7 +279,8 @@ const PropertyDetail = () => {
     if (!val) return null;
     const lower = val.toLowerCase();
     if (lower === "no" || lower === "0" || lower === "false") return "No";
-    return "Sí";
+    if (lower === "si" || lower === "sí" || lower === "true" || lower === "1") return "Sí";
+    return `Sí · ${val}`;
   };
 
   const seoTitle = `${property.nombre_inmueble} en ${property.tipo_negocio} | ${property.barrio || property.ciudad || "Cali"}`.slice(0, 60);

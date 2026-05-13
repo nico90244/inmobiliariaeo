@@ -20,6 +20,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
           src={property.foto_portada || "/placeholder.svg"}
           alt={property.nombre_inmueble}
           className="w-full h-full object-cover"
+          style={{ objectPosition: `center ${(property as any).foto_portada_pos || "center"}` }}
           loading="lazy"
         />
         {/* Badge */}

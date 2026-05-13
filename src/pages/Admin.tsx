@@ -19,12 +19,16 @@ type Propiedad = Tables<"propiedades">;
 type Captacion = Tables<"captaciones">;
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote", "Bodega", "Oficina"];
+const zonas = ["Norte", "Sur", "Oeste", "Oriente", "Nororiente", "Sureste", "Centro"];
+const ciudades = ["Cali", "Palmira", "Jamundi", "Yumbo", "Pereira", "Armenia", "Buga", "Tulua"];
+const parqueaderoTipos = ["Carro", "Moto", "Carro y Moto"];
+const WA_PREFIX = "https://wa.me/573162225604?text=";
 
 const emptyForm: Partial<Propiedad> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
-  area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "", estrato: 0, administracion: 0, descripcion: "",
+  area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "No", estrato: 0, administracion: 0, descripcion: "",
   estado: "Disponible", foto_portada: "", fotos: [], link_whatsapp: "", red_social_video: "", link_video: "",
-  destacada: false,
+  destacada: false, ciudad: "Cali",
 };
 
 const Admin = () => {
@@ -406,7 +410,9 @@ const Admin = () => {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Ciudad</label>
-                  <input type="text" value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <select value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background">
+                    {ciudades.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Dirección</label>
@@ -445,8 +451,25 @@ const Admin = () => {
                   <input type="text" value={form.piso || ""} onChange={(e) => updateField("piso", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Parqueadero</label>
-                  <input type="text" value={form.parqueadero || ""} onChange={(e) => updateField("parqueadero", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Parqueadero?</label>
+                  <select
+                    value={form.parqueadero && form.parqueadero !== "No" ? "Si" : (form.parqueadero === "No" ? "No" : "")}
+                    onChange={(e) => updateField("parqueadero", e.target.value === "Si" ? "Carro" : "No")}
+                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                  >
+                    <option value="">Seleccionar</option>
+                    <option value="Si">Sí</option>
+                    <option value="No">No</option>
+                  </select>
+                  {form.parqueadero && form.parqueadero !== "No" && (
+                    <select
+                      value={parqueaderoTipos.includes(form.parqueadero) ? form.parqueadero : "Carro"}
+                      onChange={(e) => updateField("parqueadero", e.target.value)}
+                      className="mt-2 w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    >
+                      {parqueaderoTipos.map((t) => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  )}
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -480,7 +503,10 @@ const Admin = () => {
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
-                  <input type="text" value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background">
+                    <option value="">Seleccionar</option>
+                    {zonas.map((z) => <option key={z} value={z}>{z}</option>)}
+                  </select>
                 </div>
               </div>
               <div>
@@ -488,8 +514,26 @@ const Admin = () => {
                 <textarea value={form.descripcion || ""} onChange={(e) => updateField("descripcion", e.target.value)} rows={3} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none resize-none" />
               </div>
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link WhatsApp</label>
-                <input type="text" value={form.link_whatsapp || ""} onChange={(e) => updateField("link_whatsapp", e.target.value)} placeholder="https://wa.me/573162225604?text=..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Mensaje WhatsApp (se envía al hacer click)</label>
+                <div className="flex items-stretch border border-foreground/10 focus-within:border-primary">
+                  <span className="flex items-center px-3 bg-muted/40 font-body text-xs text-muted-foreground select-none whitespace-nowrap">
+                    {WA_PREFIX}
+                  </span>
+                  <textarea
+                    value={(() => {
+                      const link = form.link_whatsapp || "";
+                      if (link.startsWith(WA_PREFIX)) {
+                        try { return decodeURIComponent(link.slice(WA_PREFIX.length)); } catch { return link.slice(WA_PREFIX.length); }
+                      }
+                      return "";
+                    })()}
+                    onChange={(e) => updateField("link_whatsapp", e.target.value ? WA_PREFIX + encodeURIComponent(e.target.value) : "")}
+                    rows={2}
+                    placeholder={`Hola, me interesa ${form.nombre_inmueble || "esta propiedad"}...`}
+                    className="flex-1 py-2 px-3 font-body text-sm focus:outline-none resize-none"
+                  />
+                </div>
+                <p className="font-body text-[11px] text-muted-foreground mt-1">Si lo dejas vacío, se usará el mensaje por defecto.</p>
               </div>
 
               {/*
@@ -523,17 +567,46 @@ const Admin = () => {
               {/* Cover photo */}
               <div>
                 <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-2">Foto portada</label>
-                <div className="flex items-center gap-4">
+                <div className="flex items-start gap-4 flex-wrap">
                   {coverPreview && (
-                    <div className="relative w-24 h-16 border border-foreground/10 overflow-hidden">
-                      <img src={coverPreview} alt="Foto de portada del inmueble" className="w-full h-full object-cover" />
+                    <div className="relative w-32 h-20 border border-foreground/10 overflow-hidden bg-muted">
+                      <img
+                        src={coverPreview}
+                        alt="Foto de portada del inmueble"
+                        className="w-full h-full object-cover"
+                        style={{ objectPosition: `center ${(form as any).foto_portada_pos || "center"}` }}
+                      />
                       <button onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); }} className="absolute top-0 right-0 bg-destructive text-white p-0.5"><X size={12} /></button>
                     </div>
                   )}
-                  <label className="flex items-center gap-2 px-4 py-2 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  <label className="flex items-center gap-2 px-4 py-2 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground self-start">
                     <ImageIcon size={14} /> Seleccionar
                     <input type="file" accept="image/*" onChange={handleCoverChange} className="hidden" />
                   </label>
+                  {coverPreview && (
+                    <div className="flex flex-col">
+                      <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase mb-1">Posición de la miniatura</label>
+                      <div className="flex gap-1">
+                        {[
+                          { v: "top", l: "Arriba" },
+                          { v: "center", l: "Centro" },
+                          { v: "bottom", l: "Abajo" },
+                        ].map((opt) => {
+                          const active = ((form as any).foto_portada_pos || "center") === opt.v;
+                          return (
+                            <button
+                              key={opt.v}
+                              type="button"
+                              onClick={() => updateField("foto_portada_pos" as any, opt.v)}
+                              className={`px-3 py-1.5 font-heading text-[10px] font-semibold uppercase tracking-widest border transition-colors ${active ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-foreground/10 hover:border-primary"}`}
+                            >
+                              {opt.l}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
