@@ -451,21 +451,32 @@ const Admin = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Incluye administración?</label>
-                  <select
-                    value={(form.administracion ?? 0) > 0 ? "si" : "no"}
-                    onChange={(e) => updateField("administracion", e.target.value === "si" ? (form.administracion && form.administracion > 0 ? form.administracion : 1) : 0)}
-                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
-                  >
-                    <option value="no">No</option>
-                    <option value="si">Sí</option>
-                  </select>
-                  {(form.administracion ?? 0) > 0 && (
-                    <div className="mt-2">
-                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor administración</label>
-                      <input type="number" value={form.administracion || 0} onChange={(e) => updateField("administracion", Number(e.target.value))} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
-                    </div>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor administración</label>
+                  {form.administracion === -1 ? (
+                    <input
+                      type="text"
+                      value="Incluida en el arriendo"
+                      disabled
+                      className="w-full border border-foreground/10 py-2 px-3 font-body text-sm bg-muted/40 text-muted-foreground italic"
+                    />
+                  ) : (
+                    <input
+                      type="number"
+                      value={form.administracion || 0}
+                      onChange={(e) => updateField("administracion", Number(e.target.value))}
+                      placeholder="0"
+                      className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                    />
                   )}
+                  <label className="mt-2 flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.administracion === -1}
+                      onChange={(e) => updateField("administracion", e.target.checked ? -1 : 0)}
+                      className="accent-primary"
+                    />
+                    <span className="font-body text-xs text-foreground">La administración está incluida en el arriendo</span>
+                  </label>
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
