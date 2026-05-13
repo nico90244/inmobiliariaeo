@@ -19,12 +19,16 @@ type Propiedad = Tables<"propiedades">;
 type Captacion = Tables<"captaciones">;
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote", "Bodega", "Oficina"];
+const zonas = ["Norte", "Sur", "Oeste", "Oriente", "Nororiente", "Sureste", "Centro"];
+const ciudades = ["Cali", "Palmira", "Jamundi", "Yumbo", "Pereira", "Armenia", "Buga", "Tulua"];
+const parqueaderoTipos = ["Carro", "Moto", "Carro y Moto"];
+const WA_PREFIX = "https://wa.me/573162225604?text=";
 
 const emptyForm: Partial<Propiedad> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
-  area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "", estrato: 0, administracion: 0, descripcion: "",
+  area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "No", estrato: 0, administracion: 0, descripcion: "",
   estado: "Disponible", foto_portada: "", fotos: [], link_whatsapp: "", red_social_video: "", link_video: "",
-  destacada: false,
+  destacada: false, ciudad: "Cali",
 };
 
 const Admin = () => {
