@@ -567,17 +567,46 @@ const Admin = () => {
               {/* Cover photo */}
               <div>
                 <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-2">Foto portada</label>
-                <div className="flex items-center gap-4">
+                <div className="flex items-start gap-4 flex-wrap">
                   {coverPreview && (
-                    <div className="relative w-24 h-16 border border-foreground/10 overflow-hidden">
-                      <img src={coverPreview} alt="Foto de portada del inmueble" className="w-full h-full object-cover" />
+                    <div className="relative w-32 h-20 border border-foreground/10 overflow-hidden bg-muted">
+                      <img
+                        src={coverPreview}
+                        alt="Foto de portada del inmueble"
+                        className="w-full h-full object-cover"
+                        style={{ objectPosition: `center ${(form as any).foto_portada_pos || "center"}` }}
+                      />
                       <button onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); }} className="absolute top-0 right-0 bg-destructive text-white p-0.5"><X size={12} /></button>
                     </div>
                   )}
-                  <label className="flex items-center gap-2 px-4 py-2 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  <label className="flex items-center gap-2 px-4 py-2 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground self-start">
                     <ImageIcon size={14} /> Seleccionar
                     <input type="file" accept="image/*" onChange={handleCoverChange} className="hidden" />
                   </label>
+                  {coverPreview && (
+                    <div className="flex flex-col">
+                      <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase mb-1">Posición de la miniatura</label>
+                      <div className="flex gap-1">
+                        {[
+                          { v: "top", l: "Arriba" },
+                          { v: "center", l: "Centro" },
+                          { v: "bottom", l: "Abajo" },
+                        ].map((opt) => {
+                          const active = ((form as any).foto_portada_pos || "center") === opt.v;
+                          return (
+                            <button
+                              key={opt.v}
+                              type="button"
+                              onClick={() => updateField("foto_portada_pos" as any, opt.v)}
+                              className={`px-3 py-1.5 font-heading text-[10px] font-semibold uppercase tracking-widest border transition-colors ${active ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-foreground/10 hover:border-primary"}`}
+                            >
+                              {opt.l}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
