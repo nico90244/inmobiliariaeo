@@ -503,7 +503,10 @@ const Admin = () => {
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
-                  <input type="text" value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background">
+                    <option value="">Seleccionar</option>
+                    {zonas.map((z) => <option key={z} value={z}>{z}</option>)}
+                  </select>
                 </div>
               </div>
               <div>
@@ -511,8 +514,26 @@ const Admin = () => {
                 <textarea value={form.descripcion || ""} onChange={(e) => updateField("descripcion", e.target.value)} rows={3} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none resize-none" />
               </div>
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link WhatsApp</label>
-                <input type="text" value={form.link_whatsapp || ""} onChange={(e) => updateField("link_whatsapp", e.target.value)} placeholder="https://wa.me/573162225604?text=..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Mensaje WhatsApp (se envía al hacer click)</label>
+                <div className="flex items-stretch border border-foreground/10 focus-within:border-primary">
+                  <span className="flex items-center px-3 bg-muted/40 font-body text-xs text-muted-foreground select-none whitespace-nowrap">
+                    {WA_PREFIX}
+                  </span>
+                  <textarea
+                    value={(() => {
+                      const link = form.link_whatsapp || "";
+                      if (link.startsWith(WA_PREFIX)) {
+                        try { return decodeURIComponent(link.slice(WA_PREFIX.length)); } catch { return link.slice(WA_PREFIX.length); }
+                      }
+                      return "";
+                    })()}
+                    onChange={(e) => updateField("link_whatsapp", e.target.value ? WA_PREFIX + encodeURIComponent(e.target.value) : "")}
+                    rows={2}
+                    placeholder={`Hola, me interesa ${form.nombre_inmueble || "esta propiedad"}...`}
+                    className="flex-1 py-2 px-3 font-body text-sm focus:outline-none resize-none"
+                  />
+                </div>
+                <p className="font-body text-[11px] text-muted-foreground mt-1">Si lo dejas vacío, se usará el mensaje por defecto.</p>
               </div>
 
               {/*
