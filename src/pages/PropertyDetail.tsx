@@ -360,6 +360,7 @@ const PropertyDetail = () => {
                 {property.piso && <Feature icon={Building2} label="Piso" value={property.piso} />}
                 {property.parqueadero != null && <Feature icon={Car} label="Parqueadero" value={formatParqueadero(property.parqueadero)!} />}
                 {property.estrato && <Feature icon={Building2} label="Estrato" value={property.estrato} />}
+                {property.administracion === -1 && <Feature icon={DollarSign} label="Administración" value="Incluida" />}
                 {(property.administracion ?? 0) > 0 && <Feature icon={DollarSign} label="Administración" value={formatPrice(property.administracion)} />}
                 {property.barrio && <Feature icon={MapPin} label="Barrio" value={property.barrio} />}
               </div>
