@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Loader2, AlertCircle, ArrowLeft, Maximize2, Bed, Bath, Building2, Car,
   DollarSign, MapPin, Play, Video, Phone, Share2, Copy, X, ChevronLeft,
-  ChevronRight,
+  ChevronRight, FileText,
 } from "lucide-react";
+import { generatePropertyPDF } from "@/lib/generatePropertyPDF";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -177,6 +178,13 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
         <Phone size={16} /> Llamar ahora
       </a>
       <p className="font-body text-xs text-muted-foreground text-center mt-2">Respuesta inmediata en horario laboral</p>
+
+      <button
+        onClick={() => generatePropertyPDF(property).catch(() => toast({ title: "Error", description: "No se pudo generar el PDF.", variant: "destructive" }))}
+        className="mt-4 w-full py-3 bg-foreground text-background font-heading text-xs font-semibold tracking-widest uppercase hover:bg-foreground/90 transition-colors flex items-center justify-center gap-2"
+      >
+        <FileText size={16} /> Descargar Ficha Técnica (PDF)
+      </button>
 
       <div className="mt-6 pt-4 border-t border-foreground/10 flex items-center gap-3">
         <span className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Compartir:</span>
@@ -352,6 +360,7 @@ const PropertyDetail = () => {
                 {property.piso && <Feature icon={Building2} label="Piso" value={property.piso} />}
                 {property.parqueadero != null && <Feature icon={Car} label="Parqueadero" value={formatParqueadero(property.parqueadero)!} />}
                 {property.estrato && <Feature icon={Building2} label="Estrato" value={property.estrato} />}
+                {property.administracion === -1 && <Feature icon={DollarSign} label="Administración" value="Incluida" />}
                 {(property.administracion ?? 0) > 0 && <Feature icon={DollarSign} label="Administración" value={formatPrice(property.administracion)} />}
                 {property.barrio && <Feature icon={MapPin} label="Barrio" value={property.barrio} />}
               </div>

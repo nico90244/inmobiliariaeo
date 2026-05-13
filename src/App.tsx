@@ -13,6 +13,7 @@ import Captacion from "./pages/Captacion";
 import Contacto from "./pages/Contacto";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
+import Sitemap from "./pages/Sitemap";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/contacto" element={<Contacto />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/mapa-del-sitio" element={<Sitemap />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>

@@ -40,7 +40,7 @@ const PropertyModal = ({ property, open, onClose }: PropertyModalProps) => {
     { icon: ShowerHead, label: "Baños", value: property.banos },
     { icon: Building, label: "Piso", value: property.piso },
     { icon: Car, label: "Parqueadero", value: property.parqueadero },
-    { icon: DollarSign, label: "Admón/mes", value: property.administracion ? formatPrice(property.administracion) : null },
+    { icon: DollarSign, label: "Admón/mes", value: property.administracion === -1 ? "Incluida" : property.administracion ? formatPrice(property.administracion) : null },
   ].filter((c) => c.value != null && c.value !== "" && c.value !== 0);
 
   return (
