@@ -113,7 +113,7 @@ export const generatePropertyPDF = async (property: Propiedad) => {
     ["Piso", property.piso],
     ["Parqueadero", property.parqueadero],
     ["Estrato", property.estrato],
-    ["Administración", property.administracion ? formatPrice(property.administracion) : null],
+    ["Administración", property.administracion === -1 ? "Incluida en el arriendo" : property.administracion ? formatPrice(property.administracion) : null],
     ["Estado", property.estado],
   ].filter(([, v]) => v !== null && v !== undefined && v !== "") as [string, string | number][];
 
