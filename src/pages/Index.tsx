@@ -13,8 +13,8 @@ const Index = () => {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
     name: "Inmobiliaria Eliana Osorio",
-    url: "https://inmobiliariaeo.lovable.app",
-    logo: "https://inmobiliariaeo.lovable.app/logo.png",
+    url: "https://inmobiliariaeo.com",
+    logo: "https://inmobiliariaeo.com/logo.png",
     telephone: "+57 318 653 1598",
     address: {
       "@type": "PostalAddress",

@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-const SITE_URL = "https://inmobiliariaeo.lovable.app";
+const SITE_URL = "https://inmobiliariaeo.com";
 const DEFAULT_IMAGE =
   "https://storage.googleapis.com/gpt-engineer-file-uploads/Kwyk1s9LpLW0qjpaMpD9iA1eA8y1/social-images/social-1773159780459-LOGO_ELIANA_OSORIO_INMOBILIARIA_NEGRO.webp";
 
@@ -24,6 +24,8 @@ const SEO = ({ title, description, path = "/", image = DEFAULT_IMAGE, type = "we
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
+      <meta property="og:site_name" content="Inmobiliaria Eliana Osorio" />
+      <meta property="og:locale" content="es_CO" />
       <meta property="og:image" content={image} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />

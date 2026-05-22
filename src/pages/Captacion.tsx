@@ -125,23 +125,23 @@ const Captacion = () => {
                 <h2 className="font-heading text-xl font-semibold text-foreground mb-6">Datos del inmueble</h2>
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre completo</label>
-                    <input type="text" required value={form.nombre} onChange={(e) => update("nombre", e.target.value)} maxLength={100} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
+                    <label htmlFor="cap-nombre" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre completo</label>
+                    <input id="cap-nombre" type="text" required value={form.nombre} onChange={(e) => update("nombre", e.target.value)} maxLength={100} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular</label>
-                      <input type="tel" required value={form.celular} onChange={(e) => update("celular", e.target.value)} maxLength={15} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
+                      <label htmlFor="cap-celular" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular</label>
+                      <input id="cap-celular" type="tel" required value={form.celular} onChange={(e) => update("celular", e.target.value)} maxLength={15} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
                     </div>
                     <div>
-                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Correo</label>
-                      <input type="email" value={form.correo} onChange={(e) => update("correo", e.target.value)} maxLength={255} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
+                      <label htmlFor="cap-correo" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Correo</label>
+                      <input id="cap-correo" type="email" value={form.correo} onChange={(e) => update("correo", e.target.value)} maxLength={255} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo negocio</label>
-                      <select required value={form.tipo_negocio} onChange={(e) => update("tipo_negocio", e.target.value)} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
+                      <label htmlFor="cap-negocio" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo negocio</label>
+                      <select id="cap-negocio" required value={form.tipo_negocio} onChange={(e) => update("tipo_negocio", e.target.value)} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
                         <option value="">Seleccionar</option>
                         <option value="Venta">Venta</option>
                         <option value="Alquiler">Alquiler</option>
@@ -149,8 +149,8 @@ const Captacion = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo inmueble</label>
-                      <select required value={form.tipo_inmueble} onChange={(e) => update("tipo_inmueble", e.target.value)} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
+                      <label htmlFor="cap-tipo" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo inmueble</label>
+                      <select id="cap-tipo" required value={form.tipo_inmueble} onChange={(e) => update("tipo_inmueble", e.target.value)} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
                         <option value="">Seleccionar</option>
                         {propertyTypes.map((p) => <option key={p} value={p}>{p}</option>)}
                       </select>
@@ -158,17 +158,17 @@ const Captacion = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Barrio / Sector</label>
-                      <input type="text" required value={form.barrio} onChange={(e) => update("barrio", e.target.value)} maxLength={100} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
+                      <label htmlFor="cap-barrio" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Barrio / Sector</label>
+                      <input id="cap-barrio" type="text" required value={form.barrio} onChange={(e) => update("barrio", e.target.value)} maxLength={100} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
                     </div>
                     <div>
-                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor aproximado</label>
-                      <input type="text" value={form.valor_aproximado} onChange={(e) => update("valor_aproximado", e.target.value)} maxLength={50} placeholder="$ 0" className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
+                      <label htmlFor="cap-valor" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor aproximado</label>
+                      <input id="cap-valor" type="text" value={form.valor_aproximado} onChange={(e) => update("valor_aproximado", e.target.value)} maxLength={50} placeholder="$ 0" className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
                     </div>
                   </div>
                   <div>
-                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Observaciones</label>
-                    <textarea value={form.observaciones} onChange={(e) => update("observaciones", e.target.value)} rows={3} maxLength={1000} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none resize-none" />
+                    <label htmlFor="cap-obs" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Observaciones</label>
+                    <textarea id="cap-obs" value={form.observaciones} onChange={(e) => update("observaciones", e.target.value)} rows={3} maxLength={1000} className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none resize-none" />
                   </div>
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" checked={form.acepta_politica} onChange={(e) => update("acepta_politica", e.target.checked)} className="mt-1 accent-[hsl(40,47%,50%)]" />

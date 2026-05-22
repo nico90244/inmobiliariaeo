@@ -2,8 +2,6 @@ import { useState } from "react";
 import { X, Bot } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 
-// TODO: Reemplazar por iframe de N8N chatbot
-
 const WhatsAppButton = () => {
   const [chatOpen, setChatOpen] = useState(false);
 

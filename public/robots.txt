@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://inmobiliariaeo.lovable.app/sitemap.xml
+Sitemap: https://inmobiliariaeo.com/sitemap.xml

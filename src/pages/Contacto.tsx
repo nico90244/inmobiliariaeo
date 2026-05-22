@@ -10,10 +10,10 @@ const localBusinessJsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name: "Inmobiliaria Eliana Osorio",
-  image: "https://inmobiliariaeo.lovable.app/logo.png",
+  image: "https://inmobiliariaeo.com/logo.png",
   telephone: "+57 318 653 1598",
   email: "info@inmobiliariaeo.com",
-  url: "https://inmobiliariaeo.lovable.app/contacto",
+  url: "https://inmobiliariaeo.com/contacto",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Cali",
@@ -54,16 +54,16 @@ const Contacto = () => {
                 <p className="font-body text-lg text-muted-foreground mb-12">Cuéntanos qué buscas y te asesoramos sin compromiso.</p>
                 <form onSubmit={handleSubmit} className="space-y-8 max-w-lg">
                   <div>
-                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre</label>
-                    <input type="text" required value={name} onChange={(e) => setName(e.target.value)} maxLength={100} className="w-full bg-transparent border-b border-foreground/20 py-3 font-body text-foreground focus:border-primary focus:outline-none transition-colors" />
+                    <label htmlFor="cto-nombre" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre</label>
+                    <input id="cto-nombre" type="text" required value={name} onChange={(e) => setName(e.target.value)} maxLength={100} className="w-full bg-transparent border-b border-foreground/20 py-3 font-body text-foreground focus:border-primary focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Teléfono</label>
-                    <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={15} className="w-full bg-transparent border-b border-foreground/20 py-3 font-body text-foreground focus:border-primary focus:outline-none transition-colors" />
+                    <label htmlFor="cto-telefono" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Teléfono</label>
+                    <input id="cto-telefono" type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={15} className="w-full bg-transparent border-b border-foreground/20 py-3 font-body text-foreground focus:border-primary focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Mensaje</label>
-                    <textarea required value={message} onChange={(e) => setMessage(e.target.value)} rows={3} maxLength={1000} className="w-full bg-transparent border-b border-foreground/20 py-3 font-body text-foreground focus:border-primary focus:outline-none transition-colors resize-none" />
+                    <label htmlFor="cto-mensaje" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Mensaje</label>
+                    <textarea id="cto-mensaje" required value={message} onChange={(e) => setMessage(e.target.value)} rows={3} maxLength={1000} className="w-full bg-transparent border-b border-foreground/20 py-3 font-body text-foreground focus:border-primary focus:outline-none transition-colors resize-none" />
                   </div>
                   <button type="submit" className="px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors">
                     {submitted ? "¡Enviado!" : "Enviar"}

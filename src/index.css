@@ -112,6 +112,25 @@
 }
 
 @layer utilities {
+  /* Scrollbar fino para el panel lateral de propiedades */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary) / 0.3);
+    border-radius: 2px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--primary) / 0.6);
+  }
+
   .hover-grayscale {
     transition: filter 0.5s ease;
   }

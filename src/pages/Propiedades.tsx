@@ -12,14 +12,23 @@ const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca",
 
 const Propiedades = () => {
   const location = useLocation();
-  const defaultTipoNegocio = location.pathname === "/venta" ? "Venta" : location.pathname === "/alquiler" ? "Alquiler" : "";
+  const searchParams = new URLSearchParams(location.search);
+
+  const defaultTipoNegocio =
+    location.pathname === "/venta"
+      ? "Venta"
+      : location.pathname === "/alquiler"
+      ? "Alquiler"
+      : searchParams.get("negocio")
+      ? searchParams.get("negocio")!.charAt(0).toUpperCase() + searchParams.get("negocio")!.slice(1)
+      : "";
 
   const [tipoNegocio, setTipoNegocio] = useState(defaultTipoNegocio);
-  const [tipoInmueble, setTipoInmueble] = useState("");
-  const [barrio, setBarrio] = useState("");
+  const [tipoInmueble, setTipoInmueble] = useState(searchParams.get("tipo") ?? "");
+  const [barrio, setBarrio] = useState(searchParams.get("barrio") ?? "");
   const [ciudad, setCiudad] = useState("");
-  const [precioMin, setPrecioMin] = useState("");
-  const [precioMax, setPrecioMax] = useState("");
+  const [precioMin, setPrecioMin] = useState(searchParams.get("precioMin") ?? "");
+  const [precioMax, setPrecioMax] = useState(searchParams.get("precioMax") ?? "");
 
   const { data, isLoading, error } = usePropiedades({
     tipo_negocio: tipoNegocio || undefined,
@@ -42,7 +51,7 @@ const Propiedades = () => {
   return (
     <>
       <SEO title={seoTitle} description={seoDesc} path={location.pathname} />
-      <Header solid />
+      <Header />
       <main className="pt-20">
         {/* Banner */}
         <div className="py-10" style={{ background: "#F5F5F5" }}>
@@ -66,35 +75,35 @@ const Propiedades = () => {
             <div className="bg-muted/30 p-6 mb-12 border border-foreground/10">
               <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Tipo negocio</label>
-                  <select value={tipoNegocio} onChange={(e) => setTipoNegocio(e.target.value)} className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
+                  <label htmlFor="f-negocio" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Tipo negocio</label>
+                  <select id="f-negocio" value={tipoNegocio} onChange={(e) => setTipoNegocio(e.target.value)} className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
                     <option value="">Todos</option>
                     <option value="Venta">Venta</option>
                     <option value="Alquiler">Alquiler</option>
                   </select>
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Inmueble</label>
-                  <select value={tipoInmueble} onChange={(e) => setTipoInmueble(e.target.value)} className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
+                  <label htmlFor="f-tipo" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Inmueble</label>
+                  <select id="f-tipo" value={tipoInmueble} onChange={(e) => setTipoInmueble(e.target.value)} className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none">
                     <option value="">Todos</option>
                     {propertyTypes.map((p) => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Barrio</label>
-                  <input type="text" value={barrio} onChange={(e) => setBarrio(e.target.value)} placeholder="Ej: Ciudad Jardín" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
+                  <label htmlFor="f-barrio" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Barrio</label>
+                  <input id="f-barrio" type="text" value={barrio} onChange={(e) => setBarrio(e.target.value)} placeholder="Ej: Ciudad Jardín" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Ciudad</label>
-                  <input type="text" value={ciudad} onChange={(e) => setCiudad(e.target.value)} placeholder="Ej: Cali" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
+                  <label htmlFor="f-ciudad" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Ciudad</label>
+                  <input id="f-ciudad" type="text" value={ciudad} onChange={(e) => setCiudad(e.target.value)} placeholder="Ej: Cali" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Precio mín.</label>
-                  <input type="number" value={precioMin} onChange={(e) => setPrecioMin(e.target.value)} placeholder="$ 0" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
+                  <label htmlFor="f-precio-min" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Precio mín.</label>
+                  <input id="f-precio-min" type="number" value={precioMin} onChange={(e) => setPrecioMin(e.target.value)} placeholder="$ 0" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Precio máx.</label>
-                  <input type="number" value={precioMax} onChange={(e) => setPrecioMax(e.target.value)} placeholder="$ 0" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
+                  <label htmlFor="f-precio-max" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">Precio máx.</label>
+                  <input id="f-precio-max" type="number" value={precioMax} onChange={(e) => setPrecioMax(e.target.value)} placeholder="$ 0" className="w-full bg-background border border-foreground/10 py-2 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
                 </div>
               </div>
             </div>

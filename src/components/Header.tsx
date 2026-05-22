@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import logoGold from "@/assets/logo-gold.png";
 
-const Header = ({ solid = false }: { solid?: boolean }) => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [propDropdown, setPropDropdown] = useState(false);
   const location = useLocation();
@@ -15,7 +15,7 @@ const Header = ({ solid = false }: { solid?: boolean }) => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#1A1A1A]`}
+      className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#1A1A1A]"
       style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
     >
       <div className="container mx-auto px-6 lg:px-12">
@@ -24,7 +24,7 @@ const Header = ({ solid = false }: { solid?: boolean }) => {
             <img src={logoGold} alt="Inmobiliaria Eliana Osorio" className="h-16 w-auto" />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8" aria-label="Navegación principal">
             <Link to="/" className={`font-heading text-base font-medium tracking-wide transition-colors duration-300 ${isActive("/") ? navActiveClass : navTextClass}`}>Inicio</Link>
 
             <div
@@ -32,22 +32,33 @@ const Header = ({ solid = false }: { solid?: boolean }) => {
               onMouseEnter={() => setPropDropdown(true)}
               onMouseLeave={() => setPropDropdown(false)}
             >
-              <button className={`flex items-center gap-1 font-heading text-base font-medium tracking-wide transition-colors duration-300 ${
-                ["/propiedades", "/venta", "/alquiler"].includes(location.pathname)
-                  ? navActiveClass
-                  : navTextClass
-              }`}>
-                Propiedades <ChevronDown size={14} />
+              <button
+                aria-haspopup="true"
+                aria-expanded={propDropdown}
+                onFocus={() => setPropDropdown(true)}
+                onBlur={(e) => {
+                  if (!e.currentTarget.parentElement?.contains(e.relatedTarget as Node)) {
+                    setPropDropdown(false);
+                  }
+                }}
+                onKeyDown={(e) => { if (e.key === "Escape") setPropDropdown(false); }}
+                className={`flex items-center gap-1 font-heading text-base font-medium tracking-wide transition-colors duration-300 ${
+                  ["/propiedades", "/venta", "/alquiler"].includes(location.pathname)
+                    ? navActiveClass
+                    : navTextClass
+                }`}
+              >
+                Propiedades <ChevronDown size={14} aria-hidden="true" />
               </button>
               {propDropdown && (
-                <div className="absolute top-full left-0 mt-1 bg-[#1A1A1A] border border-white/10 shadow-lg min-w-[180px] z-50">
-                  <Link to="/propiedades" onClick={() => setPropDropdown(false)} className="block px-5 py-3 font-heading text-sm text-white/70 hover:text-primary hover:bg-white/5 transition-colors">
+                <div className="absolute top-full left-0 mt-1 bg-[#1A1A1A] border border-white/10 shadow-lg min-w-[180px] z-50" role="menu">
+                  <Link to="/propiedades" onClick={() => setPropDropdown(false)} role="menuitem" className="block px-5 py-3 font-heading text-sm text-white/70 hover:text-primary hover:bg-white/5 transition-colors">
                     Ver todas
                   </Link>
-                  <Link to="/venta" onClick={() => setPropDropdown(false)} className="block px-5 py-3 font-heading text-sm text-white/70 hover:text-primary hover:bg-white/5 transition-colors">
+                  <Link to="/venta" onClick={() => setPropDropdown(false)} role="menuitem" className="block px-5 py-3 font-heading text-sm text-white/70 hover:text-primary hover:bg-white/5 transition-colors">
                     En Venta
                   </Link>
-                  <Link to="/alquiler" onClick={() => setPropDropdown(false)} className="block px-5 py-3 font-heading text-sm text-white/70 hover:text-primary hover:bg-white/5 transition-colors">
+                  <Link to="/alquiler" onClick={() => setPropDropdown(false)} role="menuitem" className="block px-5 py-3 font-heading text-sm text-white/70 hover:text-primary hover:bg-white/5 transition-colors">
                     En Alquiler
                   </Link>
                 </div>
@@ -62,16 +73,18 @@ const Header = ({ solid = false }: { solid?: boolean }) => {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden text-white"
-            aria-label="Menú"
+            aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={isOpen}
+            aria-controls="mobile-nav"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
           </button>
         </div>
       </div>
 
       {isOpen && (
-        <div className="lg:hidden bg-[#1A1A1A] border-t border-white/10">
-          <nav className="container mx-auto px-6 py-6 flex flex-col gap-4">
+        <div id="mobile-nav" className="lg:hidden bg-[#1A1A1A] border-t border-white/10">
+          <nav className="container mx-auto px-6 py-6 flex flex-col gap-4" aria-label="Navegación móvil">
             <Link to="/" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2">
               Inicio
             </Link>

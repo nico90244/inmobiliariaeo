@@ -1,14 +1,26 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote"];
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const [tipo, setTipo] = useState("Venta");
   const [inmueble, setInmueble] = useState("");
   const [barrio, setBarrio] = useState("");
   const [precioMin, setPrecioMin] = useState("");
   const [precioMax, setPrecioMax] = useState("");
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (tipo) params.set("negocio", tipo.toLowerCase());
+    if (inmueble) params.set("tipo", inmueble);
+    if (barrio) params.set("barrio", barrio);
+    if (precioMin) params.set("precioMin", precioMin);
+    if (precioMax) params.set("precioMax", precioMax);
+    navigate(`/propiedades?${params.toString()}`);
+  };
 
   return (
     <section id="inicio" className="relative min-h-screen flex items-end pb-24 pt-20">
@@ -34,11 +46,12 @@ const HeroSection = () => {
               <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Tipo
               </label>
-              <div className="flex border-b border-foreground/20">
+              <div className="flex border-b border-foreground/20" role="group" aria-label="Tipo de negocio">
                 {["Venta", "Alquiler"].map((t) => (
                   <button
                     key={t}
                     onClick={() => setTipo(t)}
+                    aria-pressed={tipo === t}
                     className={`flex-1 py-2 font-heading text-sm font-medium transition-colors ${
                       tipo === t ? "text-primary border-b-2 border-primary" : "text-muted-foreground"
                     }`}
@@ -86,7 +99,8 @@ const HeroSection = () => {
               </label>
               <input
                 id="hero-precio-min"
-                type="text"
+                type="number"
+                min="0"
                 value={precioMin}
                 onChange={(e) => setPrecioMin(e.target.value)}
                 placeholder="$ 0"
@@ -100,7 +114,8 @@ const HeroSection = () => {
               </label>
               <input
                 id="hero-precio-max"
-                type="text"
+                type="number"
+                min="0"
                 value={precioMax}
                 onChange={(e) => setPrecioMax(e.target.value)}
                 placeholder="$ 0"
@@ -109,7 +124,10 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <button className="mt-6 w-full md:w-auto px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors">
+          <button
+            onClick={handleSearch}
+            className="mt-6 w-full md:w-auto px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+          >
             Buscar
           </button>
         </div>

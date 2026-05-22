@@ -128,7 +128,7 @@ const AppointmentBooking = ({ property }: { property: Propiedad }) => {
   const firstDay = getFirstDayOfWeek(year, month);
 
   return (
-    <div className="bg-background border border-primary/20 shadow-lg p-6 mt-6">
+    <div className="bg-background border border-primary/20 shadow-lg p-6">
       <h3 className="font-heading text-lg font-bold text-foreground mb-1 flex items-center gap-2">
         <CalendarCheck size={20} className="text-primary" /> Agendar visita
       </h3>
