@@ -111,6 +111,31 @@
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   FALLBACK DE COLORES – fuera de @layer para máxima prioridad.
+   CSS Level 3 hsl(h,s%,l%) garantiza compatibilidad universal.
+   Resuelve el bug de botones invisibles cuando el navegador
+   no interpreta correctamente hsl(var(...)) de Level 4.
+   ───────────────────────────────────────────────────────────── */
+.bg-primary {
+  background-color: hsl(40, 47%, 50%);
+}
+.bg-primary\/5  { background-color: hsl(40, 47%, 50%, 0.05); }
+.bg-primary\/10 { background-color: hsl(40, 47%, 50%, 0.10); }
+.bg-primary\/20 { background-color: hsl(40, 47%, 50%, 0.20); }
+.bg-primary\/30 { background-color: hsl(40, 47%, 50%, 0.30); }
+.bg-primary\/40 { background-color: hsl(40, 47%, 50%, 0.40); }
+.hover\:bg-primary\/5:hover   { background-color: hsl(40, 47%, 50%, 0.05); }
+.hover\:bg-primary\/80:hover  { background-color: hsl(40, 47%, 44%, 1); }
+.hover\:bg-primary\/90:hover  { background-color: hsl(40, 47%, 45%, 1); }
+.bg-secondary   { background-color: hsl(0, 0%, 12%); }
+.text-primary   { color: hsl(40, 47%, 50%); }
+.text-primary-foreground { color: hsl(43, 33%, 97%); }
+.border-primary { border-color: hsl(40, 47%, 50%); }
+.border-primary\/20 { border-color: hsl(40, 47%, 50%, 0.20); }
+.border-primary\/30 { border-color: hsl(40, 47%, 50%, 0.30); }
+.border-primary\/40 { border-color: hsl(40, 47%, 50%, 0.40); }
+
 @layer utilities {
   /* Scrollbar fino para el panel lateral de propiedades */
   .scrollbar-thin {
@@ -143,4 +168,4 @@
   .filter-white {
     filter: brightness(0) invert(1);
   }
-}
+} /* end @layer utilities */

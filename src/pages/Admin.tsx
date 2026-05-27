@@ -7,9 +7,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
+  TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
+import AdminContratoArrendamiento from "@/components/admin/AdminContratoArrendamiento";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -53,6 +55,51 @@ const Admin = () => {
 
   // Captacion detail
   const [selectedCaptacion, setSelectedCaptacion] = useState<Captacion | null>(null);
+
+  // Contrato arrendamiento
+  const [contratoOpen, setContratoOpen] = useState(false);
+  const [contratoPropiedad, setContratoPropiedad] = useState<Propiedad | null>(null);
+  const [contratoExistingId, setContratoExistingId] = useState<string | null>(null);
+
+  const openContrato = async (p: Propiedad) => {
+    // Check if there's an existing contract for this property
+    const { data } = await supabase
+      .from("contratos_arrendamiento")
+      .select("id")
+      .eq("propiedad_id", p.id)
+      .order("fecha_creacion", { ascending: false })
+      .limit(1)
+      .single();
+    setContratoExistingId(data?.id ?? null);
+    setContratoPropiedad(p);
+    setContratoOpen(true);
+  };
+
+  // Quick status change from table
+  const handleEstadoRapido = async (p: Propiedad, nuevoEstado: string) => {
+    const { error } = await supabase.from("propiedades").update({ estado: nuevoEstado }).eq("id", p.id);
+    if (error) {
+      toast({ title: "Error al cambiar estado", variant: "destructive" });
+      return;
+    }
+    toast({ title: `Estado → ${nuevoEstado}` });
+    loadData();
+    queryClient.invalidateQueries({ queryKey: ["propiedades"] });
+    // If marking as Arrendado on an Alquiler property, open contract form
+    if (nuevoEstado === "Arrendado" && p.tipo_negocio === "Alquiler") {
+      setContratoPropiedad({ ...p, estado: nuevoEstado });
+      setContratoExistingId(null);
+      setContratoOpen(true);
+    }
+  };
+
+  // Metrics by status
+  const metricas = useMemo(() => ({
+    disponible: propiedades.filter((p) => p.estado === "Disponible").length,
+    arrendado:  propiedades.filter((p) => p.estado === "Arrendado").length,
+    vendido:    propiedades.filter((p) => p.estado === "Vendido").length,
+    descartado: propiedades.filter((p) => p.estado === "Descartado").length,
+  }), [propiedades]);
 
   // Propiedades filters
   const [filterNegocio, setFilterNegocio] = useState("");
@@ -280,6 +327,26 @@ const Admin = () => {
               </button>
             </div>
 
+            {/* Métricas de estado */}
+            {!loadingData && propiedades.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                {[
+                  { label: "Disponibles",  value: metricas.disponible, icon: BarChart3,     color: "text-primary",      bg: "bg-primary/10" },
+                  { label: "Arrendadas",   value: metricas.arrendado,  icon: CheckCircle2,  color: "text-green-600",    bg: "bg-green-50 dark:bg-green-950/30" },
+                  { label: "Vendidas",     value: metricas.vendido,    icon: TrendingDown,  color: "text-blue-600",     bg: "bg-blue-50 dark:bg-blue-950/30" },
+                  { label: "Descartadas",  value: metricas.descartado, icon: XCircle,       color: "text-muted-foreground", bg: "bg-muted/30" },
+                ].map(({ label, value, icon: Icon, color, bg }) => (
+                  <div key={label} className={`${bg} border border-foreground/5 p-4 flex items-center gap-3`}>
+                    <Icon size={20} className={color} />
+                    <div>
+                      <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">{label}</p>
+                      <p className={`font-heading text-2xl font-bold ${color}`}>{value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Filtros */}
             <div className="bg-muted/20 border border-foreground/10 p-4 mb-4">
               <div className="flex flex-wrap gap-3 items-end">
@@ -381,6 +448,7 @@ const Admin = () => {
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio / Zona</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Precio</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
+                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Contrato</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Acciones</th>
                     </tr>
                   </thead>
@@ -398,7 +466,35 @@ const Admin = () => {
                           {[p.barrio, p.zona].filter(Boolean).join(" · ") || "—"}
                         </td>
                         <td className="p-4 font-body">{p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}</td>
-                        <td className="p-4"><span className={`px-2 py-1 text-xs font-heading font-semibold ${p.estado === "Disponible" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>{p.estado}</span></td>
+                        <td className="p-4">
+                          <select
+                            value={p.estado || "Disponible"}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => handleEstadoRapido(p, e.target.value)}
+                            className={`px-2 py-1 text-xs font-heading font-semibold border-0 focus:outline-none cursor-pointer rounded-sm ${
+                              p.estado === "Disponible"  ? "bg-primary/10 text-primary" :
+                              p.estado === "Arrendado"   ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400" :
+                              p.estado === "Vendido"     ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400" :
+                              "bg-muted text-muted-foreground"
+                            }`}
+                          >
+                            <option value="Disponible">Disponible</option>
+                            <option value="Arrendado">Arrendado</option>
+                            <option value="Vendido">Vendido</option>
+                            <option value="Descartado">Descartado</option>
+                          </select>
+                        </td>
+                        <td className="p-4">
+                          {p.tipo_negocio === "Alquiler" && p.estado === "Arrendado" && (
+                            <button
+                              onClick={() => openContrato(p)}
+                              title="Ver / crear contrato"
+                              className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              <ClipboardList size={16} />
+                            </button>
+                          )}
+                        </td>
                         <td className="p-4 flex gap-2">
                           <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
                           <button onClick={() => handleDelete(p.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
@@ -407,7 +503,7 @@ const Admin = () => {
                     ))}
                     {propiedadesFiltradas.length === 0 && (
                       <tr>
-                        <td colSpan={7} className="p-8 text-center font-body text-muted-foreground">
+                        <td colSpan={9} className="p-8 text-center font-body text-muted-foreground">
                           {propiedades.length === 0 ? "No hay propiedades registradas." : "Ninguna propiedad coincide con los filtros."}
                         </td>
                       </tr>
@@ -510,6 +606,7 @@ const Admin = () => {
                     <option value="Disponible">Disponible</option>
                     <option value="Arrendado">Arrendado</option>
                     <option value="Vendido">Vendido</option>
+                    <option value="Descartado">Descartado</option>
                   </select>
                 </div>
               </div>
@@ -679,6 +776,16 @@ const Admin = () => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Contrato arrendamiento modal */}
+        {contratoPropiedad && (
+          <AdminContratoArrendamiento
+            open={contratoOpen}
+            onClose={() => { setContratoOpen(false); setContratoPropiedad(null); }}
+            propiedad={contratoPropiedad}
+            existingId={contratoExistingId}
+          />
+        )}
 
         {/* Captacion detail modal */}
         <Dialog open={!!selectedCaptacion} onOpenChange={(o) => !o && setSelectedCaptacion(null)}>
