@@ -40,7 +40,10 @@ const HeroSection = () => {
           </p>
         </div>
 
-        <div className="hero-animate-3 bg-background p-6 md:p-8 border border-foreground/10">
+        <div
+          className="hero-animate-3 backdrop-blur-md p-6 md:p-8 border border-white/20"
+          style={{ backgroundColor: "hsl(43, 33%, 97%, 0.72)" }}
+        >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="col-span-2 md:col-span-1">
               <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
