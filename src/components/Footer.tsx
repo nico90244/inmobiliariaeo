@@ -134,10 +134,16 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-primary/30">
-          <p className="font-heading text-xs tracking-widest text-secondary-foreground/40 uppercase text-center">
-            © {new Date().getFullYear()} Inmobiliaria Eliana Osorio. Todos los derechos reservados. | Desarrollado por Nikole Osorio en Cali, Colombia
+        <div className="mt-12 pt-8 border-t border-primary/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="font-heading text-xs tracking-widest text-secondary-foreground/40 uppercase text-center sm:text-left">
+            © {new Date().getFullYear()} Inmobiliaria Eliana Osorio. Todos los derechos reservados.
           </p>
+          <Link
+            to="/admin"
+            className="font-heading text-[10px] tracking-widest text-secondary-foreground/20 hover:text-primary/50 transition-colors uppercase"
+          >
+            Acceso Admin
+          </Link>
         </div>
       </div>
     </footer>);
