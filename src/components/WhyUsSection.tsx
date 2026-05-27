@@ -9,7 +9,7 @@ const WhyUsSection = () => {
   return (
     <section className="py-24 md:py-40 bg-secondary text-secondary-foreground">
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="max-w-3xl mb-16">
+        <div className="reveal max-w-3xl mb-16">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
             ¿Por qué elegirnos?
           </h2>
@@ -19,9 +19,9 @@ const WhyUsSection = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-          {reasons.map((r) => (
-            <div key={r.label}>
-              <span className="font-heading text-4xl md:text-5xl font-bold text-primary block mb-3">
+          {reasons.map((r, i) => (
+            <div key={r.label} className={`reveal reveal-delay-${i + 1} group border-b border-white/10 pb-8 hover:border-primary/50 transition-colors duration-300`}>
+              <span className="font-heading text-4xl md:text-5xl font-bold text-primary block mb-3 transition-transform duration-300 group-hover:-translate-y-1">
                 {r.stat}
               </span>
               <h3 className="font-heading text-base font-semibold text-secondary-foreground mb-2">

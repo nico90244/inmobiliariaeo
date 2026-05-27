@@ -22,7 +22,7 @@ const ContactSection = () => {
         <div className="section-divider mb-24" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          <div className="lg:col-span-7">
+          <div className="reveal lg:col-span-7">
             <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
               Contáctanos
             </h2>
@@ -82,7 +82,7 @@ const ContactSection = () => {
             </form>
           </div>
 
-          <div className="lg:col-span-4 lg:col-start-9 space-y-8 pt-4">
+          <div className="reveal reveal-delay-2 lg:col-span-4 lg:col-start-9 space-y-8 pt-4">
             <div className="flex items-start gap-4">
               <MapPin size={20} className="text-primary mt-1 flex-shrink-0" />
               <div>

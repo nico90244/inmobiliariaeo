@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import logoGold from "@/assets/logo-gold.png";
@@ -6,7 +6,15 @@ import logoGold from "@/assets/logo-gold.png";
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [propDropdown, setPropDropdown] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 72);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -15,13 +23,23 @@ const Header = () => {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#1A1A1A]"
-      style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
+      className={`fixed top-0 left-0 right-0 z-50 border-b border-white/10 transition-all duration-300 ${
+        scrolled ? "bg-[#1A1A1A]/95 backdrop-blur-md" : "bg-[#1A1A1A]"
+      }`}
+      style={{
+        boxShadow: scrolled
+          ? "0 4px 24px rgba(0,0,0,0.28)"
+          : "0 2px 8px rgba(0,0,0,0.15)",
+      }}
     >
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="flex items-center justify-between h-24">
+        <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? "h-16" : "h-24"}`}>
           <Link to="/" className="flex-shrink-0">
-            <img src={logoGold} alt="Inmobiliaria Eliana Osorio" className="h-16 w-auto" />
+            <img
+              src={logoGold}
+              alt="Inmobiliaria Eliana Osorio"
+              className={`w-auto transition-all duration-300 ${scrolled ? "h-10" : "h-16"}`}
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8" aria-label="Navegación principal">

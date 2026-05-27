@@ -19,7 +19,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
         <img
           src={property.foto_portada || "/placeholder.svg"}
           alt={property.nombre_inmueble}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
         {/* Badge */}

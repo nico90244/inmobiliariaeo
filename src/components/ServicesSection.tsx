@@ -27,7 +27,7 @@ const ServicesSection = () => {
       <div className="container mx-auto px-6 lg:px-12">
         <div className="section-divider mb-24" />
 
-        <div className="max-w-3xl mb-16">
+        <div className="reveal max-w-3xl mb-16">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
             Servicios
           </h2>
@@ -37,8 +37,10 @@ const ServicesSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-foreground/10">
-          {services.map((service) => (
-            <div key={service.number} className="bg-background p-8 md:p-12 group">
+          {services.map((service, i) => (
+            <div key={service.number} className={`reveal reveal-delay-${i + 1} bg-background p-8 md:p-12 group relative overflow-hidden`}>
+              {/* Accent line that slides in from the left on hover */}
+              <span className="absolute left-0 top-0 h-full w-0.5 bg-primary origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-500 ease-out" />
               <span className="font-heading text-5xl md:text-7xl font-bold text-primary/20 group-hover:text-primary transition-colors duration-500 block mb-6">
                 {service.number}
               </span>

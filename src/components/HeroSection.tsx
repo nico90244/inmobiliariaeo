@@ -31,16 +31,16 @@ const HeroSection = () => {
 
       <div className="container relative z-10 mx-auto px-6 lg:px-12">
         <div className="max-w-3xl mb-16">
-          <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight mb-6">
+          <h1 className="hero-animate-1 font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight mb-6">
             Tu hogar{" "}
-            <span className="text-primary">con respaldo jurídico</span>
+            <span className="shimmer-gold">con respaldo jurídico</span>
           </h1>
-          <p className="font-body text-lg md:text-xl text-primary-foreground/80">
+          <p className="hero-animate-2 font-body text-lg md:text-xl text-primary-foreground/80">
             Venta, alquiler y asesoría jurídica de propiedad raíz
           </p>
         </div>
 
-        <div className="bg-background p-6 md:p-8 border border-foreground/10">
+        <div className="hero-animate-3 bg-background p-6 md:p-8 border border-foreground/10">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="col-span-2 md:col-span-1">
               <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
