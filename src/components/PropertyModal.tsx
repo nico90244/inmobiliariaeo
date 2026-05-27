@@ -40,7 +40,7 @@ const PropertyModal = ({ property, open, onClose }: PropertyModalProps) => {
     { icon: ShowerHead, label: "Baños", value: property.banos },
     { icon: Building, label: "Piso", value: property.piso },
     { icon: Car, label: "Parqueadero", value: property.parqueadero },
-    { icon: DollarSign, label: "Admón/mes", value: property.administracion === -1 ? "Incluida" : property.administracion ? formatPrice(property.administracion) : null },
+    { icon: DollarSign, label: "Admón/mes", value: property.administracion ? formatPrice(property.administracion) : null },
   ].filter((c) => c.value != null && c.value !== "" && c.value !== 0);
 
   return (
@@ -130,7 +130,7 @@ const PropertyModal = ({ property, open, onClose }: PropertyModalProps) => {
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-2 py-3 bg-[hsl(142,70%,45%)] text-white font-heading text-sm font-semibold tracking-widest uppercase hover:bg-[hsl(142,70%,40%)] transition-colors"
             >
-              <WhatsAppIcon size={18} className="filter-white" />
+              <WhatsAppIcon size={18} className="text-white" />
               Solicitar información por WhatsApp
             </a>
             <a

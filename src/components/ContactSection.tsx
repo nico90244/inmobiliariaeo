@@ -92,7 +92,7 @@ const ContactSection = () => {
             </div>
 
             <div className="flex items-start gap-4">
-              <WhatsAppIcon size={20} className="mt-1 flex-shrink-0 filter-gold" />
+              <WhatsAppIcon size={20} className="mt-1 flex-shrink-0 text-primary" />
               <div>
                 <p className="font-heading text-sm font-semibold text-foreground">WhatsApp</p>
                 <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" className="font-body text-muted-foreground hover:text-primary transition-colors">

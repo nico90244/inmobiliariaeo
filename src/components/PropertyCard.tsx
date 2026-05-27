@@ -20,7 +20,6 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
           src={property.foto_portada || "/placeholder.svg"}
           alt={property.nombre_inmueble}
           className="w-full h-full object-cover"
-          style={{ objectPosition: `center ${(property as any).foto_portada_pos || "center"}` }}
           loading="lazy"
         />
         {/* Badge */}
@@ -103,7 +102,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
         >
-          <WhatsAppIcon size={14} className="filter-white" />
+          <WhatsAppIcon size={14} className="text-primary-foreground" />
           WhatsApp
         </a>
       </div>

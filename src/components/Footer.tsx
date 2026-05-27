@@ -94,7 +94,7 @@ const Footer = () => {
                 <a href="tel:+573186531598" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">318 653 1598</a>
               </li>
               <li className="flex items-center gap-3">
-                <WhatsAppIcon size={16} className="flex-shrink-0 filter-gold" />
+                <WhatsAppIcon size={16} className="flex-shrink-0 text-primary" />
                 <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" className="font-body text-sm text-secondary-foreground/60 hover:text-primary transition-colors">316 222 5604</a>
               </li>
               <li className="flex items-center gap-3">
@@ -134,18 +134,10 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-primary/30 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-heading text-xs tracking-widest text-secondary-foreground/40 uppercase text-center md:text-left">
+        <div className="mt-12 pt-8 border-t border-primary/30">
+          <p className="font-heading text-xs tracking-widest text-secondary-foreground/40 uppercase text-center">
             © {new Date().getFullYear()} Inmobiliaria Eliana Osorio. Todos los derechos reservados. | Desarrollado por Nikole Osorio en Cali, Colombia
           </p>
-          <div className="flex items-center gap-5">
-            <Link to="/mapa-del-sitio" className="font-heading text-xs tracking-widest uppercase text-secondary-foreground/60 hover:text-primary transition-colors">
-              Mapa del sitio
-            </Link>
-            <Link to="/admin/login" className="font-heading text-xs tracking-widest uppercase text-primary hover:text-primary/80 transition-colors">
-              Iniciar sesión
-            </Link>
-          </div>
         </div>
       </div>
     </footer>);
