@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
 import {
-  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar,
+  Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
@@ -19,16 +19,12 @@ type Propiedad = Tables<"propiedades">;
 type Captacion = Tables<"captaciones">;
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote", "Bodega", "Oficina"];
-const zonas = ["Norte", "Sur", "Oeste", "Oriente", "Nororiente", "Sureste", "Centro"];
-const ciudades = ["Cali", "Palmira", "Jamundi", "Yumbo", "Pereira", "Armenia", "Buga", "Tulua"];
-const parqueaderoTipos = ["Carro", "Moto", "Carro y Moto"];
-const WA_PREFIX = "https://wa.me/573162225604?text=";
 
 const emptyForm: Partial<Propiedad> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
-  area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "No", estrato: 0, administracion: 0, descripcion: "",
+  area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "", estrato: 0, administracion: 0, descripcion: "",
   estado: "Disponible", foto_portada: "", fotos: [], link_whatsapp: "", red_social_video: "", link_video: "",
-  destacada: false, ciudad: "Cali",
+  destacada: false,
 };
 
 const Admin = () => {
@@ -57,6 +53,31 @@ const Admin = () => {
 
   // Captacion detail
   const [selectedCaptacion, setSelectedCaptacion] = useState<Captacion | null>(null);
+
+  // Propiedades filters
+  const [filterNegocio, setFilterNegocio] = useState("");
+  const [filterTipo, setFilterTipo] = useState("");
+  const [filterZona, setFilterZona] = useState("");
+  const [filterPrecioMin, setFilterPrecioMin] = useState("");
+  const [filterPrecioMax, setFilterPrecioMax] = useState("");
+
+  const clearFilters = () => {
+    setFilterNegocio(""); setFilterTipo(""); setFilterZona("");
+    setFilterPrecioMin(""); setFilterPrecioMax("");
+  };
+
+  const hasActiveFilters = !!(filterNegocio || filterTipo || filterZona || filterPrecioMin || filterPrecioMax);
+
+  const propiedadesFiltradas = useMemo(() => {
+    return propiedades.filter((p) => {
+      if (filterNegocio && p.tipo_negocio !== filterNegocio) return false;
+      if (filterTipo && p.tipo_inmueble !== filterTipo) return false;
+      if (filterZona && !`${p.barrio ?? ""} ${p.zona ?? ""}`.toLowerCase().includes(filterZona.toLowerCase())) return false;
+      if (filterPrecioMin && (p.precio ?? 0) < Number(filterPrecioMin)) return false;
+      if (filterPrecioMax && (p.precio ?? 0) > Number(filterPrecioMax)) return false;
+      return true;
+    });
+  }, [propiedades, filterNegocio, filterTipo, filterZona, filterPrecioMin, filterPrecioMax]);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/admin/login");
@@ -259,6 +280,94 @@ const Admin = () => {
               </button>
             </div>
 
+            {/* Filtros */}
+            <div className="bg-muted/20 border border-foreground/10 p-4 mb-4">
+              <div className="flex flex-wrap gap-3 items-end">
+                {/* Tipo negocio */}
+                <div className="flex flex-col gap-1 min-w-[130px]">
+                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Negocio</label>
+                  <select
+                    value={filterNegocio}
+                    onChange={(e) => setFilterNegocio(e.target.value)}
+                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                  >
+                    <option value="">Todos</option>
+                    <option value="Venta">Venta</option>
+                    <option value="Alquiler">Alquiler</option>
+                  </select>
+                </div>
+
+                {/* Tipo inmueble */}
+                <div className="flex flex-col gap-1 min-w-[150px]">
+                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Tipo inmueble</label>
+                  <select
+                    value={filterTipo}
+                    onChange={(e) => setFilterTipo(e.target.value)}
+                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                  >
+                    <option value="">Todos</option>
+                    {propertyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </div>
+
+                {/* Zona / Barrio */}
+                <div className="flex flex-col gap-1 min-w-[160px]">
+                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Zona / Barrio</label>
+                  <div className="relative">
+                    <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                    <input
+                      type="text"
+                      value={filterZona}
+                      onChange={(e) => setFilterZona(e.target.value)}
+                      placeholder="Buscar…"
+                      className="border border-foreground/10 py-2 pl-8 pr-3 font-body text-sm focus:border-primary focus:outline-none bg-background w-full"
+                    />
+                  </div>
+                </div>
+
+                {/* Precio mín */}
+                <div className="flex flex-col gap-1 min-w-[130px]">
+                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio mín</label>
+                  <input
+                    type="number"
+                    value={filterPrecioMin}
+                    onChange={(e) => setFilterPrecioMin(e.target.value)}
+                    onFocus={(e) => e.target.select()}
+                    placeholder="0"
+                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                  />
+                </div>
+
+                {/* Precio máx */}
+                <div className="flex flex-col gap-1 min-w-[130px]">
+                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio máx</label>
+                  <input
+                    type="number"
+                    value={filterPrecioMax}
+                    onChange={(e) => setFilterPrecioMax(e.target.value)}
+                    onFocus={(e) => e.target.select()}
+                    placeholder="Sin límite"
+                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                  />
+                </div>
+
+                {/* Limpiar */}
+                {hasActiveFilters && (
+                  <button
+                    onClick={clearFilters}
+                    className="flex items-center gap-1.5 px-4 py-2 text-muted-foreground hover:text-destructive font-heading text-xs font-semibold tracking-widest uppercase transition-colors self-end"
+                  >
+                    <FilterX size={14} /> Limpiar
+                  </button>
+                )}
+              </div>
+              {hasActiveFilters && (
+                <p className="font-body text-xs text-muted-foreground mt-2">
+                  Mostrando <strong>{propiedadesFiltradas.length}</strong> de <strong>{propiedades.length}</strong> propiedades
+                </p>
+              )}
+            </div>
+
             {loadingData ? (
               <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>
             ) : (
@@ -268,21 +377,27 @@ const Admin = () => {
                     <tr>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio</th>
+                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Negocio</th>
+                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio / Zona</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Precio</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Video</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
                       <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {propiedades.map((p) => (
+                    {propiedadesFiltradas.map((p) => (
                       <tr key={p.id} className="border-t border-foreground/5 hover:bg-muted/20">
-                        <td className="p-4 font-body">{p.nombre_inmueble}</td>
+                        <td className="p-4 font-body max-w-[200px] truncate" title={p.nombre_inmueble}>{p.nombre_inmueble}</td>
                         <td className="p-4 font-body">{p.tipo_inmueble}</td>
-                        <td className="p-4 font-body">{p.barrio}</td>
+                        <td className="p-4">
+                          <span className={`px-2 py-1 text-xs font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
+                            {p.tipo_negocio}
+                          </span>
+                        </td>
+                        <td className="p-4 font-body text-muted-foreground">
+                          {[p.barrio, p.zona].filter(Boolean).join(" · ") || "—"}
+                        </td>
                         <td className="p-4 font-body">{p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}</td>
-                        <td className="p-4">{p.link_video ? <Video size={16} className="text-primary" /> : <span className="text-muted-foreground">—</span>}</td>
                         <td className="p-4"><span className={`px-2 py-1 text-xs font-heading font-semibold ${p.estado === "Disponible" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>{p.estado}</span></td>
                         <td className="p-4 flex gap-2">
                           <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
@@ -290,8 +405,12 @@ const Admin = () => {
                         </td>
                       </tr>
                     ))}
-                    {propiedades.length === 0 && (
-                      <tr><td colSpan={7} className="p-8 text-center font-body text-muted-foreground">No hay propiedades registradas.</td></tr>
+                    {propiedadesFiltradas.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="p-8 text-center font-body text-muted-foreground">
+                          {propiedades.length === 0 ? "No hay propiedades registradas." : "Ninguna propiedad coincide con los filtros."}
+                        </td>
+                      </tr>
                     )}
                   </tbody>
                 </table>
@@ -410,9 +529,7 @@ const Admin = () => {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Ciudad</label>
-                  <select value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background">
-                    {ciudades.map((c) => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                  <input type="text" value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Dirección</label>
@@ -426,87 +543,56 @@ const Admin = () => {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Precio</label>
-                  <input type="number" value={form.precio || 0} onChange={(e) => updateField("precio", Number(e.target.value))} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.precio ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("precio", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Área m²</label>
-                  <input type="number" value={form.area_m2 || 0} onChange={(e) => updateField("area_m2", Number(e.target.value))} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.area_m2 ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("area_m2", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Estrato</label>
-                  <input type="number" value={form.estrato || 0} onChange={(e) => updateField("estrato", Number(e.target.value))} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.estrato ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("estrato", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <div className="grid grid-cols-4 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Habitaciones</label>
-                  <input type="number" value={form.habitaciones || 0} onChange={(e) => updateField("habitaciones", Number(e.target.value))} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.habitaciones ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("habitaciones", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Baños</label>
-                  <input type="number" value={form.banos || 0} onChange={(e) => updateField("banos", Number(e.target.value))} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.banos ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("banos", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Piso</label>
                   <input type="text" value={form.piso || ""} onChange={(e) => updateField("piso", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Parqueadero?</label>
-                  <select
-                    value={form.parqueadero && form.parqueadero !== "No" ? "Si" : (form.parqueadero === "No" ? "No" : "")}
-                    onChange={(e) => updateField("parqueadero", e.target.value === "Si" ? "Carro" : "No")}
-                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
-                  >
-                    <option value="">Seleccionar</option>
-                    <option value="Si">Sí</option>
-                    <option value="No">No</option>
-                  </select>
-                  {form.parqueadero && form.parqueadero !== "No" && (
-                    <select
-                      value={parqueaderoTipos.includes(form.parqueadero) ? form.parqueadero : "Carro"}
-                      onChange={(e) => updateField("parqueadero", e.target.value)}
-                      className="mt-2 w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
-                    >
-                      {parqueaderoTipos.map((t) => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                  )}
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Parqueadero</label>
+                  <input type="text" value={form.parqueadero || ""} onChange={(e) => updateField("parqueadero", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor administración</label>
-                  {form.administracion === -1 ? (
-                    <input
-                      type="text"
-                      value="Incluida en el arriendo"
-                      disabled
-                      className="w-full border border-foreground/10 py-2 px-3 font-body text-sm bg-muted/40 text-muted-foreground italic"
-                    />
-                  ) : (
-                    <input
-                      type="number"
-                      value={form.administracion || 0}
-                      onChange={(e) => updateField("administracion", Number(e.target.value))}
-                      placeholder="0"
-                      className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
-                    />
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Incluye administración?</label>
+                  <select
+                    value={(form.administracion ?? 0) > 0 ? "si" : "no"}
+                    onChange={(e) => updateField("administracion", e.target.value === "si" ? (form.administracion && form.administracion > 0 ? form.administracion : 1) : 0)}
+                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                  >
+                    <option value="no">No</option>
+                    <option value="si">Sí</option>
+                  </select>
+                  {(form.administracion ?? 0) > 0 && (
+                    <div className="mt-2">
+                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor administración</label>
+                      <input type="number" value={form.administracion ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("administracion", e.target.value === "" ? 0 : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                    </div>
                   )}
-                  <label className="mt-2 flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={form.administracion === -1}
-                      onChange={(e) => updateField("administracion", e.target.checked ? -1 : 0)}
-                      className="accent-primary"
-                    />
-                    <span className="font-body text-xs text-foreground">La administración está incluida en el arriendo</span>
-                  </label>
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
-                  <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background">
-                    <option value="">Seleccionar</option>
-                    {zonas.map((z) => <option key={z} value={z}>{z}</option>)}
-                  </select>
+                  <input type="text" value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <div>
@@ -514,26 +600,8 @@ const Admin = () => {
                 <textarea value={form.descripcion || ""} onChange={(e) => updateField("descripcion", e.target.value)} rows={3} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none resize-none" />
               </div>
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Mensaje WhatsApp (se envía al hacer click)</label>
-                <div className="flex items-stretch border border-foreground/10 focus-within:border-primary">
-                  <span className="flex items-center px-3 bg-muted/40 font-body text-xs text-muted-foreground select-none whitespace-nowrap">
-                    {WA_PREFIX}
-                  </span>
-                  <textarea
-                    value={(() => {
-                      const link = form.link_whatsapp || "";
-                      if (link.startsWith(WA_PREFIX)) {
-                        try { return decodeURIComponent(link.slice(WA_PREFIX.length)); } catch { return link.slice(WA_PREFIX.length); }
-                      }
-                      return "";
-                    })()}
-                    onChange={(e) => updateField("link_whatsapp", e.target.value ? WA_PREFIX + encodeURIComponent(e.target.value) : "")}
-                    rows={2}
-                    placeholder={`Hola, me interesa ${form.nombre_inmueble || "esta propiedad"}...`}
-                    className="flex-1 py-2 px-3 font-body text-sm focus:outline-none resize-none"
-                  />
-                </div>
-                <p className="font-body text-[11px] text-muted-foreground mt-1">Si lo dejas vacío, se usará el mensaje por defecto.</p>
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link WhatsApp</label>
+                <input type="text" value={form.link_whatsapp || ""} onChange={(e) => updateField("link_whatsapp", e.target.value)} placeholder="https://wa.me/573162225604?text=..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
               </div>
 
               {/*
@@ -567,46 +635,17 @@ const Admin = () => {
               {/* Cover photo */}
               <div>
                 <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-2">Foto portada</label>
-                <div className="flex items-start gap-4 flex-wrap">
+                <div className="flex items-center gap-4">
                   {coverPreview && (
-                    <div className="relative w-32 h-20 border border-foreground/10 overflow-hidden bg-muted">
-                      <img
-                        src={coverPreview}
-                        alt="Foto de portada del inmueble"
-                        className="w-full h-full object-cover"
-                        style={{ objectPosition: `center ${(form as any).foto_portada_pos || "center"}` }}
-                      />
+                    <div className="relative w-24 h-16 border border-foreground/10 overflow-hidden">
+                      <img src={coverPreview} alt="Foto de portada del inmueble" className="w-full h-full object-cover" />
                       <button onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); }} className="absolute top-0 right-0 bg-destructive text-white p-0.5"><X size={12} /></button>
                     </div>
                   )}
-                  <label className="flex items-center gap-2 px-4 py-2 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground self-start">
+                  <label className="flex items-center gap-2 px-4 py-2 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                     <ImageIcon size={14} /> Seleccionar
                     <input type="file" accept="image/*" onChange={handleCoverChange} className="hidden" />
                   </label>
-                  {coverPreview && (
-                    <div className="flex flex-col">
-                      <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase mb-1">Posición de la miniatura</label>
-                      <div className="flex gap-1">
-                        {[
-                          { v: "top", l: "Arriba" },
-                          { v: "center", l: "Centro" },
-                          { v: "bottom", l: "Abajo" },
-                        ].map((opt) => {
-                          const active = ((form as any).foto_portada_pos || "center") === opt.v;
-                          return (
-                            <button
-                              key={opt.v}
-                              type="button"
-                              onClick={() => updateField("foto_portada_pos" as any, opt.v)}
-                              className={`px-3 py-1.5 font-heading text-[10px] font-semibold uppercase tracking-widest border transition-colors ${active ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-foreground/10 hover:border-primary"}`}
-                            >
-                              {opt.l}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
 

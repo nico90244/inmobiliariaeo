@@ -163,7 +163,28 @@ const Captacion = () => {
                     </div>
                     <div>
                       <label htmlFor="cap-valor" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor aproximado</label>
-                      <input id="cap-valor" type="text" value={form.valor_aproximado} onChange={(e) => update("valor_aproximado", e.target.value)} maxLength={50} placeholder="$ 0" className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none" />
+                      <input
+                        id="cap-valor"
+                        type="text"
+                        inputMode="numeric"
+                        value={form.valor_aproximado}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          // Permite solo dígitos, puntos y comas
+                          const raw = e.target.value.replace(/[^0-9.,]/g, "");
+                          update("valor_aproximado", raw);
+                        }}
+                        onBlur={(e) => {
+                          // Formatea con separadores de miles al salir
+                          const num = parseFloat(e.target.value.replace(/\./g, "").replace(",", "."));
+                          if (!isNaN(num) && num > 0) {
+                            update("valor_aproximado", new Intl.NumberFormat("es-CO").format(num));
+                          }
+                        }}
+                        maxLength={20}
+                        placeholder="Ej: 1.200.000"
+                        className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
+                      />
                     </div>
                   </div>
                   <div>

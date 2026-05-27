@@ -11,6 +11,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import AppointmentBooking from "@/components/AppointmentBooking";
+import RequisitoAlquiler from "@/components/RequisitoAlquiler";
 import SEO from "@/components/SEO";
 import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
@@ -405,11 +406,17 @@ const PropertyDetail = () => {
             <div>
               <div className="hidden lg:flex flex-col gap-4 sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto overscroll-contain pr-1 scrollbar-thin">
                 <ContactCard property={property} />
+                {property.tipo_negocio === "Alquiler" && property.precio && (
+                  <RequisitoAlquiler canon={property.precio} />
+                )}
                 <AppointmentBooking property={property} />
               </div>
               {/* Mobile */}
               <div className="lg:hidden space-y-4">
                 <ContactCard property={property} />
+                {property.tipo_negocio === "Alquiler" && property.precio && (
+                  <RequisitoAlquiler canon={property.precio} />
+                )}
                 <AppointmentBooking property={property} />
               </div>
             </div>
