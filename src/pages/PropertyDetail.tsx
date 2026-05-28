@@ -65,7 +65,7 @@ const Lightbox = ({ photos, initialIndex, onClose }: { photos: string[]; initial
 };
 
 /* ─── Gallery ─── */
-const Gallery = ({ photos }: { photos: string[] }) => {
+const Gallery = ({ photos, coverPosition }: { photos: string[]; coverPosition?: string | null }) => {
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const [mobileIdx, setMobileIdx] = useState(0);
   const maxThumbs = 4;
@@ -78,7 +78,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
       {/* Desktop */}
       <div className="hidden md:grid grid-cols-5 gap-2 h-[480px]">
         <div className="col-span-3 cursor-pointer overflow-hidden" onClick={() => setLightboxIdx(0)}>
-          <img src={photos[0]} alt="Foto principal de la propiedad" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+          <img src={photos[0]} alt="Foto principal de la propiedad" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" style={{ objectPosition: coverPosition || "50% 50%" }} />
         </div>
         <div className="col-span-2 grid grid-cols-2 grid-rows-2 gap-2">
           {photos.slice(1, maxThumbs + 1).map((p, i) => (
@@ -96,7 +96,7 @@ const Gallery = ({ photos }: { photos: string[] }) => {
 
       {/* Mobile carousel */}
       <div className="md:hidden relative">
-        <img src={photos[mobileIdx]} alt={`Foto ${mobileIdx + 1} de la propiedad`} className="w-full h-72 object-cover" onClick={() => setLightboxIdx(mobileIdx)} />
+        <img src={photos[mobileIdx]} alt={`Foto ${mobileIdx + 1} de la propiedad`} className="w-full h-72 object-cover" style={{ objectPosition: mobileIdx === 0 ? (coverPosition || "50% 50%") : "50% 50%" }} onClick={() => setLightboxIdx(mobileIdx)} />
         {photos.length > 1 && (
           <>
             <button onClick={() => setMobileIdx((i) => (i - 1 + photos.length) % photos.length)} className="absolute left-2 top-1/2 -translate-y-1/2 bg-foreground/50 text-primary-foreground p-1" aria-label="Anterior">
@@ -351,7 +351,7 @@ const PropertyDetail = () => {
             {/* Left column */}
             <div className="space-y-6">
               {/* Gallery */}
-              <Gallery photos={allPhotos} />
+              <Gallery photos={allPhotos} coverPosition={property.foto_portada_position} />
 
               {/* Features grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">

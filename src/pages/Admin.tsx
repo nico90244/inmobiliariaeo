@@ -8,6 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
   TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList,
+  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
@@ -22,11 +23,13 @@ type Captacion = Tables<"captaciones">;
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote", "Bodega", "Oficina"];
 
+const ZONAS = ["Sur", "Norte", "Oeste", "Oriente", "Nororiente", "Suroriente"];
+
 const emptyForm: Partial<Propiedad> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
-  area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "", estrato: 0, administracion: 0, descripcion: "",
-  estado: "Disponible", foto_portada: "", fotos: [], link_whatsapp: "", red_social_video: "", link_video: "",
-  destacada: false,
+  area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "No", estrato: 0, administracion: 0, descripcion: "",
+  estado: "Disponible", foto_portada: "", foto_portada_position: "50% 50%", fotos: [], link_whatsapp: "",
+  red_social_video: "", link_video: "", destacada: false,
 };
 
 const Admin = () => {
@@ -52,6 +55,16 @@ const Admin = () => {
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+
+  // Cover position editor: x/y en porcentaje (0–100)
+  const [coverPosX, setCoverPosX] = useState(50);
+  const [coverPosY, setCoverPosY] = useState(50);
+  const coverPosStr = `${coverPosX}% ${coverPosY}%`;
+
+  const nudgePos = (dx: number, dy: number) => {
+    setCoverPosX((v) => Math.max(0, Math.min(100, v + dx)));
+    setCoverPosY((v) => Math.max(0, Math.min(100, v + dy)));
+  };
 
   // Captacion detail
   const [selectedCaptacion, setSelectedCaptacion] = useState<Captacion | null>(null);
@@ -158,6 +171,14 @@ const Admin = () => {
 
   const updateField = (field: string, value: any) => setForm((f) => ({ ...f, [field]: value }));
 
+  const parseCoverPos = (posStr: string | null) => {
+    const str = posStr || "50% 50%";
+    const parts = str.split(" ");
+    const x = parseFloat(parts[0]) || 50;
+    const y = parseFloat(parts[1]) || 50;
+    return { x, y };
+  };
+
   const openNewForm = () => {
     setForm(emptyForm);
     setEditingId(null);
@@ -165,6 +186,8 @@ const Admin = () => {
     setCoverFile(null);
     setGalleryPreviews([]);
     setGalleryFiles([]);
+    setCoverPosX(50);
+    setCoverPosY(50);
     setFormOpen(true);
   };
 
@@ -175,6 +198,9 @@ const Admin = () => {
     setCoverFile(null);
     setGalleryPreviews(p.fotos || []);
     setGalleryFiles([]);
+    const { x, y } = parseCoverPos(p.foto_portada_position);
+    setCoverPosX(x);
+    setCoverPosY(y);
     setFormOpen(true);
   };
 
@@ -235,6 +261,7 @@ const Admin = () => {
       const record = {
         ...form,
         foto_portada: fotoPortadaUrl,
+        foto_portada_position: coverPosStr,
         fotos: fotosUrls,
       };
 
@@ -666,7 +693,25 @@ const Admin = () => {
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Parqueadero</label>
-                  <input type="text" value={form.parqueadero || ""} onChange={(e) => updateField("parqueadero", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <select
+                    value={form.parqueadero && form.parqueadero !== "No" ? "Si" : "No"}
+                    onChange={(e) => updateField("parqueadero", e.target.value === "No" ? "No" : "Carro")}
+                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                  >
+                    <option value="No">No</option>
+                    <option value="Si">Sí</option>
+                  </select>
+                  {form.parqueadero && form.parqueadero !== "No" && (
+                    <select
+                      value={form.parqueadero}
+                      onChange={(e) => updateField("parqueadero", e.target.value)}
+                      className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none mt-1.5"
+                    >
+                      <option value="Carro">Carro</option>
+                      <option value="Moto">Moto</option>
+                      <option value="Carro y Moto">Carro y Moto</option>
+                    </select>
+                  )}
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -689,7 +734,10 @@ const Admin = () => {
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
-                  <input type="text" value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                    <option value="">Seleccionar</option>
+                    {ZONAS.map((z) => <option key={z} value={z}>{z}</option>)}
+                  </select>
                 </div>
               </div>
               <div>
@@ -729,21 +777,77 @@ const Admin = () => {
                 </div>
               </div>
 
-              {/* Cover photo */}
-              <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-2">Foto portada</label>
-                <div className="flex items-center gap-4">
-                  {coverPreview && (
-                    <div className="relative w-24 h-16 border border-foreground/10 overflow-hidden">
-                      <img src={coverPreview} alt="Foto de portada del inmueble" className="w-full h-full object-cover" />
-                      <button onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); }} className="absolute top-0 right-0 bg-destructive text-white p-0.5"><X size={12} /></button>
-                    </div>
-                  )}
-                  <label className="flex items-center gap-2 px-4 py-2 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                    <ImageIcon size={14} /> Seleccionar
+              {/* Cover photo + position editor */}
+              <div className="border border-foreground/10 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Foto portada</label>
+                  <label className="flex items-center gap-2 px-3 py-1.5 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                    <ImageIcon size={13} /> {coverPreview ? "Cambiar" : "Seleccionar"}
                     <input type="file" accept="image/*" onChange={handleCoverChange} className="hidden" />
                   </label>
                 </div>
+
+                {coverPreview ? (
+                  <div className="space-y-3">
+                    {/* Preview with current object-position */}
+                    <div className="relative">
+                      <div className="relative w-full h-48 border border-foreground/10 overflow-hidden bg-muted/20">
+                        <img
+                          src={coverPreview}
+                          alt="Previsualización portada"
+                          className="w-full h-full object-cover"
+                          style={{ objectPosition: coverPosStr }}
+                        />
+                        {/* Crosshair overlay */}
+                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20">
+                          <div className="w-px h-full bg-white" />
+                          <div className="h-px w-full bg-white absolute" />
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); setCoverPosX(50); setCoverPosY(50); }}
+                        className="absolute top-1 right-1 bg-destructive text-white p-0.5 rounded-sm"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+
+                    {/* Position controls */}
+                    <div>
+                      <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
+                        Encuadre de la imagen · <span className="text-primary">{coverPosX}% {coverPosY}%</span>
+                      </p>
+                      <div className="flex items-center gap-4">
+                        {/* D-pad */}
+                        <div className="grid grid-cols-3 gap-1 w-fit">
+                          <div />
+                          <button onClick={() => nudgePos(0, -10)} className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><ArrowUp size={14} /></button>
+                          <div />
+                          <button onClick={() => nudgePos(-10, 0)} className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><ArrowLeft size={14} /></button>
+                          <button onClick={() => { setCoverPosX(50); setCoverPosY(50); }} title="Centrar" className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><Crosshair size={14} /></button>
+                          <button onClick={() => nudgePos(10, 0)} className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><ArrowRight size={14} /></button>
+                          <div />
+                          <button onClick={() => nudgePos(0, 10)} className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><ArrowDown size={14} /></button>
+                          <div />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <div>
+                            <p className="font-heading text-[9px] font-semibold tracking-widest text-muted-foreground uppercase mb-1">Horizontal</p>
+                            <input type="range" min={0} max={100} value={coverPosX} onChange={(e) => setCoverPosX(Number(e.target.value))} className="w-full accent-primary h-1.5 cursor-pointer" />
+                          </div>
+                          <div>
+                            <p className="font-heading text-[9px] font-semibold tracking-widest text-muted-foreground uppercase mb-1">Vertical</p>
+                            <input type="range" min={0} max={100} value={coverPosY} onChange={(e) => setCoverPosY(Number(e.target.value))} className="w-full accent-primary h-1.5 cursor-pointer" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full h-28 border border-dashed border-foreground/15 flex items-center justify-center text-muted-foreground/40">
+                    <ImageIcon size={32} />
+                  </div>
+                )}
               </div>
 
               {/* Gallery */}

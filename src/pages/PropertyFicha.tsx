@@ -307,7 +307,7 @@ const PropertyFicha = () => {
                 {allPhotos[0] && (
                   <div style={{ margin: "0 40px", height: 320, overflow: "hidden" }}>
                     <img src={allPhotos[0]} alt={property.nombre_inmueble}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: property.foto_portada_position || "50% 50%", display: "block" }} />
                   </div>
                 )}
 
@@ -431,7 +431,7 @@ const PropertyFicha = () => {
                   <div style={{ position: "relative", lineHeight: 0 }}>
                     <img src={allPhotos[0]} alt={property.nombre_inmueble}
                       className="ficha-hero-img"
-                      style={{ width: "100%", height: 260, objectFit: "cover", display: "block" }} />
+                      style={{ width: "100%", height: 260, objectFit: "cover", objectPosition: property.foto_portada_position || "50% 50%", display: "block" }} />
                     <div style={{
                       position: "absolute", inset: 0,
                       background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 52%)",
