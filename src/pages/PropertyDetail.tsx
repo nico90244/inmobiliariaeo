@@ -3,8 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Loader2, AlertCircle, ArrowLeft, Maximize2, Bed, Bath, Building2, Car,
-  DollarSign, MapPin, Play, Video, Phone, Share2, Copy, X, ChevronLeft,
-  ChevronRight, Mail, Check, FileText,
+  DollarSign, MapPin, Play, Video, Phone, Copy, X, ChevronLeft,
+  ChevronRight, Check, FileText,
 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
@@ -119,8 +119,6 @@ const Gallery = ({ photos }: { photos: string[] }) => {
 
 /* ─── Contact Card ─── */
 const ContactCard = ({ property }: { property: Propiedad }) => {
-  const [nombre, setNombre] = useState("");
-  const [celular, setCelular] = useState("");
   const [mensaje, setMensaje] = useState(
     `Hola, me interesa la propiedad ${property.nombre_inmueble} en ${property.barrio || ""}. ¿Podría obtener más información?`
   );
@@ -128,8 +126,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
   const { toast } = useToast();
 
   const handleWhatsApp = () => {
-    const text = `Nombre: ${nombre}\nCelular: ${celular}\n\n${mensaje}`;
-    window.open(`https://wa.me/573162225604?text=${encodeURIComponent(text)}`, "_blank");
+    window.open(`https://wa.me/573186531598?text=${encodeURIComponent(mensaje)}`, "_blank");
   };
 
   const handleCopyLink = async () => {
@@ -143,56 +140,20 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
     }
   };
 
-  const handleNativeShare = async () => {
-    const shareData = {
-      title: property.nombre_inmueble,
-      text: `${property.tipo_inmueble} en ${property.tipo_negocio} · ${property.barrio || "Cali"} · ${formatPrice(property.precio)}`,
-      url: window.location.href,
-    };
-    if (navigator.share && navigator.canShare?.(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch {
-        // usuario canceló — no hacer nada
-      }
-    } else {
-      // fallback: copiar link
-      handleCopyLink();
-    }
-  };
-
   const shareWA = () => {
     const text = `🏠 *${property.nombre_inmueble}*\n${property.tipo_negocio} · ${property.barrio || ""}\n💰 ${formatPrice(property.precio)}\n\n👉 ${window.location.href}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
-  const shareEmail = () => {
-    const subject = encodeURIComponent(`${property.nombre_inmueble} - Inmobiliaria Eliana Osorio`);
-    const body = encodeURIComponent(
-      `Te comparto esta propiedad:\n\n${property.nombre_inmueble}\n${property.tipo_negocio} · ${property.barrio || ""}\nPrecio: ${formatPrice(property.precio)}\n\nVer detalles: ${window.location.href}`
-    );
-    window.open(`mailto:?subject=${subject}&body=${body}`);
-  };
-
   return (
     <div className="bg-background border border-primary/20 shadow-lg p-6">
       <h3 className="font-heading text-lg font-bold text-foreground mb-1">¿Te interesa esta propiedad?</h3>
-      <p className="font-body text-sm text-muted-foreground mb-6">Contáctanos y te asesoramos sin costo</p>
+      <p className="font-body text-sm text-muted-foreground mb-5">Contáctanos y te asesoramos sin costo</p>
 
-      <div className="space-y-3 mb-4">
-        <input
-          type="text" placeholder="Nombre completo" value={nombre} onChange={(e) => setNombre(e.target.value)}
-          className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
-        />
-        <input
-          type="tel" placeholder="Celular" value={celular} onChange={(e) => setCelular(e.target.value)}
-          className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
-        />
-        <textarea
-          rows={5} value={mensaje} onChange={(e) => setMensaje(e.target.value)}
-          className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none resize-none"
-        />
-      </div>
+      <textarea
+        rows={4} value={mensaje} onChange={(e) => setMensaje(e.target.value)}
+        className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none resize-none mb-4"
+      />
 
       <button onClick={handleWhatsApp} className="w-full py-3 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
         <WhatsAppIcon size={16} className="text-primary-foreground" /> Enviar por WhatsApp
@@ -207,54 +168,23 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
       <a href="tel:3186531598" className="w-full py-3 border border-primary text-primary font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-colors flex items-center justify-center gap-2">
         <Phone size={16} /> Llamar ahora
       </a>
-      <p className="font-body text-xs text-muted-foreground text-center mt-2">Respuesta inmediata en horario laboral</p>
+      <p className="font-body text-xs text-muted-foreground text-center mt-2 mb-6">Respuesta inmediata en horario laboral</p>
 
-      {/* Share section */}
-      <div className="mt-6 pt-5 border-t border-foreground/10">
-        <p className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-3">
-          Compartir propiedad
-        </p>
-        <div className="grid grid-cols-3 gap-2">
-          {/* Native share / copy */}
-          <button
-            onClick={handleNativeShare}
-            className="flex flex-col items-center gap-1.5 py-2.5 border border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary transition-all duration-200 text-center"
-            title="Compartir"
-          >
-            {copied ? <Check size={16} className="text-green-600" /> : <Share2 size={16} />}
-            <span className="font-heading text-[9px] font-semibold tracking-widest uppercase">
-              {copied ? "Copiado" : "Compartir"}
-            </span>
-          </button>
-
-          {/* WhatsApp */}
-          <button
-            onClick={shareWA}
-            className="flex flex-col items-center gap-1.5 py-2.5 border border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary transition-all duration-200"
-            title="Compartir por WhatsApp"
-          >
-            <WhatsAppIcon size={16} />
-            <span className="font-heading text-[9px] font-semibold tracking-widest uppercase">WhatsApp</span>
-          </button>
-
-          {/* Copy link */}
-          <button
-            onClick={handleCopyLink}
-            className="flex flex-col items-center gap-1.5 py-2.5 border border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary transition-all duration-200"
-            title="Copiar link"
-          >
-            <Copy size={16} />
-            <span className="font-heading text-[9px] font-semibold tracking-widest uppercase">Copiar link</span>
-          </button>
-        </div>
-
-        {/* Email share */}
+      {/* Share — solo las acciones útiles */}
+      <div className="flex gap-2 pt-5 border-t border-foreground/10">
         <button
-          onClick={shareEmail}
-          className="mt-2 w-full flex items-center justify-center gap-2 py-2 border border-foreground/10 text-foreground/50 hover:border-primary/40 hover:text-primary/70 transition-all duration-200 font-heading text-[10px] font-semibold tracking-widest uppercase"
-          title="Compartir por correo"
+          onClick={handleCopyLink}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary transition-all duration-200 font-heading text-[9px] font-semibold tracking-widest uppercase"
         >
-          <Mail size={14} /> Enviar por correo
+          {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
+          {copied ? "Copiado" : "Copiar link"}
+        </button>
+        <button
+          onClick={shareWA}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary transition-all duration-200 font-heading text-[9px] font-semibold tracking-widest uppercase"
+        >
+          <WhatsAppIcon size={14} />
+          Compartir
         </button>
       </div>
     </div>
