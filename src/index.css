@@ -260,6 +260,16 @@
     max-width: 100% !important;
     width: 100% !important;
   }
+  /* Salto de página explícito tras la página 1 */
+  [data-ficha-page1] {
+    break-after: page;
+    page-break-after: always;
+  }
+  /* Limitar altura de la descripción para que no desborde la página 1 */
+  [data-ficha-desc] {
+    max-height: 62mm !important;
+    overflow: hidden !important;
+  }
   /* Galería: evitar corte a mitad de imagen entre páginas */
   [data-ficha-gallery] {
     break-inside: avoid;
