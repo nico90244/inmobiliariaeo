@@ -214,6 +214,38 @@
 .border-primary\/30 { border-color: hsl(40, 47%, 50%, 0.30); }
 .border-primary\/40 { border-color: hsl(40, 47%, 50%, 0.40); }
 
+/* ─────────────────────────────────────────────────────────────
+   PRINT – ficha técnica de propiedades.
+   El navegador la convierte a PDF con Ctrl/⌘ + P → Guardar como PDF.
+   ───────────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  /* Ocultar barra de acciones y header sticky */
+  .ficha-no-print {
+    display: none !important;
+  }
+  /* Forzar colores exactos (fondos, dorados, fotos) */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* Quitar el fondo gris del "escritorio" y el padding */
+  body {
+    background: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  /* El documento ocupa toda la página A4 */
+  [data-ficha-doc] {
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
 @layer utilities {
   /* Scrollbar fino para el panel lateral de propiedades */
   .scrollbar-thin {

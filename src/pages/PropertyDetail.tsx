@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Loader2, AlertCircle, ArrowLeft, Maximize2, Bed, Bath, Building2, Car,
   DollarSign, MapPin, Play, Video, Phone, Share2, Copy, X, ChevronLeft,
-  ChevronRight, Mail, Check,
+  ChevronRight, Mail, Check, FileText,
 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
@@ -403,7 +403,15 @@ const PropertyDetail = () => {
               {[property.ciudad || "Cali", property.zona, property.tipo_inmueble].filter(Boolean).join(" | ")}
             </p>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-2">{property.nombre_inmueble}</h1>
-            <p className="font-body text-2xl md:text-3xl font-bold text-primary">{formatPrice(property.precio)}</p>
+            <div className="flex items-center gap-4 flex-wrap">
+              <p className="font-body text-2xl md:text-3xl font-bold text-primary">{formatPrice(property.precio)}</p>
+              <Link
+                to={`/ficha/${property.id}`}
+                className="inline-flex items-center gap-1.5 font-heading text-[10px] font-semibold tracking-widest uppercase text-muted-foreground border border-foreground/15 px-3 py-1.5 hover:border-primary hover:text-primary transition-colors duration-200"
+              >
+                <FileText size={12} /> Ver ficha técnica
+              </Link>
+            </div>
           </div>
         </div>
 
