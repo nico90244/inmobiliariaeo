@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft, Printer, Copy, Check,
   Bed, Bath, Building2, Car, Maximize2, DollarSign, MapPin,
+  Instagram, Facebook,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
@@ -119,7 +120,8 @@ const PropertyFicha = () => {
   const fichaUrl  = window.location.href;
   const qrUrl     = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(fichaUrl)}`;
   const isAlquiler = property.tipo_negocio === "Alquiler";
-  const minIngresos = property.precio ? property.precio * 3 : null;
+  // Ingresos mínimos: 2× el canon (para arrendatario y codeudor por separado)
+  const minIngresos = property.precio ? property.precio * 2 : null;
   const smlvNeeded  = minIngresos
     ? (minIngresos / SMLV_2026).toFixed(1)
     : null;
@@ -339,7 +341,7 @@ const PropertyFicha = () => {
 
               {/* Photo gallery */}
               {allPhotos.length > 1 && (
-                <div style={{ padding: "0 40px 28px" }}>
+                <div data-ficha-gallery style={{ padding: "0 40px 28px" }}>
                   <div style={{ height: 1, backgroundColor: "#E5E7EB", marginBottom: 20 }} />
                   <Label>Galería</Label>
                   <div style={{
@@ -377,7 +379,7 @@ const PropertyFicha = () => {
                       fontSize: 13, color: WHITE, fontWeight: 700,
                       letterSpacing: "0.02em",
                     }}>
-                      +57 318 353 1598
+                      +57 318 653 1598
                     </p>
                   </div>
                 </div>
@@ -398,68 +400,58 @@ const PropertyFicha = () => {
           ══════════════════════════════════════════════ */}
           {isAlquiler && (
             <>
-              {/* Branded header */}
+              {/* Branded header — compacto */}
               <div style={{
                 backgroundColor: DARK,
-                padding: "24px 36px",
+                padding: "18px 32px",
                 display: "flex", alignItems: "center",
                 justifyContent: "space-between",
               }}>
                 <img src={logoGold} alt="Inmobiliaria Eliana Osorio"
-                  style={{ height: 52, width: "auto" }} />
-                <div style={{ textAlign: "right" }}>
-                  <p style={{
-                    fontFamily: "Josefin Sans, sans-serif",
-                    fontSize: 9, fontWeight: 600,
-                    letterSpacing: "0.18em", textTransform: "uppercase",
-                    color: GOLD, marginBottom: 5,
-                  }}>
-                    Inmueble en alquiler
-                  </p>
-                  <p style={{
-                    fontFamily: "Josefin Sans, sans-serif",
-                    fontSize: 10, color: "rgba(255,255,255,0.4)",
-                    letterSpacing: "0.06em",
-                  }}>
-                    inmobiliariaeo.com
-                  </p>
-                </div>
+                  style={{ height: 44, width: "auto" }} />
+                <span style={{
+                  fontFamily: "Josefin Sans, sans-serif",
+                  fontSize: 9, fontWeight: 600,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  color: GOLD,
+                }}>
+                  Inmueble en alquiler
+                </span>
               </div>
 
-              {/* Hero photo with text overlay */}
+              {/* Hero photo con overlay — sin position:absolute para mejor compatibilidad print */}
               {allPhotos[0] && (
-                <div style={{
-                  position: "relative", height: 330, overflow: "hidden",
-                }}>
+                <div style={{ position: "relative", overflow: "hidden", lineHeight: 0 }}>
                   <img
                     src={allPhotos[0]}
                     alt={property.nombre_inmueble}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    style={{ width: "100%", height: 300, objectFit: "cover", display: "block" }}
                   />
+                  {/* Overlay con info */}
                   <div style={{
                     position: "absolute", inset: 0,
-                    background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.08) 55%)",
-                  }} />
-                  <div style={{ position: "absolute", bottom: 26, left: 32, right: 32 }}>
+                    background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.05) 50%)",
+                    display: "flex", flexDirection: "column",
+                    justifyContent: "flex-end",
+                    padding: "24px 32px",
+                  }}>
                     <p style={{
-                      fontFamily: "Josefin Sans, sans-serif",
-                      fontSize: 9, fontWeight: 600,
+                      fontFamily: "Josefin Sans, sans-serif", fontSize: 9, fontWeight: 600,
                       letterSpacing: "0.18em", textTransform: "uppercase",
-                      color: GOLD, marginBottom: 6,
+                      color: GOLD, marginBottom: 5,
                     }}>
                       {property.tipo_inmueble}
-                      {(property.barrio || property.ciudad) && ` · ${property.barrio || property.ciudad}`}
+                      {(property.zona || property.barrio) && ` · ${[property.zona, property.barrio].filter(Boolean).join(" · ")}`}
                     </p>
                     <h1 style={{
-                      fontFamily: "'Catchy Mager', serif",
-                      fontSize: 26, fontWeight: 700,
-                      color: WHITE, lineHeight: 1.2, marginBottom: 8,
+                      fontFamily: "'Catchy Mager', serif", fontSize: 24, fontWeight: 700,
+                      color: WHITE, lineHeight: 1.2, marginBottom: 7,
                     }}>
                       {property.nombre_inmueble}
                     </h1>
                     <p style={{
-                      fontFamily: "Josefin Sans, sans-serif",
-                      fontSize: 22, fontWeight: 700, color: GOLD,
+                      fontFamily: "Josefin Sans, sans-serif", fontSize: 20,
+                      fontWeight: 700, color: GOLD,
                     }}>
                       {formatPrice(property.precio)}{" "}
                       <span style={{ fontSize: 12, fontWeight: 400, opacity: 0.75 }}>/ mes</span>
@@ -471,15 +463,11 @@ const PropertyFicha = () => {
               {/* Specs + Requirements (two columns) */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
                 {/* Specs */}
-                <div style={{
-                  padding: "26px 26px 24px 32px",
-                  borderRight: "1px solid #E5E7EB",
-                }}>
+                <div style={{ padding: "22px 22px 20px 28px", borderRight: "1px solid #E5E7EB" }}>
                   <Label>Características</Label>
                   <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "8px 8px", marginTop: 12,
+                    display: "grid", gridTemplateColumns: "1fr 1fr",
+                    gap: "7px 7px", marginTop: 10,
                   }}>
                     {specItems.map(({ icon, label, value }) => (
                       <SpecChip key={label} icon={icon} label={label} value={value} />
@@ -488,65 +476,100 @@ const PropertyFicha = () => {
                 </div>
 
                 {/* Requirements */}
-                <div style={{ backgroundColor: DARK, padding: "26px 30px 24px 26px" }}>
+                <div style={{ backgroundColor: DARK, padding: "22px 26px 20px 22px" }}>
                   <Label>Requisitos de arrendamiento</Label>
 
+                  {/* Ingresos mínimos */}
                   {minIngresos && (
                     <div style={{
-                      marginBottom: 14, marginTop: 10,
-                      padding: "10px 14px",
+                      margin: "8px 0 12px",
+                      padding: "9px 12px",
                       backgroundColor: "rgba(201,168,76,0.10)",
                       border: "1px solid rgba(201,168,76,0.22)",
                     }}>
                       <p style={{
-                        fontFamily: "Josefin Sans, sans-serif",
-                        fontSize: 8, fontWeight: 600,
+                        fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
                         letterSpacing: "0.12em", textTransform: "uppercase",
-                        color: GOLD, marginBottom: 5,
+                        color: GOLD, marginBottom: 4,
                       }}>
                         Ingresos mínimos requeridos
                       </p>
                       <p style={{
-                        fontFamily: "Josefin Sans, sans-serif",
-                        fontSize: 18, fontWeight: 700, color: WHITE, lineHeight: 1,
+                        fontFamily: "Josefin Sans, sans-serif", fontSize: 16,
+                        fontWeight: 700, color: WHITE, lineHeight: 1,
                       }}>
                         {formatPrice(minIngresos)}
                       </p>
                       {smlvNeeded && (
                         <p style={{
-                          fontFamily: "DM Sans, sans-serif",
-                          fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 3,
+                          fontFamily: "DM Sans, sans-serif", fontSize: 9,
+                          color: "rgba(255,255,255,0.45)", marginTop: 3,
                         }}>
-                          {smlvNeeded} SMLMV · 3 veces el canon
+                          {smlvNeeded} SMLMV · 2 veces el canon (arrendatario y codeudor)
                         </p>
                       )}
                     </div>
                   )}
 
+                  {/* Codeudor */}
+                  <p style={{
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
+                    letterSpacing: "0.12em", textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.5)", marginBottom: 6,
+                  }}>
+                    Se requiere un codeudor
+                  </p>
+
+                  {/* Empleados */}
+                  <p style={{
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 700,
+                    letterSpacing: "0.1em", textTransform: "uppercase",
+                    color: GOLD, marginBottom: 5,
+                  }}>
+                    Empleados
+                  </p>
                   {[
-                    "Codeudor con propiedad raíz en Cali",
-                    "Extractos bancarios (últimos 3 meses)",
-                    "Certificado laboral o cámara de comercio",
-                    "Contrato de trabajo o RUT",
-                    "Fotocopia de cédula ampliada al 150%",
-                    "Paz y salvo del arrendamiento anterior",
+                    "Carta laboral",
+                    "Últimos 3 desprendibles de pago",
+                    "Fotocopia de cédula",
                   ].map((req, i) => (
-                    <div key={i} style={{
-                      display: "flex", alignItems: "flex-start",
-                      gap: 8, marginBottom: 7,
-                    }}>
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 7, marginBottom: 5 }}>
                       <div style={{
-                        width: 15, height: 15,
-                        backgroundColor: GOLD,
+                        width: 13, height: 13, backgroundColor: GOLD,
                         display: "flex", alignItems: "center", justifyContent: "center",
                         flexShrink: 0, marginTop: 1,
                       }}>
-                        <span style={{ color: DARK, fontSize: 9, fontWeight: 700, lineHeight: 1 }}>✓</span>
+                        <span style={{ color: DARK, fontSize: 8, fontWeight: 700, lineHeight: 1 }}>✓</span>
                       </div>
-                      <p style={{
-                        fontFamily: "DM Sans, sans-serif",
-                        fontSize: 11, color: "rgba(255,255,255,0.72)", lineHeight: 1.4,
+                      <p style={{ fontFamily: "DM Sans, sans-serif", fontSize: 10, color: "rgba(255,255,255,0.72)", lineHeight: 1.3 }}>
+                        {req}
+                      </p>
+                    </div>
+                  ))}
+
+                  {/* Independientes */}
+                  <p style={{
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 700,
+                    letterSpacing: "0.1em", textTransform: "uppercase",
+                    color: GOLD, margin: "8px 0 5px",
+                  }}>
+                    Independientes
+                  </p>
+                  {[
+                    "RUT",
+                    "Extractos bancarios últimos 3 meses",
+                    "Fotocopia de cédula",
+                    "Declaración de renta (si aplica)",
+                  ].map((req, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 7, marginBottom: 5 }}>
+                      <div style={{
+                        width: 13, height: 13, backgroundColor: GOLD,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0, marginTop: 1,
                       }}>
+                        <span style={{ color: DARK, fontSize: 8, fontWeight: 700, lineHeight: 1 }}>✓</span>
+                      </div>
+                      <p style={{ fontFamily: "DM Sans, sans-serif", fontSize: 10, color: "rgba(255,255,255,0.72)", lineHeight: 1.3 }}>
                         {req}
                       </p>
                     </div>
@@ -556,12 +579,11 @@ const PropertyFicha = () => {
 
               {/* Description */}
               {property.descripcion && (
-                <div style={{ padding: "24px 32px", borderTop: "1px solid #E5E7EB" }}>
+                <div style={{ padding: "20px 28px", borderTop: "1px solid #E5E7EB" }}>
                   <Label>Descripción</Label>
                   <p style={{
-                    fontFamily: "DM Sans, sans-serif",
-                    fontSize: 12, color: GRAY_T,
-                    lineHeight: 1.75, whiteSpace: "pre-line", marginTop: 8,
+                    fontFamily: "DM Sans, sans-serif", fontSize: 11, color: GRAY_T,
+                    lineHeight: 1.5, whiteSpace: "pre-line", marginTop: 7,
                   }}>
                     {property.descripcion}
                   </p>
@@ -570,97 +592,147 @@ const PropertyFicha = () => {
 
               {/* Photo gallery */}
               {allPhotos.length > 1 && (
-                <div style={{ padding: "0 32px 26px" }}>
-                  <div style={{ height: 1, backgroundColor: "#E5E7EB", marginBottom: 18 }} />
+                <div data-ficha-gallery style={{ padding: "0 28px 22px", breakInside: "avoid" as const }}>
+                  <div style={{ height: 1, backgroundColor: "#E5E7EB", marginBottom: 14 }} />
                   <Label>Galería</Label>
                   <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: 6, marginTop: 10,
+                    display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: 5, marginTop: 8,
                   }}>
                     {allPhotos.slice(1, 7).map((p, i) => (
                       <img key={i} src={p} alt={`Foto ${i + 2}`}
-                        style={{ width: "100%", height: 128, objectFit: "cover", display: "block" }} />
+                        style={{ width: "100%", height: 118, objectFit: "cover", display: "block" }} />
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Video / social link */}
+              {/* Video link — clickeable con ícono de red social */}
               {property.link_video && (
                 <div style={{
-                  padding: "16px 32px 20px",
+                  padding: "14px 28px 16px",
                   borderTop: "1px solid #E5E7EB",
                 }}>
                   <Label>Video del inmueble</Label>
-                  <p style={{
-                    fontFamily: "DM Sans, sans-serif",
-                    fontSize: 11, color: GRAY_T, marginTop: 6,
-                  }}>
-                    {property.red_social_video
-                      ? `Ver en ${property.red_social_video.charAt(0).toUpperCase() + property.red_social_video.slice(1)}: `
-                      : "Ver video: "}
-                    <span style={{ color: GOLD, fontWeight: 600 }}>{property.link_video}</span>
-                  </p>
+                  <a
+                    href={property.link_video}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      marginTop: 8,
+                      padding: "8px 16px",
+                      backgroundColor: DARK, color: WHITE,
+                      fontFamily: "Josefin Sans, sans-serif", fontSize: 11,
+                      fontWeight: 600, letterSpacing: "0.08em",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {property.red_social_video === "instagram" || !property.red_social_video ? (
+                      <Instagram size={15} style={{ color: GOLD }} />
+                    ) : property.red_social_video === "facebook" ? (
+                      <Facebook size={15} style={{ color: GOLD }} />
+                    ) : (
+                      /* TikTok */
+                      <svg viewBox="0 0 24 24" fill={GOLD} style={{ width: 15, height: 15, flexShrink: 0 }}>
+                        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.8a8.18 8.18 0 004.77 1.53V6.86a4.83 4.83 0 01-1-.17z" />
+                      </svg>
+                    )}
+                    {property.red_social_video === "instagram" || !property.red_social_video
+                      ? "Ver reel en Instagram"
+                      : property.red_social_video === "facebook"
+                        ? "Ver en Facebook"
+                        : "Ver en TikTok"}
+                  </a>
                 </div>
               )}
 
               {/* Footer */}
               <div style={{
-                backgroundColor: DARK,
-                padding: "22px 32px",
+                backgroundColor: DARK, padding: "20px 28px",
                 display: "flex", alignItems: "center",
                 justifyContent: "space-between", gap: 16,
               }}>
+                {/* Left: contacto + redes */}
                 <div>
+                  {/* WhatsApp */}
                   <p style={{
-                    fontFamily: "Josefin Sans, sans-serif",
-                    fontSize: 9, fontWeight: 600,
-                    letterSpacing: "0.16em", textTransform: "uppercase",
-                    color: GOLD, marginBottom: 10,
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
+                    letterSpacing: "0.14em", textTransform: "uppercase",
+                    color: GOLD, marginBottom: 3,
                   }}>
-                    Contáctanos
+                    WhatsApp
                   </p>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    {[
-                      { label: "Teléfono", value: "318 653 1598" },
-                      { label: "WhatsApp", value: "316 222 5604" },
-                      { label: "Correo", value: "info@inmobiliariaeo.com" },
-                    ].map(({ label, value }) => (
-                      <p key={label} style={{
-                        fontFamily: "DM Sans, sans-serif",
-                        fontSize: 11, color: "rgba(255,255,255,0.70)",
+                  <p style={{
+                    fontFamily: "DM Sans, sans-serif", fontSize: 13,
+                    color: WHITE, fontWeight: 700, marginBottom: 12,
+                  }}>
+                    +57 318 653 1598
+                  </p>
+
+                  {/* Redes sociales */}
+                  <p style={{
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
+                    letterSpacing: "0.14em", textTransform: "uppercase",
+                    color: GOLD, marginBottom: 7,
+                  }}>
+                    Síguenos en nuestras redes
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                    {/* Instagram */}
+                    <a href="https://instagram.com/inmobiliaria_eo" target="_blank" rel="noopener noreferrer"
+                      style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none" }}>
+                      <div style={{
+                        width: 24, height: 24, backgroundColor: "rgba(255,255,255,0.08)",
+                        borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
                       }}>
-                        <span style={{
-                          fontFamily: "Josefin Sans, sans-serif",
-                          fontSize: 8, fontWeight: 600,
-                          letterSpacing: "0.12em", textTransform: "uppercase",
-                          color: GOLD, marginRight: 6,
-                        }}>
-                          {label}
-                        </span>
-                        {value}
-                      </p>
-                    ))}
-                    <p style={{
-                      fontFamily: "DM Sans, sans-serif",
-                      fontSize: 10, color: "rgba(255,255,255,0.35)",
-                      marginTop: 4,
-                    }}>
-                      @inmobiliaria_eo en Instagram, Facebook y TikTok
-                    </p>
+                        <Instagram size={12} style={{ color: GOLD }} />
+                      </div>
+                      <span style={{ fontFamily: "DM Sans, sans-serif", fontSize: 10, color: "rgba(255,255,255,0.65)" }}>
+                        @inmobiliaria_eo
+                      </span>
+                    </a>
+                    {/* Facebook */}
+                    <a href="https://facebook.com/inmobiliariaeo" target="_blank" rel="noopener noreferrer"
+                      style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none" }}>
+                      <div style={{
+                        width: 24, height: 24, backgroundColor: "rgba(255,255,255,0.08)",
+                        borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <Facebook size={12} style={{ color: GOLD }} />
+                      </div>
+                      <span style={{ fontFamily: "DM Sans, sans-serif", fontSize: 10, color: "rgba(255,255,255,0.65)" }}>
+                        inmobiliariaeo
+                      </span>
+                    </a>
+                    {/* TikTok */}
+                    <a href="https://tiktok.com/@inmobiliaria_eo" target="_blank" rel="noopener noreferrer"
+                      style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none" }}>
+                      <div style={{
+                        width: 24, height: 24, backgroundColor: "rgba(255,255,255,0.08)",
+                        borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <svg viewBox="0 0 24 24" fill={GOLD} style={{ width: 11, height: 11 }}>
+                          <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.8a8.18 8.18 0 004.77 1.53V6.86a4.83 4.83 0 01-1-.17z" />
+                        </svg>
+                      </div>
+                      <span style={{ fontFamily: "DM Sans, sans-serif", fontSize: 10, color: "rgba(255,255,255,0.65)" }}>
+                        @inmobiliaria_eo
+                      </span>
+                    </a>
                   </div>
                 </div>
+
+                {/* Right: QR */}
                 <div style={{
                   display: "flex", flexDirection: "column",
-                  alignItems: "center", gap: 8, flexShrink: 0,
+                  alignItems: "center", gap: 7, flexShrink: 0,
                 }}>
-                  <img src={qrUrl} alt="QR ficha" style={{ width: 90, height: 90 }} />
+                  <img src={qrUrl} alt="QR ficha" style={{ width: 84, height: 84 }} />
                   <p style={{
-                    fontFamily: "Josefin Sans, sans-serif",
-                    fontSize: 8, fontWeight: 600,
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 7, fontWeight: 600,
                     letterSpacing: "0.1em", textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.35)", textAlign: "center", lineHeight: 1.5,
+                    color: "rgba(255,255,255,0.3)", textAlign: "center", lineHeight: 1.5,
                   }}>
                     Ver ficha<br />online
                   </p>

@@ -221,7 +221,7 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 10mm 12mm;
+    margin: 8mm 10mm;
   }
   /* Ocultar barra de acciones */
   .ficha-no-print {
@@ -233,29 +233,37 @@
     print-color-adjust: exact !important;
   }
   /* Forzar ancho A4 — evita que Chrome use viewport móvil al imprimir */
-  html, body {
+  html {
+    width: 210mm !important;
+    min-width: 210mm !important;
+  }
+  body {
     width: 210mm !important;
     min-width: 210mm !important;
     background: none !important;
     padding: 0 !important;
     margin: 0 !important;
   }
-  /* Quitar el fondo gris y padding del "escritorio" */
+  /* Quitar el fondo gris, padding y min-height del contenedor */
   [data-ficha-wrapper] {
     padding: 0 !important;
-    background: none !important;
+    margin: 0 !important;
+    background: transparent !important;
     display: block !important;
-    min-height: unset !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
   }
-  /* El documento ocupa el ancho completo de la página */
+  /* El documento ocupa todo el ancho de la página */
   [data-ficha-doc] {
     box-shadow: none !important;
     max-width: 100% !important;
     width: 100% !important;
   }
-  /* Permitir saltos de página naturales entre secciones */
-  [data-ficha-doc] > * {
-    page-break-inside: auto;
+  /* Galería: evitar corte a mitad de imagen entre páginas */
+  [data-ficha-gallery] {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
 
