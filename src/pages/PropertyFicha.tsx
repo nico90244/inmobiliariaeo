@@ -425,11 +425,13 @@ const PropertyFicha = () => {
                   </span>
                 </div>
 
-                {/* Foto portada con overlay — sin overflow:hidden para que Chrome imprima la imagen */}
+                {/* Foto portada con overlay — altura fija directamente en el img (como Venta),
+                    evita que height:"100%" falle en Chrome mobile al imprimir */}
                 {allPhotos[0] && (
-                  <div style={{ position: "relative", height: 260 }}>
+                  <div style={{ position: "relative", lineHeight: 0 }}>
                     <img src={allPhotos[0]} alt={property.nombre_inmueble}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      className="ficha-hero-img"
+                      style={{ width: "100%", height: 260, objectFit: "cover", display: "block" }} />
                     <div style={{
                       position: "absolute", inset: 0,
                       background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 52%)",

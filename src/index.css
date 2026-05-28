@@ -267,6 +267,12 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
+  /* Foto portada alquiler: fijar alto para que no colapse en Chrome mobile */
+  [data-ficha-page1] .ficha-hero-img {
+    height: 260px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
   /* Salto de página explícito tras la página 1 */
   [data-ficha-page1] {
     break-after: page;
