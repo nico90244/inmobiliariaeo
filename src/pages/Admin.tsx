@@ -28,8 +28,8 @@ const ZONAS = ["Sur", "Norte", "Oeste", "Oriente", "Nororiente", "Suroriente"];
 const emptyForm: Partial<Propiedad> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
   area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "No", estrato: 0, administracion: 0, descripcion: "",
-  estado: "Disponible", foto_portada: "", foto_portada_position: "50% 50%", fotos: [], link_whatsapp: "",
-  red_social_video: "", link_video: "", destacada: false,
+  estado: "Disponible", foto_portada: "", foto_portada_position: "50% 50%", foto_portada_zoom: 1.0,
+  fotos: [], link_whatsapp: "", red_social_video: "", link_video: "", destacada: false,
 };
 
 const Admin = () => {
@@ -56,9 +56,10 @@ const Admin = () => {
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
 
-  // Cover position editor: x/y en porcentaje (0–100)
+  // Cover position + zoom editor
   const [coverPosX, setCoverPosX] = useState(50);
   const [coverPosY, setCoverPosY] = useState(50);
+  const [coverZoom, setCoverZoom] = useState(1.0);
   const coverPosStr = `${coverPosX}% ${coverPosY}%`;
 
   const nudgePos = (dx: number, dy: number) => {
@@ -188,6 +189,7 @@ const Admin = () => {
     setGalleryFiles([]);
     setCoverPosX(50);
     setCoverPosY(50);
+    setCoverZoom(1.0);
     setFormOpen(true);
   };
 
@@ -201,6 +203,7 @@ const Admin = () => {
     const { x, y } = parseCoverPos(p.foto_portada_position);
     setCoverPosX(x);
     setCoverPosY(y);
+    setCoverZoom(p.foto_portada_zoom ?? 1.0);
     setFormOpen(true);
   };
 
@@ -262,6 +265,7 @@ const Admin = () => {
         ...form,
         foto_portada: fotoPortadaUrl,
         foto_portada_position: coverPosStr,
+        foto_portada_zoom: coverZoom,
         fotos: fotosUrls,
       };
 
@@ -789,14 +793,18 @@ const Admin = () => {
 
                 {coverPreview ? (
                   <div className="space-y-3">
-                    {/* Preview with current object-position */}
+                    {/* Preview with current object-position + zoom */}
                     <div className="relative">
                       <div className="relative w-full h-48 border border-foreground/10 overflow-hidden bg-muted/20">
                         <img
                           src={coverPreview}
                           alt="Previsualización portada"
                           className="w-full h-full object-cover"
-                          style={{ objectPosition: coverPosStr }}
+                          style={{
+                            objectPosition: coverPosStr,
+                            transform: `scale(${coverZoom})`,
+                            transformOrigin: coverPosStr,
+                          }}
                         />
                         {/* Crosshair overlay */}
                         <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20">
@@ -805,7 +813,7 @@ const Admin = () => {
                         </div>
                       </div>
                       <button
-                        onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); setCoverPosX(50); setCoverPosY(50); }}
+                        onClick={() => { setCoverPreview(null); setCoverFile(null); updateField("foto_portada", ""); setCoverPosX(50); setCoverPosY(50); setCoverZoom(1.0); }}
                         className="absolute top-1 right-1 bg-destructive text-white p-0.5 rounded-sm"
                       >
                         <X size={12} />
@@ -815,7 +823,8 @@ const Admin = () => {
                     {/* Position controls */}
                     <div>
                       <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase mb-2">
-                        Encuadre de la imagen · <span className="text-primary">{coverPosX}% {coverPosY}%</span>
+                        Encuadre · <span className="text-primary">{coverPosX}% {coverPosY}%</span>
+                        <span className="ml-2">· Zoom <span className="text-primary">{Math.round(coverZoom * 100)}%</span></span>
                       </p>
                       <div className="flex items-center gap-4">
                         {/* D-pad */}
@@ -824,7 +833,7 @@ const Admin = () => {
                           <button onClick={() => nudgePos(0, -10)} className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><ArrowUp size={14} /></button>
                           <div />
                           <button onClick={() => nudgePos(-10, 0)} className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><ArrowLeft size={14} /></button>
-                          <button onClick={() => { setCoverPosX(50); setCoverPosY(50); }} title="Centrar" className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><Crosshair size={14} /></button>
+                          <button onClick={() => { setCoverPosX(50); setCoverPosY(50); setCoverZoom(1.0); }} title="Centrar y resetear zoom" className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><Crosshair size={14} /></button>
                           <button onClick={() => nudgePos(10, 0)} className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><ArrowRight size={14} /></button>
                           <div />
                           <button onClick={() => nudgePos(0, 10)} className="p-1.5 border border-foreground/10 hover:border-primary hover:text-primary transition-colors flex items-center justify-center"><ArrowDown size={14} /></button>
@@ -838,6 +847,10 @@ const Admin = () => {
                           <div>
                             <p className="font-heading text-[9px] font-semibold tracking-widest text-muted-foreground uppercase mb-1">Vertical</p>
                             <input type="range" min={0} max={100} value={coverPosY} onChange={(e) => setCoverPosY(Number(e.target.value))} className="w-full accent-primary h-1.5 cursor-pointer" />
+                          </div>
+                          <div>
+                            <p className="font-heading text-[9px] font-semibold tracking-widest text-muted-foreground uppercase mb-1">Zoom ({Math.round(coverZoom * 100)}%)</p>
+                            <input type="range" min={100} max={200} step={5} value={Math.round(coverZoom * 100)} onChange={(e) => setCoverZoom(Number(e.target.value) / 100)} className="w-full accent-primary h-1.5 cursor-pointer" />
                           </div>
                         </div>
                       </div>

@@ -307,7 +307,13 @@ const PropertyFicha = () => {
                 {allPhotos[0] && (
                   <div style={{ margin: "0 40px", height: 320, overflow: "hidden" }}>
                     <img src={allPhotos[0]} alt={property.nombre_inmueble}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: property.foto_portada_position || "50% 50%", display: "block" }} />
+                      style={{
+                        width: "100%", height: "100%", objectFit: "cover",
+                        objectPosition: property.foto_portada_position || "50% 50%",
+                        transform: `scale(${property.foto_portada_zoom ?? 1})`,
+                        transformOrigin: property.foto_portada_position || "50% 50%",
+                        display: "block",
+                      }} />
                   </div>
                 )}
 
@@ -425,40 +431,49 @@ const PropertyFicha = () => {
                   </span>
                 </div>
 
-                {/* Foto portada con overlay — altura fija directamente en el img (como Venta),
-                    evita que height:"100%" falle en Chrome mobile al imprimir */}
+                {/* Foto portada — SIN position:relative para compatibilidad con Chrome mobile print.
+                    El texto va en una banda oscura hermana, no superpuesta con position:absolute. */}
                 {allPhotos[0] && (
-                  <div style={{ position: "relative", lineHeight: 0 }}>
+                  <div style={{ height: 210, overflow: "hidden", lineHeight: 0 }}>
                     <img src={allPhotos[0]} alt={property.nombre_inmueble}
                       className="ficha-hero-img"
-                      style={{ width: "100%", height: 260, objectFit: "cover", objectPosition: property.foto_portada_position || "50% 50%", display: "block" }} />
-                    <div style={{
-                      position: "absolute", inset: 0,
-                      background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 52%)",
-                      display: "flex", flexDirection: "column", justifyContent: "flex-end",
-                      padding: "20px 32px",
-                    }}>
-                      <p style={{
-                        fontFamily: "Josefin Sans, sans-serif", fontSize: 9, fontWeight: 600,
-                        letterSpacing: "0.16em", textTransform: "uppercase", color: GOLD, marginBottom: 5,
-                      }}>
-                        {property.tipo_inmueble} · {locationStr}
-                      </p>
-                      <h1 style={{
-                        fontFamily: "'Catchy Mager', serif", fontSize: 22, fontWeight: 700,
-                        color: WHITE, lineHeight: 1.2, marginBottom: 6,
-                      }}>
-                        {property.nombre_inmueble}
-                      </h1>
-                      <p style={{
-                        fontFamily: "Josefin Sans, sans-serif", fontSize: 18, fontWeight: 700, color: GOLD,
-                      }}>
-                        {formatPrice(property.precio)}{" "}
-                        <span style={{ fontSize: 11, fontWeight: 400, opacity: 0.75 }}>/ mes</span>
-                      </p>
-                    </div>
+                      style={{
+                        width: "100%", height: "100%", objectFit: "cover",
+                        objectPosition: property.foto_portada_position || "50% 50%",
+                        transform: `scale(${property.foto_portada_zoom ?? 1})`,
+                        transformOrigin: property.foto_portada_position || "50% 50%",
+                        display: "block",
+                      }} />
                   </div>
                 )}
+
+                {/* Banda de texto — hermana de la imagen, NO superpuesta */}
+                <div style={{
+                  backgroundColor: DARK, padding: "12px 32px 14px",
+                  display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 12,
+                }}>
+                  <div>
+                    <p style={{
+                      fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
+                      letterSpacing: "0.16em", textTransform: "uppercase", color: GOLD, marginBottom: 4,
+                    }}>
+                      {property.tipo_inmueble} · {locationStr}
+                    </p>
+                    <h1 style={{
+                      fontFamily: "'Catchy Mager', serif", fontSize: 20, fontWeight: 700,
+                      color: WHITE, lineHeight: 1.15,
+                    }}>
+                      {property.nombre_inmueble}
+                    </h1>
+                  </div>
+                  <p style={{
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 17, fontWeight: 700, color: GOLD,
+                    whiteSpace: "nowrap", flexShrink: 0,
+                  }}>
+                    {formatPrice(property.precio)}{" "}
+                    <span style={{ fontSize: 10, fontWeight: 400, opacity: 0.75 }}>/ mes</span>
+                  </p>
+                </div>
 
                 {/* Specs + Requisitos en dos columnas */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
