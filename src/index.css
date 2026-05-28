@@ -260,6 +260,13 @@
     max-width: 100% !important;
     width: 100% !important;
   }
+  /* Forzar que las imágenes del documento se rendericen en print
+     (Chrome a veces las omite si el padre tiene overflow:hidden) */
+  [data-ficha-doc] img {
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   /* Salto de página explícito tras la página 1 */
   [data-ficha-page1] {
     break-after: page;

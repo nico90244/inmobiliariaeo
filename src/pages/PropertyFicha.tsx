@@ -425,11 +425,11 @@ const PropertyFicha = () => {
                   </span>
                 </div>
 
-                {/* Foto portada con overlay */}
+                {/* Foto portada con overlay — sin overflow:hidden para que Chrome imprima la imagen */}
                 {allPhotos[0] && (
-                  <div style={{ position: "relative", overflow: "hidden", lineHeight: 0 }}>
+                  <div style={{ position: "relative", height: 260 }}>
                     <img src={allPhotos[0]} alt={property.nombre_inmueble}
-                      style={{ width: "100%", height: 260, objectFit: "cover", display: "block" }} />
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     <div style={{
                       position: "absolute", inset: 0,
                       background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 52%)",
@@ -630,26 +630,34 @@ const PropertyFicha = () => {
                     </p>
                     <p style={{
                       fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
-                      letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD, marginBottom: 8,
+                      letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD, marginBottom: 5,
                     }}>
                       Síguenos en nuestras redes
                     </p>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                      <SocialRow
-                        icon={<Instagram size={11} style={{ color: GOLD }} />}
-                        href="https://instagram.com/inmobiliaria_eo"
-                        user="@inmobiliaria_eo"
-                      />
-                      <SocialRow
-                        icon={<Facebook size={11} style={{ color: GOLD }} />}
-                        href="https://facebook.com/inmobiliariaeo"
-                        user="inmobiliariaeo"
-                      />
-                      <SocialRow
-                        icon={<TikTokIcon size={10} color={GOLD} />}
-                        href="https://tiktok.com/@inmobiliaria_eo"
-                        user="@inmobiliaria_eo"
-                      />
+                    <p style={{
+                      fontFamily: "DM Sans, sans-serif", fontSize: 12, fontWeight: 600,
+                      color: WHITE, marginBottom: 8, letterSpacing: "0.01em",
+                    }}>
+                      @inmobiliaria_eo
+                    </p>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      {[
+                        { href: "https://instagram.com/inmobiliaria_eo", icon: <Instagram size={13} style={{ color: GOLD }} /> },
+                        { href: "https://facebook.com/inmobiliariaeo",    icon: <Facebook size={13} style={{ color: GOLD }} /> },
+                        { href: "https://tiktok.com/@inmobiliaria_eo",    icon: <TikTokIcon size={12} color={GOLD} /> },
+                      ].map(({ href, icon }) => (
+                        <a key={href} href={href} target="_blank" rel="noopener noreferrer"
+                          style={{ textDecoration: "none" }}>
+                          <div style={{
+                            width: 30, height: 30,
+                            backgroundColor: "rgba(255,255,255,0.08)",
+                            borderRadius: "50%",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>
+                            {icon}
+                          </div>
+                        </a>
+                      ))}
                     </div>
                   </div>
                   {/* QR en footer */}
