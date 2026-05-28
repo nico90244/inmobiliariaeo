@@ -189,13 +189,16 @@ const PropertyFicha = () => {
       </div>
 
       {/* ── Page wrapper (gray "desk") ── */}
-      <div style={{
-        backgroundColor: "#DEDAD5",
-        minHeight: "calc(100vh - 56px)",
-        padding: "36px 16px 56px",
-        display: "flex", justifyContent: "center",
-        overflowX: "auto",
-      }}>
+      <div
+        data-ficha-wrapper
+        style={{
+          backgroundColor: "#DEDAD5",
+          minHeight: "calc(100vh - 56px)",
+          padding: "36px 16px 56px",
+          display: "flex", justifyContent: "center",
+          overflowX: "auto",
+        }}
+      >
         {/* ── Document (794 px = A4 @ 96 dpi) ── */}
         <div
           data-ficha-doc
@@ -219,32 +222,24 @@ const PropertyFicha = () => {
               <div style={{ padding: "22px 40px 0" }}>
                 <div style={{
                   display: "flex", alignItems: "center",
-                  justifyContent: "space-between", marginBottom: 14,
+                  justifyContent: "flex-start", gap: 12, marginBottom: 14,
                 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <span style={{
-                      fontFamily: "Josefin Sans, sans-serif", fontSize: 10,
-                      fontWeight: 700, letterSpacing: "0.16em",
-                      textTransform: "uppercase",
-                      backgroundColor: GOLD, color: CREAM,
-                      padding: "4px 12px",
-                    }}>
-                      En Venta
-                    </span>
-                    <span style={{
-                      fontFamily: "Josefin Sans, sans-serif", fontSize: 10,
-                      fontWeight: 600, letterSpacing: "0.1em",
-                      textTransform: "uppercase", color: "#9CA3AF",
-                    }}>
-                      {property.tipo_inmueble}
-                    </span>
-                  </div>
-                  <p style={{
-                    fontFamily: "Josefin Sans, sans-serif", fontSize: 9,
-                    color: "#C4C4C4", letterSpacing: "0.06em",
+                  <span style={{
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 10,
+                    fontWeight: 700, letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                    backgroundColor: GOLD, color: CREAM,
+                    padding: "4px 12px",
                   }}>
-                    inmobiliariaeo.com
-                  </p>
+                    En Venta
+                  </span>
+                  <span style={{
+                    fontFamily: "Josefin Sans, sans-serif", fontSize: 10,
+                    fontWeight: 600, letterSpacing: "0.1em",
+                    textTransform: "uppercase", color: "#9CA3AF",
+                  }}>
+                    {property.tipo_inmueble}
+                  </span>
                 </div>
 
                 {/* Title */}
@@ -256,16 +251,15 @@ const PropertyFicha = () => {
                   {property.nombre_inmueble}
                 </h1>
 
-                {/* Location */}
-                {(property.barrio || property.ciudad) && (
+                {/* Location — zona y barrio únicamente (sin dirección exacta) */}
+                {(property.zona || property.barrio) && (
                   <p style={{
                     fontFamily: "DM Sans, sans-serif", fontSize: 12,
                     color: GRAY_T, display: "flex", alignItems: "center",
                     gap: 4, marginBottom: 18,
                   }}>
                     <MapPin size={12} style={{ color: GOLD }} />
-                    {[property.barrio, property.ciudad || "Cali"].filter(Boolean).join(", ")}
-                    {property.zona ? ` · ${property.zona}` : ""}
+                    {[property.zona, property.barrio].filter(Boolean).join(" · ")}
                   </p>
                 )}
               </div>
@@ -317,8 +311,8 @@ const PropertyFicha = () => {
                       <Label>Descripción</Label>
                       <p style={{
                         fontFamily: "DM Sans, sans-serif",
-                        fontSize: 12, color: GRAY_T,
-                        lineHeight: 1.7, whiteSpace: "pre-line",
+                        fontSize: 11, color: GRAY_T,
+                        lineHeight: 1.45, whiteSpace: "pre-line",
                       }}>
                         {property.descripcion}
                       </p>
@@ -369,28 +363,23 @@ const PropertyFicha = () => {
                 justifyContent: "space-between",
               }}>
                 <div style={{ display: "flex", gap: 28 }}>
-                  {[
-                    { label: "Teléfono", value: "318 653 1598" },
-                    { label: "WhatsApp", value: "316 222 5604" },
-                    { label: "Correo", value: "info@inmobiliariaeo.com" },
-                  ].map(({ label, value }) => (
-                    <div key={label}>
-                      <p style={{
-                        fontFamily: "Josefin Sans, sans-serif",
-                        fontSize: 8, fontWeight: 600,
-                        letterSpacing: "0.14em", textTransform: "uppercase",
-                        color: GOLD, marginBottom: 3,
-                      }}>
-                        {label}
-                      </p>
-                      <p style={{
-                        fontFamily: "DM Sans, sans-serif",
-                        fontSize: 11, color: WHITE, fontWeight: 600,
-                      }}>
-                        {value}
-                      </p>
-                    </div>
-                  ))}
+                  <div>
+                    <p style={{
+                      fontFamily: "Josefin Sans, sans-serif",
+                      fontSize: 8, fontWeight: 600,
+                      letterSpacing: "0.14em", textTransform: "uppercase",
+                      color: GOLD, marginBottom: 3,
+                    }}>
+                      WhatsApp
+                    </p>
+                    <p style={{
+                      fontFamily: "DM Sans, sans-serif",
+                      fontSize: 13, color: WHITE, fontWeight: 700,
+                      letterSpacing: "0.02em",
+                    }}>
+                      +57 318 353 1598
+                    </p>
+                  </div>
                 </div>
                 <p style={{
                   fontFamily: "Josefin Sans, sans-serif",
@@ -398,7 +387,7 @@ const PropertyFicha = () => {
                   letterSpacing: "0.1em", textTransform: "uppercase",
                   color: "rgba(255,255,255,0.25)", textAlign: "right",
                 }}>
-                  Inmobiliaria Eliana Osorio<br />Cali, Colombia
+                  Cali, Colombia
                 </p>
               </div>
             </>

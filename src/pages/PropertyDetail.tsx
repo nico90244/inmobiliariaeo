@@ -449,7 +449,12 @@ const PropertyDetail = () => {
                 <h2 className="font-heading text-xl font-bold text-foreground mb-4 flex items-center gap-2">
                   <MapPin size={20} className="text-primary" /> Ubicación
                 </h2>
-                {property.direccion && <p className="font-body text-muted-foreground mb-4">{property.direccion}</p>}
+                {/* Mostrar solo zona y barrio — la dirección exacta se omite por seguridad */}
+                {(property.zona || property.barrio) && (
+                  <p className="font-body text-muted-foreground mb-4">
+                    {[property.zona, property.barrio, property.ciudad || "Cali"].filter(Boolean).join(" · ")}
+                  </p>
+                )}
                 <iframe
                   title="Mapa"
                   src={`https://maps.google.com/maps?q=${mapQuery}&output=embed`}

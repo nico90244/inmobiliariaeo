@@ -14,8 +14,8 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
 
   return (
     <div className="group bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-200 ease-out hover:-translate-y-1 border border-foreground/5">
-      {/* Image */}
-      <div className="relative aspect-video overflow-hidden">
+      {/* Image — clickable */}
+      <Link to={`/propiedades/${property.id}`} className="relative aspect-video overflow-hidden block">
         <img
           src={property.foto_portada || "/placeholder.svg"}
           alt={property.nombre_inmueble}
@@ -30,7 +30,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
           {property.tipo_negocio}
           {property.zona && <> | {property.zona}</>}
         </span>
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="p-4">
