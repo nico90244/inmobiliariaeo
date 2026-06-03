@@ -46,7 +46,7 @@ const Sitemap = () => {
         description="Explora todas las secciones y propiedades publicadas en Inmobiliaria Eliana Osorio."
         path="/mapa-del-sitio"
       />
-      <Header solid />
+      <Header />
       <main className="pt-28 pb-24 bg-background">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="max-w-3xl mb-12">

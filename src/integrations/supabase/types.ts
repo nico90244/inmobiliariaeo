@@ -160,8 +160,7 @@ export type Database = {
           fecha_actualizacion: string
           fecha_creacion: string
           foto_portada: string | null
-          foto_portada_position: string | null
-          foto_portada_zoom: number | null
+          foto_portada_pos: string | null
           fotos: string[] | null
           habitaciones: number | null
           id: string
@@ -190,8 +189,7 @@ export type Database = {
           fecha_actualizacion?: string
           fecha_creacion?: string
           foto_portada?: string | null
-          foto_portada_position?: string | null
-          foto_portada_zoom?: number | null
+          foto_portada_pos?: string | null
           fotos?: string[] | null
           habitaciones?: number | null
           id?: string
@@ -220,8 +218,7 @@ export type Database = {
           fecha_actualizacion?: string
           fecha_creacion?: string
           foto_portada?: string | null
-          foto_portada_position?: string | null
-          foto_portada_zoom?: number | null
+          foto_portada_pos?: string | null
           fotos?: string[] | null
           habitaciones?: number | null
           id?: string

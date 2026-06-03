@@ -8,7 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
   TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList,
-  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair,
+  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
@@ -40,6 +40,7 @@ const Admin = () => {
 
   const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas">("propiedades");
   const [pendingReservas, setPendingReservas] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
   const [captaciones, setCaptaciones] = useState<Captacion[]>([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -314,26 +315,65 @@ const Admin = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Mobile top bar */}
+      <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between bg-secondary text-secondary-foreground px-4 py-3 border-b border-secondary-foreground/10">
+        <button
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Abrir menú"
+          className="p-2 -ml-2 text-secondary-foreground hover:text-primary transition-colors"
+        >
+          <Menu size={22} />
+        </button>
+        <img src={logo} alt="Logo Inmobiliaria EO" className="h-8 w-auto brightness-0 invert" />
+        <button
+          onClick={() => signOut().then(() => navigate("/"))}
+          aria-label="Cerrar sesión"
+          className="p-2 -mr-2 text-secondary-foreground/70 hover:text-destructive transition-colors"
+        >
+          <LogOut size={20} />
+        </button>
+      </div>
+
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          aria-hidden="true"
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-secondary text-secondary-foreground flex flex-col flex-shrink-0">
-        <div className="p-6 border-b border-secondary-foreground/10">
+      <aside
+        className={`bg-secondary text-secondary-foreground flex flex-col flex-shrink-0 z-50
+          fixed lg:static inset-y-0 left-0 w-64 transform transition-transform duration-300
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+      >
+        <div className="p-6 border-b border-secondary-foreground/10 flex items-center justify-between">
           <img src={logo} alt="Logo Inmobiliaria EO" className="h-10 w-auto brightness-0 invert" />
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden text-secondary-foreground/70 hover:text-secondary-foreground"
+            aria-label="Cerrar menú"
+          >
+            <X size={20} />
+          </button>
         </div>
-        <nav className="flex-1 p-4 space-y-1">
-          <button onClick={() => setSection("propiedades")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "propiedades" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <button onClick={() => { setSection("propiedades"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "propiedades" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <Home size={18} /> Propiedades
           </button>
-          <button onClick={() => setSection("captaciones")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "captaciones" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+          <button onClick={() => { setSection("captaciones"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "captaciones" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <FileText size={18} /> Captaciones
           </button>
           <div className="pt-2 pb-1 px-4">
             <span className="font-heading text-[10px] font-semibold tracking-widest text-secondary-foreground/40 uppercase">Citas</span>
           </div>
-          <button onClick={() => setSection("citas-disponibilidad")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "citas-disponibilidad" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+          <button onClick={() => { setSection("citas-disponibilidad"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "citas-disponibilidad" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <Calendar size={18} /> Disponibilidad
           </button>
-          <button onClick={() => setSection("citas-reservas")} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors relative ${section === "citas-reservas" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+          <button onClick={() => { setSection("citas-reservas"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors relative ${section === "citas-reservas" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <Calendar size={18} /> Reservas
             {pendingReservas > 0 && (
               <span className="ml-auto bg-destructive text-destructive-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{pendingReservas}</span>
@@ -348,7 +388,7 @@ const Admin = () => {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 bg-background p-8 overflow-auto">
+      <main className="flex-1 bg-background p-4 md:p-8 overflow-auto min-w-0">
         {section === "propiedades" && (
           <>
             <div className="flex items-center justify-between mb-8">
