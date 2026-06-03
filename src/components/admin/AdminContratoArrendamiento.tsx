@@ -86,7 +86,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
   useEffect(() => {
     if (!open) return;
     if (existingId) {
-      supabase.from("contratos_arrendamiento").select("*").eq("id", existingId).single().then(({ data }) => {
+      (supabase as any).from("contratos_arrendamiento").select("*").eq("id", existingId).single().then(({ data }: any) => {
         if (data) setForm({ ...emptyContrato(propiedad.id, canon), ...data });
       });
     } else {
@@ -165,11 +165,11 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
       };
 
       if (existingId) {
-        const { error } = await supabase.from("contratos_arrendamiento").update(record).eq("id", existingId);
+        const { error } = await (supabase as any).from("contratos_arrendamiento").update(record).eq("id", existingId);
         if (error) throw error;
         toast({ title: "Contrato actualizado" });
       } else {
-        const { error } = await supabase.from("contratos_arrendamiento").insert(record);
+        const { error } = await (supabase as any).from("contratos_arrendamiento").insert(record);
         if (error) throw error;
         toast({ title: "Contrato guardado exitosamente" });
       }

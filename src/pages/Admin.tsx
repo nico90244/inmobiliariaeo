@@ -25,7 +25,7 @@ const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca",
 
 const ZONAS = ["Sur", "Norte", "Oeste", "Oriente", "Nororiente", "Suroriente"];
 
-const emptyForm: Partial<Propiedad> = {
+const emptyForm: Partial<Propiedad> & Record<string, any> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
   area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "No", estrato: 0, administracion: 0, descripcion: "",
   estado: "Disponible", foto_portada: "", foto_portada_position: "50% 50%", foto_portada_zoom: 1.0,
@@ -78,7 +78,7 @@ const Admin = () => {
 
   const openContrato = async (p: Propiedad) => {
     // Check if there's an existing contract for this property
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from("contratos_arrendamiento")
       .select("id")
       .eq("propiedad_id", p.id)
@@ -201,10 +201,10 @@ const Admin = () => {
     setCoverFile(null);
     setGalleryPreviews(p.fotos || []);
     setGalleryFiles([]);
-    const { x, y } = parseCoverPos(p.foto_portada_position);
+    const { x, y } = parseCoverPos((p as any).foto_portada_position);
     setCoverPosX(x);
     setCoverPosY(y);
-    setCoverZoom(p.foto_portada_zoom ?? 1.0);
+    setCoverZoom((p as any).foto_portada_zoom ?? 1.0);
     setFormOpen(true);
   };
 
@@ -391,27 +391,29 @@ const Admin = () => {
       <main className="flex-1 bg-background p-4 md:p-8 overflow-auto min-w-0">
         {section === "propiedades" && (
           <>
-            <div className="flex items-center justify-between mb-8">
-              <h1 className="font-heading text-2xl font-bold text-foreground">Propiedades</h1>
-              <button onClick={openNewForm} className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors">
-                <Plus size={16} /> Nueva propiedad
+            <div className="flex items-center justify-between gap-3 mb-5 md:mb-8">
+              <h1 className="font-heading text-lg md:text-2xl font-bold text-foreground">Propiedades</h1>
+              <button onClick={openNewForm} className="flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-2 md:py-2.5 bg-primary text-primary-foreground font-heading text-[11px] md:text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors whitespace-nowrap">
+                <Plus size={14} className="md:hidden" /><Plus size={16} className="hidden md:block" />
+                <span className="hidden sm:inline">Nueva propiedad</span><span className="sm:hidden">Nueva</span>
               </button>
             </div>
 
             {/* Métricas de estado */}
             {!loadingData && propiedades.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-5 md:mb-6">
                 {[
                   { label: "Disponibles",  value: metricas.disponible, icon: BarChart3,     color: "text-primary",      bg: "bg-primary/10" },
                   { label: "Arrendadas",   value: metricas.arrendado,  icon: CheckCircle2,  color: "text-green-600",    bg: "bg-green-50 dark:bg-green-950/30" },
                   { label: "Vendidas",     value: metricas.vendido,    icon: TrendingDown,  color: "text-blue-600",     bg: "bg-blue-50 dark:bg-blue-950/30" },
                   { label: "Descartadas",  value: metricas.descartado, icon: XCircle,       color: "text-muted-foreground", bg: "bg-muted/30" },
                 ].map(({ label, value, icon: Icon, color, bg }) => (
-                  <div key={label} className={`${bg} border border-foreground/5 p-4 flex items-center gap-3`}>
-                    <Icon size={20} className={color} />
-                    <div>
-                      <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">{label}</p>
-                      <p className={`font-heading text-2xl font-bold ${color}`}>{value}</p>
+                  <div key={label} className={`${bg} border border-foreground/5 p-2.5 md:p-4 flex items-center gap-2 md:gap-3`}>
+                    <Icon size={16} className={`md:hidden ${color}`} />
+                    <Icon size={20} className={`hidden md:block ${color}`} />
+                    <div className="min-w-0">
+                      <p className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase truncate">{label}</p>
+                      <p className={`font-heading text-lg md:text-2xl font-bold ${color}`}>{value}</p>
                     </div>
                   </div>
                 ))}
@@ -419,15 +421,15 @@ const Admin = () => {
             )}
 
             {/* Filtros */}
-            <div className="bg-muted/20 border border-foreground/10 p-4 mb-4">
-              <div className="flex flex-wrap gap-3 items-end">
+            <div className="bg-muted/20 border border-foreground/10 p-3 md:p-4 mb-4">
+              <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3 md:items-end">
                 {/* Tipo negocio */}
-                <div className="flex flex-col gap-1 min-w-[130px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Negocio</label>
+                <div className="flex flex-col gap-1 md:min-w-[130px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Negocio</label>
                   <select
                     value={filterNegocio}
                     onChange={(e) => setFilterNegocio(e.target.value)}
-                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="border border-foreground/10 py-1.5 md:py-2 px-2 md:px-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background"
                   >
                     <option value="">Todos</option>
                     <option value="Venta">Venta</option>
@@ -436,12 +438,12 @@ const Admin = () => {
                 </div>
 
                 {/* Tipo inmueble */}
-                <div className="flex flex-col gap-1 min-w-[150px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Tipo inmueble</label>
+                <div className="flex flex-col gap-1 md:min-w-[150px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Tipo inmueble</label>
                   <select
                     value={filterTipo}
                     onChange={(e) => setFilterTipo(e.target.value)}
-                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="border border-foreground/10 py-1.5 md:py-2 px-2 md:px-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background"
                   >
                     <option value="">Todos</option>
                     {propertyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -449,8 +451,8 @@ const Admin = () => {
                 </div>
 
                 {/* Zona / Barrio */}
-                <div className="flex flex-col gap-1 min-w-[160px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Zona / Barrio</label>
+                <div className="flex flex-col gap-1 col-span-2 md:min-w-[160px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Zona / Barrio</label>
                   <div className="relative">
                     <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                     <input
@@ -458,34 +460,34 @@ const Admin = () => {
                       value={filterZona}
                       onChange={(e) => setFilterZona(e.target.value)}
                       placeholder="Buscar…"
-                      className="border border-foreground/10 py-2 pl-8 pr-3 font-body text-sm focus:border-primary focus:outline-none bg-background w-full"
+                      className="border border-foreground/10 py-1.5 md:py-2 pl-8 pr-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background w-full"
                     />
                   </div>
                 </div>
 
                 {/* Precio mín */}
-                <div className="flex flex-col gap-1 min-w-[130px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio mín</label>
+                <div className="flex flex-col gap-1 md:min-w-[130px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio mín</label>
                   <input
                     type="number"
                     value={filterPrecioMin}
                     onChange={(e) => setFilterPrecioMin(e.target.value)}
                     onFocus={(e) => e.target.select()}
                     placeholder="0"
-                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="border border-foreground/10 py-1.5 md:py-2 px-2 md:px-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background w-full"
                   />
                 </div>
 
                 {/* Precio máx */}
-                <div className="flex flex-col gap-1 min-w-[130px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio máx</label>
+                <div className="flex flex-col gap-1 md:min-w-[130px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio máx</label>
                   <input
                     type="number"
                     value={filterPrecioMax}
                     onChange={(e) => setFilterPrecioMax(e.target.value)}
                     onFocus={(e) => e.target.select()}
                     placeholder="Sin límite"
-                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="border border-foreground/10 py-1.5 md:py-2 px-2 md:px-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background w-full"
                   />
                 </div>
 
@@ -493,14 +495,14 @@ const Admin = () => {
                 {hasActiveFilters && (
                   <button
                     onClick={clearFilters}
-                    className="flex items-center gap-1.5 px-4 py-2 text-muted-foreground hover:text-destructive font-heading text-xs font-semibold tracking-widest uppercase transition-colors self-end"
+                    className="col-span-2 md:col-span-1 flex items-center justify-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 text-muted-foreground hover:text-destructive font-heading text-[11px] md:text-xs font-semibold tracking-widest uppercase transition-colors md:self-end"
                   >
                     <FilterX size={14} /> Limpiar
                   </button>
                 )}
               </div>
               {hasActiveFilters && (
-                <p className="font-body text-xs text-muted-foreground mt-2">
+                <p className="font-body text-[11px] md:text-xs text-muted-foreground mt-2">
                   Mostrando <strong>{propiedadesFiltradas.length}</strong> de <strong>{propiedades.length}</strong> propiedades
                 </p>
               )}
@@ -509,133 +511,223 @@ const Admin = () => {
             {loadingData ? (
               <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>
             ) : (
-              <div className="overflow-x-auto border border-foreground/10">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted/30">
-                    <tr>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Negocio</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio / Zona</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Precio</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Contrato</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {propiedadesFiltradas.map((p) => (
-                      <tr key={p.id} className="border-t border-foreground/5 hover:bg-muted/20">
-                        <td className="p-4 font-body max-w-[200px] truncate" title={p.nombre_inmueble}>{p.nombre_inmueble}</td>
-                        <td className="p-4 font-body">{p.tipo_inmueble}</td>
-                        <td className="p-4">
-                          <span className={`px-2 py-1 text-xs font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
-                            {p.tipo_negocio}
-                          </span>
-                        </td>
-                        <td className="p-4 font-body text-muted-foreground">
-                          {[p.barrio, p.zona].filter(Boolean).join(" · ") || "—"}
-                        </td>
-                        <td className="p-4 font-body">{p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}</td>
-                        <td className="p-4">
-                          <select
-                            value={p.estado || "Disponible"}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => handleEstadoRapido(p, e.target.value)}
-                            className={`px-2 py-1 text-xs font-heading font-semibold border-0 focus:outline-none cursor-pointer rounded-sm ${
-                              p.estado === "Disponible"  ? "bg-primary/10 text-primary" :
-                              p.estado === "Arrendado"   ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400" :
-                              p.estado === "Vendido"     ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400" :
-                              "bg-muted text-muted-foreground"
-                            }`}
-                          >
-                            <option value="Disponible">Disponible</option>
-                            <option value="Arrendado">Arrendado</option>
-                            <option value="Vendido">Vendido</option>
-                            <option value="Descartado">Descartado</option>
-                          </select>
-                        </td>
-                        <td className="p-4">
+              <>
+                {/* Mobile card list */}
+                <div className="md:hidden space-y-2.5">
+                  {propiedadesFiltradas.map((p) => (
+                    <div key={p.id} className="border border-foreground/10 bg-background p-3">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-heading text-sm font-bold text-foreground truncate">{p.nombre_inmueble}</p>
+                          <p className="font-body text-[11px] text-muted-foreground truncate">
+                            {p.tipo_inmueble}{[p.barrio, p.zona].filter(Boolean).length ? ` · ${[p.barrio, p.zona].filter(Boolean).join(" · ")}` : ""}
+                          </p>
+                        </div>
+                        <span className={`shrink-0 px-1.5 py-0.5 text-[10px] font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
+                          {p.tipo_negocio}
+                        </span>
+                      </div>
+                      <p className="font-body text-sm font-semibold text-foreground mb-2">
+                        {p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}
+                      </p>
+                      <div className="flex items-center justify-between gap-2">
+                        <select
+                          value={p.estado || "Disponible"}
+                          onChange={(e) => handleEstadoRapido(p, e.target.value)}
+                          className={`px-2 py-1 text-[11px] font-heading font-semibold border-0 focus:outline-none rounded-sm ${
+                            p.estado === "Disponible"  ? "bg-primary/10 text-primary" :
+                            p.estado === "Arrendado"   ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400" :
+                            p.estado === "Vendido"     ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400" :
+                            "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          <option value="Disponible">Disponible</option>
+                          <option value="Arrendado">Arrendado</option>
+                          <option value="Vendido">Vendido</option>
+                          <option value="Descartado">Descartado</option>
+                        </select>
+                        <div className="flex items-center gap-1">
                           {p.tipo_negocio === "Alquiler" && p.estado === "Arrendado" && (
-                            <button
-                              onClick={() => openContrato(p)}
-                              title="Ver / crear contrato"
-                              className="p-2 text-muted-foreground hover:text-primary transition-colors"
-                            >
-                              <ClipboardList size={16} />
-                            </button>
+                            <button onClick={() => openContrato(p)} className="p-1.5 text-muted-foreground hover:text-primary" aria-label="Contrato"><ClipboardList size={16} /></button>
                           )}
-                        </td>
-                        <td className="p-4 flex gap-2">
-                          <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
-                          <button onClick={() => handleDelete(p.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
-                        </td>
-                      </tr>
-                    ))}
-                    {propiedadesFiltradas.length === 0 && (
+                          <button onClick={() => openEditForm(p)} className="p-1.5 text-muted-foreground hover:text-primary" aria-label="Editar"><Pencil size={16} /></button>
+                          <button onClick={() => handleDelete(p.id)} className="p-1.5 text-muted-foreground hover:text-destructive" aria-label="Eliminar"><Trash2 size={16} /></button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {propiedadesFiltradas.length === 0 && (
+                    <p className="p-6 text-center font-body text-sm text-muted-foreground border border-foreground/10">
+                      {propiedades.length === 0 ? "No hay propiedades registradas." : "Ninguna propiedad coincide con los filtros."}
+                    </p>
+                  )}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden md:block overflow-x-auto border border-foreground/10">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/30">
                       <tr>
-                        <td colSpan={9} className="p-8 text-center font-body text-muted-foreground">
-                          {propiedades.length === 0 ? "No hay propiedades registradas." : "Ninguna propiedad coincide con los filtros."}
-                        </td>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Negocio</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio / Zona</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Precio</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Contrato</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Acciones</th>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {propiedadesFiltradas.map((p) => (
+                        <tr key={p.id} className="border-t border-foreground/5 hover:bg-muted/20">
+                          <td className="p-4 font-body max-w-[200px] truncate" title={p.nombre_inmueble}>{p.nombre_inmueble}</td>
+                          <td className="p-4 font-body">{p.tipo_inmueble}</td>
+                          <td className="p-4">
+                            <span className={`px-2 py-1 text-xs font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
+                              {p.tipo_negocio}
+                            </span>
+                          </td>
+                          <td className="p-4 font-body text-muted-foreground">
+                            {[p.barrio, p.zona].filter(Boolean).join(" · ") || "—"}
+                          </td>
+                          <td className="p-4 font-body">{p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}</td>
+                          <td className="p-4">
+                            <select
+                              value={p.estado || "Disponible"}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => handleEstadoRapido(p, e.target.value)}
+                              className={`px-2 py-1 text-xs font-heading font-semibold border-0 focus:outline-none cursor-pointer rounded-sm ${
+                                p.estado === "Disponible"  ? "bg-primary/10 text-primary" :
+                                p.estado === "Arrendado"   ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400" :
+                                p.estado === "Vendido"     ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400" :
+                                "bg-muted text-muted-foreground"
+                              }`}
+                            >
+                              <option value="Disponible">Disponible</option>
+                              <option value="Arrendado">Arrendado</option>
+                              <option value="Vendido">Vendido</option>
+                              <option value="Descartado">Descartado</option>
+                            </select>
+                          </td>
+                          <td className="p-4">
+                            {p.tipo_negocio === "Alquiler" && p.estado === "Arrendado" && (
+                              <button
+                                onClick={() => openContrato(p)}
+                                title="Ver / crear contrato"
+                                className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                              >
+                                <ClipboardList size={16} />
+                              </button>
+                            )}
+                          </td>
+                          <td className="p-4 flex gap-2">
+                            <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
+                            <button onClick={() => handleDelete(p.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
+                          </td>
+                        </tr>
+                      ))}
+                      {propiedadesFiltradas.length === 0 && (
+                        <tr>
+                          <td colSpan={9} className="p-8 text-center font-body text-muted-foreground">
+                            {propiedades.length === 0 ? "No hay propiedades registradas." : "Ninguna propiedad coincide con los filtros."}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </>
         )}
 
         {section === "captaciones" && (
           <>
-            <h1 className="font-heading text-2xl font-bold text-foreground mb-8">Captaciones</h1>
+            <h1 className="font-heading text-lg md:text-2xl font-bold text-foreground mb-5 md:mb-8">Captaciones</h1>
             {loadingData ? (
               <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>
             ) : (
-              <div className="overflow-x-auto border border-foreground/10">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted/30">
-                    <tr>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Fecha</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Celular</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Valor</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {captaciones.map((c) => (
-                      <tr key={c.id} className="border-t border-foreground/5 hover:bg-muted/20 cursor-pointer" onClick={() => setSelectedCaptacion(c)}>
-                        <td className="p-4 font-body">{new Date(c.fecha_creacion).toLocaleDateString("es-CO")}</td>
-                        <td className="p-4 font-body">{c.nombre}</td>
-                        <td className="p-4 font-body">{c.celular}</td>
-                        <td className="p-4 font-body">{c.tipo_negocio} - {c.tipo_inmueble}</td>
-                        <td className="p-4 font-body">{c.barrio}</td>
-                        <td className="p-4 font-body">{c.valor_aproximado}</td>
-                        <td className="p-4">
-                          <select
-                            value={c.estado || "Pendiente"}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => updateCaptacionEstado(c.id, e.target.value)}
-                            className={`px-2 py-1 text-xs font-heading font-semibold border-0 bg-transparent focus:outline-none ${
-                              c.estado === "Pendiente" ? "text-primary" : c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" : "text-muted-foreground"
-                            }`}
-                          >
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="Contactado">Contactado</option>
-                            <option value="Descartado">Descartado</option>
-                          </select>
-                        </td>
+              <>
+                {/* Mobile card list */}
+                <div className="md:hidden space-y-2.5">
+                  {captaciones.map((c) => (
+                    <button
+                      key={c.id}
+                      onClick={() => setSelectedCaptacion(c)}
+                      className="w-full text-left border border-foreground/10 bg-background p-3"
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <p className="font-heading text-sm font-bold text-foreground truncate flex-1">{c.nombre}</p>
+                        <span className="text-[10px] font-body text-muted-foreground shrink-0">{new Date(c.fecha_creacion).toLocaleDateString("es-CO")}</span>
+                      </div>
+                      <p className="font-body text-[11px] text-muted-foreground mb-1">{c.tipo_negocio} · {c.tipo_inmueble} · {c.barrio}</p>
+                      <p className="font-body text-xs text-foreground mb-2">{c.celular} {c.valor_aproximado ? `· ${c.valor_aproximado}` : ""}</p>
+                      <select
+                        value={c.estado || "Pendiente"}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => { e.stopPropagation(); updateCaptacionEstado(c.id, e.target.value); }}
+                        className={`px-2 py-1 text-[11px] font-heading font-semibold border-0 bg-muted/40 focus:outline-none rounded-sm ${
+                          c.estado === "Pendiente" ? "text-primary" : c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" : "text-muted-foreground"
+                        }`}
+                      >
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Contactado">Contactado</option>
+                        <option value="Descartado">Descartado</option>
+                      </select>
+                    </button>
+                  ))}
+                  {captaciones.length === 0 && (
+                    <p className="p-6 text-center font-body text-sm text-muted-foreground border border-foreground/10">No hay captaciones.</p>
+                  )}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden md:block overflow-x-auto border border-foreground/10">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/30">
+                      <tr>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Fecha</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Celular</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Valor</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
                       </tr>
-                    ))}
-                    {captaciones.length === 0 && (
-                      <tr><td colSpan={7} className="p-8 text-center font-body text-muted-foreground">No hay captaciones.</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {captaciones.map((c) => (
+                        <tr key={c.id} className="border-t border-foreground/5 hover:bg-muted/20 cursor-pointer" onClick={() => setSelectedCaptacion(c)}>
+                          <td className="p-4 font-body">{new Date(c.fecha_creacion).toLocaleDateString("es-CO")}</td>
+                          <td className="p-4 font-body">{c.nombre}</td>
+                          <td className="p-4 font-body">{c.celular}</td>
+                          <td className="p-4 font-body">{c.tipo_negocio} - {c.tipo_inmueble}</td>
+                          <td className="p-4 font-body">{c.barrio}</td>
+                          <td className="p-4 font-body">{c.valor_aproximado}</td>
+                          <td className="p-4">
+                            <select
+                              value={c.estado || "Pendiente"}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => updateCaptacionEstado(c.id, e.target.value)}
+                              className={`px-2 py-1 text-xs font-heading font-semibold border-0 bg-transparent focus:outline-none ${
+                                c.estado === "Pendiente" ? "text-primary" : c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" : "text-muted-foreground"
+                              }`}
+                            >
+                              <option value="Pendiente">Pendiente</option>
+                              <option value="Contactado">Contactado</option>
+                              <option value="Descartado">Descartado</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                      {captaciones.length === 0 && (
+                        <tr><td colSpan={7} className="p-8 text-center font-body text-muted-foreground">No hay captaciones.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </>
         )}
