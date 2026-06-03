@@ -25,7 +25,7 @@ const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca",
 
 const ZONAS = ["Sur", "Norte", "Oeste", "Oriente", "Nororiente", "Suroriente"];
 
-const emptyForm: Partial<Propiedad> = {
+const emptyForm: Partial<Propiedad> & Record<string, any> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
   area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "No", estrato: 0, administracion: 0, descripcion: "",
   estado: "Disponible", foto_portada: "", foto_portada_position: "50% 50%", foto_portada_zoom: 1.0,
