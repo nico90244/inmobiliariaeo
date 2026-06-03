@@ -388,7 +388,7 @@ const Admin = () => {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 bg-background p-8 overflow-auto">
+      <main className="flex-1 bg-background p-4 md:p-8 overflow-auto min-w-0">
         {section === "propiedades" && (
           <>
             <div className="flex items-center justify-between mb-8">
