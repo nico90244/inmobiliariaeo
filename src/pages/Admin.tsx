@@ -8,7 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
   TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList,
-  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair,
+  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
