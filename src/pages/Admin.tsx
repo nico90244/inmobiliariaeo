@@ -421,15 +421,15 @@ const Admin = () => {
             )}
 
             {/* Filtros */}
-            <div className="bg-muted/20 border border-foreground/10 p-4 mb-4">
-              <div className="flex flex-wrap gap-3 items-end">
+            <div className="bg-muted/20 border border-foreground/10 p-3 md:p-4 mb-4">
+              <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3 md:items-end">
                 {/* Tipo negocio */}
-                <div className="flex flex-col gap-1 min-w-[130px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Negocio</label>
+                <div className="flex flex-col gap-1 md:min-w-[130px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Negocio</label>
                   <select
                     value={filterNegocio}
                     onChange={(e) => setFilterNegocio(e.target.value)}
-                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="border border-foreground/10 py-1.5 md:py-2 px-2 md:px-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background"
                   >
                     <option value="">Todos</option>
                     <option value="Venta">Venta</option>
@@ -438,12 +438,12 @@ const Admin = () => {
                 </div>
 
                 {/* Tipo inmueble */}
-                <div className="flex flex-col gap-1 min-w-[150px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Tipo inmueble</label>
+                <div className="flex flex-col gap-1 md:min-w-[150px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Tipo inmueble</label>
                   <select
                     value={filterTipo}
                     onChange={(e) => setFilterTipo(e.target.value)}
-                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="border border-foreground/10 py-1.5 md:py-2 px-2 md:px-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background"
                   >
                     <option value="">Todos</option>
                     {propertyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -451,8 +451,8 @@ const Admin = () => {
                 </div>
 
                 {/* Zona / Barrio */}
-                <div className="flex flex-col gap-1 min-w-[160px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Zona / Barrio</label>
+                <div className="flex flex-col gap-1 col-span-2 md:min-w-[160px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Zona / Barrio</label>
                   <div className="relative">
                     <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                     <input
@@ -460,34 +460,34 @@ const Admin = () => {
                       value={filterZona}
                       onChange={(e) => setFilterZona(e.target.value)}
                       placeholder="Buscar…"
-                      className="border border-foreground/10 py-2 pl-8 pr-3 font-body text-sm focus:border-primary focus:outline-none bg-background w-full"
+                      className="border border-foreground/10 py-1.5 md:py-2 pl-8 pr-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background w-full"
                     />
                   </div>
                 </div>
 
                 {/* Precio mín */}
-                <div className="flex flex-col gap-1 min-w-[130px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio mín</label>
+                <div className="flex flex-col gap-1 md:min-w-[130px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio mín</label>
                   <input
                     type="number"
                     value={filterPrecioMin}
                     onChange={(e) => setFilterPrecioMin(e.target.value)}
                     onFocus={(e) => e.target.select()}
                     placeholder="0"
-                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="border border-foreground/10 py-1.5 md:py-2 px-2 md:px-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background w-full"
                   />
                 </div>
 
                 {/* Precio máx */}
-                <div className="flex flex-col gap-1 min-w-[130px]">
-                  <label className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio máx</label>
+                <div className="flex flex-col gap-1 md:min-w-[130px]">
+                  <label className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Precio máx</label>
                   <input
                     type="number"
                     value={filterPrecioMax}
                     onChange={(e) => setFilterPrecioMax(e.target.value)}
                     onFocus={(e) => e.target.select()}
                     placeholder="Sin límite"
-                    className="border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="border border-foreground/10 py-1.5 md:py-2 px-2 md:px-3 font-body text-xs md:text-sm focus:border-primary focus:outline-none bg-background w-full"
                   />
                 </div>
 
@@ -495,14 +495,14 @@ const Admin = () => {
                 {hasActiveFilters && (
                   <button
                     onClick={clearFilters}
-                    className="flex items-center gap-1.5 px-4 py-2 text-muted-foreground hover:text-destructive font-heading text-xs font-semibold tracking-widest uppercase transition-colors self-end"
+                    className="col-span-2 md:col-span-1 flex items-center justify-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 text-muted-foreground hover:text-destructive font-heading text-[11px] md:text-xs font-semibold tracking-widest uppercase transition-colors md:self-end"
                   >
                     <FilterX size={14} /> Limpiar
                   </button>
                 )}
               </div>
               {hasActiveFilters && (
-                <p className="font-body text-xs text-muted-foreground mt-2">
+                <p className="font-body text-[11px] md:text-xs text-muted-foreground mt-2">
                   Mostrando <strong>{propiedadesFiltradas.length}</strong> de <strong>{propiedades.length}</strong> propiedades
                 </p>
               )}
