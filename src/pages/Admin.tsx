@@ -644,54 +644,90 @@ const Admin = () => {
 
         {section === "captaciones" && (
           <>
-            <h1 className="font-heading text-2xl font-bold text-foreground mb-8">Captaciones</h1>
+            <h1 className="font-heading text-lg md:text-2xl font-bold text-foreground mb-5 md:mb-8">Captaciones</h1>
             {loadingData ? (
               <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>
             ) : (
-              <div className="overflow-x-auto border border-foreground/10">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted/30">
-                    <tr>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Fecha</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Celular</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Valor</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {captaciones.map((c) => (
-                      <tr key={c.id} className="border-t border-foreground/5 hover:bg-muted/20 cursor-pointer" onClick={() => setSelectedCaptacion(c)}>
-                        <td className="p-4 font-body">{new Date(c.fecha_creacion).toLocaleDateString("es-CO")}</td>
-                        <td className="p-4 font-body">{c.nombre}</td>
-                        <td className="p-4 font-body">{c.celular}</td>
-                        <td className="p-4 font-body">{c.tipo_negocio} - {c.tipo_inmueble}</td>
-                        <td className="p-4 font-body">{c.barrio}</td>
-                        <td className="p-4 font-body">{c.valor_aproximado}</td>
-                        <td className="p-4">
-                          <select
-                            value={c.estado || "Pendiente"}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => updateCaptacionEstado(c.id, e.target.value)}
-                            className={`px-2 py-1 text-xs font-heading font-semibold border-0 bg-transparent focus:outline-none ${
-                              c.estado === "Pendiente" ? "text-primary" : c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" : "text-muted-foreground"
-                            }`}
-                          >
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="Contactado">Contactado</option>
-                            <option value="Descartado">Descartado</option>
-                          </select>
-                        </td>
+              <>
+                {/* Mobile card list */}
+                <div className="md:hidden space-y-2.5">
+                  {captaciones.map((c) => (
+                    <button
+                      key={c.id}
+                      onClick={() => setSelectedCaptacion(c)}
+                      className="w-full text-left border border-foreground/10 bg-background p-3"
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <p className="font-heading text-sm font-bold text-foreground truncate flex-1">{c.nombre}</p>
+                        <span className="text-[10px] font-body text-muted-foreground shrink-0">{new Date(c.fecha_creacion).toLocaleDateString("es-CO")}</span>
+                      </div>
+                      <p className="font-body text-[11px] text-muted-foreground mb-1">{c.tipo_negocio} · {c.tipo_inmueble} · {c.barrio}</p>
+                      <p className="font-body text-xs text-foreground mb-2">{c.celular} {c.valor_aproximado ? `· ${c.valor_aproximado}` : ""}</p>
+                      <select
+                        value={c.estado || "Pendiente"}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => { e.stopPropagation(); updateCaptacionEstado(c.id, e.target.value); }}
+                        className={`px-2 py-1 text-[11px] font-heading font-semibold border-0 bg-muted/40 focus:outline-none rounded-sm ${
+                          c.estado === "Pendiente" ? "text-primary" : c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" : "text-muted-foreground"
+                        }`}
+                      >
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Contactado">Contactado</option>
+                        <option value="Descartado">Descartado</option>
+                      </select>
+                    </button>
+                  ))}
+                  {captaciones.length === 0 && (
+                    <p className="p-6 text-center font-body text-sm text-muted-foreground border border-foreground/10">No hay captaciones.</p>
+                  )}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden md:block overflow-x-auto border border-foreground/10">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/30">
+                      <tr>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Fecha</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Celular</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Valor</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
                       </tr>
-                    ))}
-                    {captaciones.length === 0 && (
-                      <tr><td colSpan={7} className="p-8 text-center font-body text-muted-foreground">No hay captaciones.</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {captaciones.map((c) => (
+                        <tr key={c.id} className="border-t border-foreground/5 hover:bg-muted/20 cursor-pointer" onClick={() => setSelectedCaptacion(c)}>
+                          <td className="p-4 font-body">{new Date(c.fecha_creacion).toLocaleDateString("es-CO")}</td>
+                          <td className="p-4 font-body">{c.nombre}</td>
+                          <td className="p-4 font-body">{c.celular}</td>
+                          <td className="p-4 font-body">{c.tipo_negocio} - {c.tipo_inmueble}</td>
+                          <td className="p-4 font-body">{c.barrio}</td>
+                          <td className="p-4 font-body">{c.valor_aproximado}</td>
+                          <td className="p-4">
+                            <select
+                              value={c.estado || "Pendiente"}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => updateCaptacionEstado(c.id, e.target.value)}
+                              className={`px-2 py-1 text-xs font-heading font-semibold border-0 bg-transparent focus:outline-none ${
+                                c.estado === "Pendiente" ? "text-primary" : c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" : "text-muted-foreground"
+                              }`}
+                            >
+                              <option value="Pendiente">Pendiente</option>
+                              <option value="Contactado">Contactado</option>
+                              <option value="Descartado">Descartado</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                      {captaciones.length === 0 && (
+                        <tr><td colSpan={7} className="p-8 text-center font-body text-muted-foreground">No hay captaciones.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </>
         )}
