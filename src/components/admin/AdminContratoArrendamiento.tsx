@@ -86,7 +86,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
   useEffect(() => {
     if (!open) return;
     if (existingId) {
-      supabase.from("contratos_arrendamiento").select("*").eq("id", existingId).single().then(({ data }) => {
+      (supabase as any).from("contratos_arrendamiento").select("*").eq("id", existingId).single().then(({ data }: any) => {
         if (data) setForm({ ...emptyContrato(propiedad.id, canon), ...data });
       });
     } else {
