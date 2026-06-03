@@ -201,10 +201,10 @@ const Admin = () => {
     setCoverFile(null);
     setGalleryPreviews(p.fotos || []);
     setGalleryFiles([]);
-    const { x, y } = parseCoverPos(p.foto_portada_position);
+    const { x, y } = parseCoverPos((p as any).foto_portada_position);
     setCoverPosX(x);
     setCoverPosY(y);
-    setCoverZoom(p.foto_portada_zoom ?? 1.0);
+    setCoverZoom((p as any).foto_portada_zoom ?? 1.0);
     setFormOpen(true);
   };
 
