@@ -21,9 +21,9 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
           alt={property.nombre_inmueble}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           style={{
-            objectPosition: property.foto_portada_position || "50% 50%",
-            transform: `scale(${property.foto_portada_zoom ?? 1})`,
-            transformOrigin: property.foto_portada_position || "50% 50%",
+            objectPosition: (property as any).foto_portada_position || "50% 50%",
+            transform: `scale(${(property as any).foto_portada_zoom ?? 1})`,
+            transformOrigin: (property as any).foto_portada_position || "50% 50%",
           }}
           loading="lazy"
         />
