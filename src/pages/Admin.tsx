@@ -78,7 +78,7 @@ const Admin = () => {
 
   const openContrato = async (p: Propiedad) => {
     // Check if there's an existing contract for this property
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from("contratos_arrendamiento")
       .select("id")
       .eq("propiedad_id", p.id)
