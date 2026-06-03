@@ -401,18 +401,19 @@ const Admin = () => {
 
             {/* Métricas de estado */}
             {!loadingData && propiedades.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-5 md:mb-6">
                 {[
                   { label: "Disponibles",  value: metricas.disponible, icon: BarChart3,     color: "text-primary",      bg: "bg-primary/10" },
                   { label: "Arrendadas",   value: metricas.arrendado,  icon: CheckCircle2,  color: "text-green-600",    bg: "bg-green-50 dark:bg-green-950/30" },
                   { label: "Vendidas",     value: metricas.vendido,    icon: TrendingDown,  color: "text-blue-600",     bg: "bg-blue-50 dark:bg-blue-950/30" },
                   { label: "Descartadas",  value: metricas.descartado, icon: XCircle,       color: "text-muted-foreground", bg: "bg-muted/30" },
                 ].map(({ label, value, icon: Icon, color, bg }) => (
-                  <div key={label} className={`${bg} border border-foreground/5 p-4 flex items-center gap-3`}>
-                    <Icon size={20} className={color} />
-                    <div>
-                      <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">{label}</p>
-                      <p className={`font-heading text-2xl font-bold ${color}`}>{value}</p>
+                  <div key={label} className={`${bg} border border-foreground/5 p-2.5 md:p-4 flex items-center gap-2 md:gap-3`}>
+                    <Icon size={16} className={`md:hidden ${color}`} />
+                    <Icon size={20} className={`hidden md:block ${color}`} />
+                    <div className="min-w-0">
+                      <p className="font-heading text-[9px] md:text-[10px] font-semibold tracking-widest text-muted-foreground uppercase truncate">{label}</p>
+                      <p className={`font-heading text-lg md:text-2xl font-bold ${color}`}>{value}</p>
                     </div>
                   </div>
                 ))}
