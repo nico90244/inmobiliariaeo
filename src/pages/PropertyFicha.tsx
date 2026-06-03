@@ -439,9 +439,9 @@ const PropertyFicha = () => {
                       className="ficha-hero-img"
                       style={{
                         width: "100%", height: "100%", objectFit: "cover",
-                        objectPosition: property.foto_portada_position || "50% 50%",
-                        transform: `scale(${property.foto_portada_zoom ?? 1})`,
-                        transformOrigin: property.foto_portada_position || "50% 50%",
+                        objectPosition: (property as any).foto_portada_position || "50% 50%",
+                        transform: `scale(${(property as any).foto_portada_zoom ?? 1})`,
+                        transformOrigin: (property as any).foto_portada_position || "50% 50%",
                         display: "block",
                       }} />
                   </div>
