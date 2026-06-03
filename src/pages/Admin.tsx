@@ -391,10 +391,11 @@ const Admin = () => {
       <main className="flex-1 bg-background p-4 md:p-8 overflow-auto min-w-0">
         {section === "propiedades" && (
           <>
-            <div className="flex items-center justify-between mb-8">
-              <h1 className="font-heading text-2xl font-bold text-foreground">Propiedades</h1>
-              <button onClick={openNewForm} className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors">
-                <Plus size={16} /> Nueva propiedad
+            <div className="flex items-center justify-between gap-3 mb-5 md:mb-8">
+              <h1 className="font-heading text-lg md:text-2xl font-bold text-foreground">Propiedades</h1>
+              <button onClick={openNewForm} className="flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-2 md:py-2.5 bg-primary text-primary-foreground font-heading text-[11px] md:text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors whitespace-nowrap">
+                <Plus size={14} className="md:hidden" /><Plus size={16} className="hidden md:block" />
+                <span className="hidden sm:inline">Nueva propiedad</span><span className="sm:hidden">Nueva</span>
               </button>
             </div>
 
