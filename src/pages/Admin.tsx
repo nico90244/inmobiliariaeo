@@ -40,6 +40,7 @@ const Admin = () => {
 
   const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas">("propiedades");
   const [pendingReservas, setPendingReservas] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
   const [captaciones, setCaptaciones] = useState<Captacion[]>([]);
   const [loadingData, setLoadingData] = useState(true);
