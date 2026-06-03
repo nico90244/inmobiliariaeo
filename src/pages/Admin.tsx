@@ -511,79 +511,133 @@ const Admin = () => {
             {loadingData ? (
               <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>
             ) : (
-              <div className="overflow-x-auto border border-foreground/10">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted/30">
-                    <tr>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Negocio</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio / Zona</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Precio</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Contrato</th>
-                      <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {propiedadesFiltradas.map((p) => (
-                      <tr key={p.id} className="border-t border-foreground/5 hover:bg-muted/20">
-                        <td className="p-4 font-body max-w-[200px] truncate" title={p.nombre_inmueble}>{p.nombre_inmueble}</td>
-                        <td className="p-4 font-body">{p.tipo_inmueble}</td>
-                        <td className="p-4">
-                          <span className={`px-2 py-1 text-xs font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
-                            {p.tipo_negocio}
-                          </span>
-                        </td>
-                        <td className="p-4 font-body text-muted-foreground">
-                          {[p.barrio, p.zona].filter(Boolean).join(" · ") || "—"}
-                        </td>
-                        <td className="p-4 font-body">{p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}</td>
-                        <td className="p-4">
-                          <select
-                            value={p.estado || "Disponible"}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) => handleEstadoRapido(p, e.target.value)}
-                            className={`px-2 py-1 text-xs font-heading font-semibold border-0 focus:outline-none cursor-pointer rounded-sm ${
-                              p.estado === "Disponible"  ? "bg-primary/10 text-primary" :
-                              p.estado === "Arrendado"   ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400" :
-                              p.estado === "Vendido"     ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400" :
-                              "bg-muted text-muted-foreground"
-                            }`}
-                          >
-                            <option value="Disponible">Disponible</option>
-                            <option value="Arrendado">Arrendado</option>
-                            <option value="Vendido">Vendido</option>
-                            <option value="Descartado">Descartado</option>
-                          </select>
-                        </td>
-                        <td className="p-4">
+              <>
+                {/* Mobile card list */}
+                <div className="md:hidden space-y-2.5">
+                  {propiedadesFiltradas.map((p) => (
+                    <div key={p.id} className="border border-foreground/10 bg-background p-3">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-heading text-sm font-bold text-foreground truncate">{p.nombre_inmueble}</p>
+                          <p className="font-body text-[11px] text-muted-foreground truncate">
+                            {p.tipo_inmueble}{[p.barrio, p.zona].filter(Boolean).length ? ` · ${[p.barrio, p.zona].filter(Boolean).join(" · ")}` : ""}
+                          </p>
+                        </div>
+                        <span className={`shrink-0 px-1.5 py-0.5 text-[10px] font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
+                          {p.tipo_negocio}
+                        </span>
+                      </div>
+                      <p className="font-body text-sm font-semibold text-foreground mb-2">
+                        {p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}
+                      </p>
+                      <div className="flex items-center justify-between gap-2">
+                        <select
+                          value={p.estado || "Disponible"}
+                          onChange={(e) => handleEstadoRapido(p, e.target.value)}
+                          className={`px-2 py-1 text-[11px] font-heading font-semibold border-0 focus:outline-none rounded-sm ${
+                            p.estado === "Disponible"  ? "bg-primary/10 text-primary" :
+                            p.estado === "Arrendado"   ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400" :
+                            p.estado === "Vendido"     ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400" :
+                            "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          <option value="Disponible">Disponible</option>
+                          <option value="Arrendado">Arrendado</option>
+                          <option value="Vendido">Vendido</option>
+                          <option value="Descartado">Descartado</option>
+                        </select>
+                        <div className="flex items-center gap-1">
                           {p.tipo_negocio === "Alquiler" && p.estado === "Arrendado" && (
-                            <button
-                              onClick={() => openContrato(p)}
-                              title="Ver / crear contrato"
-                              className="p-2 text-muted-foreground hover:text-primary transition-colors"
-                            >
-                              <ClipboardList size={16} />
-                            </button>
+                            <button onClick={() => openContrato(p)} className="p-1.5 text-muted-foreground hover:text-primary" aria-label="Contrato"><ClipboardList size={16} /></button>
                           )}
-                        </td>
-                        <td className="p-4 flex gap-2">
-                          <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
-                          <button onClick={() => handleDelete(p.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
-                        </td>
-                      </tr>
-                    ))}
-                    {propiedadesFiltradas.length === 0 && (
+                          <button onClick={() => openEditForm(p)} className="p-1.5 text-muted-foreground hover:text-primary" aria-label="Editar"><Pencil size={16} /></button>
+                          <button onClick={() => handleDelete(p.id)} className="p-1.5 text-muted-foreground hover:text-destructive" aria-label="Eliminar"><Trash2 size={16} /></button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {propiedadesFiltradas.length === 0 && (
+                    <p className="p-6 text-center font-body text-sm text-muted-foreground border border-foreground/10">
+                      {propiedades.length === 0 ? "No hay propiedades registradas." : "Ninguna propiedad coincide con los filtros."}
+                    </p>
+                  )}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden md:block overflow-x-auto border border-foreground/10">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/30">
                       <tr>
-                        <td colSpan={9} className="p-8 text-center font-body text-muted-foreground">
-                          {propiedades.length === 0 ? "No hay propiedades registradas." : "Ninguna propiedad coincide con los filtros."}
-                        </td>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Nombre</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Tipo</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Negocio</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Barrio / Zona</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Precio</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Contrato</th>
+                        <th className="text-left p-4 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Acciones</th>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {propiedadesFiltradas.map((p) => (
+                        <tr key={p.id} className="border-t border-foreground/5 hover:bg-muted/20">
+                          <td className="p-4 font-body max-w-[200px] truncate" title={p.nombre_inmueble}>{p.nombre_inmueble}</td>
+                          <td className="p-4 font-body">{p.tipo_inmueble}</td>
+                          <td className="p-4">
+                            <span className={`px-2 py-1 text-xs font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
+                              {p.tipo_negocio}
+                            </span>
+                          </td>
+                          <td className="p-4 font-body text-muted-foreground">
+                            {[p.barrio, p.zona].filter(Boolean).join(" · ") || "—"}
+                          </td>
+                          <td className="p-4 font-body">{p.precio ? new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(p.precio) : "-"}</td>
+                          <td className="p-4">
+                            <select
+                              value={p.estado || "Disponible"}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={(e) => handleEstadoRapido(p, e.target.value)}
+                              className={`px-2 py-1 text-xs font-heading font-semibold border-0 focus:outline-none cursor-pointer rounded-sm ${
+                                p.estado === "Disponible"  ? "bg-primary/10 text-primary" :
+                                p.estado === "Arrendado"   ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400" :
+                                p.estado === "Vendido"     ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400" :
+                                "bg-muted text-muted-foreground"
+                              }`}
+                            >
+                              <option value="Disponible">Disponible</option>
+                              <option value="Arrendado">Arrendado</option>
+                              <option value="Vendido">Vendido</option>
+                              <option value="Descartado">Descartado</option>
+                            </select>
+                          </td>
+                          <td className="p-4">
+                            {p.tipo_negocio === "Alquiler" && p.estado === "Arrendado" && (
+                              <button
+                                onClick={() => openContrato(p)}
+                                title="Ver / crear contrato"
+                                className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                              >
+                                <ClipboardList size={16} />
+                              </button>
+                            )}
+                          </td>
+                          <td className="p-4 flex gap-2">
+                            <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
+                            <button onClick={() => handleDelete(p.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
+                          </td>
+                        </tr>
+                      ))}
+                      {propiedadesFiltradas.length === 0 && (
+                        <tr>
+                          <td colSpan={9} className="p-8 text-center font-body text-muted-foreground">
+                            {propiedades.length === 0 ? "No hay propiedades registradas." : "Ninguna propiedad coincide con los filtros."}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </>
         )}
