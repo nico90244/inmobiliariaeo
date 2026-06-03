@@ -362,7 +362,7 @@ const PropertyDetail = () => {
             {/* Left column */}
             <div className="space-y-6">
               {/* Gallery */}
-              <Gallery photos={allPhotos} coverPosition={property.foto_portada_position} coverZoom={property.foto_portada_zoom} />
+              <Gallery photos={allPhotos} coverPosition={(property as any).foto_portada_position} coverZoom={(property as any).foto_portada_zoom} />
 
               {/* Features grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
