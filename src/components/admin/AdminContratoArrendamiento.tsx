@@ -294,10 +294,6 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
                 <label className={labelCls}>Fecha inicio contrato</label>
                 <input type="date" value={form.fecha_inicio} onChange={(e) => set("fecha_inicio", e.target.value)} className={inputCls} />
               </div>
-              <div>
-                <label className={labelCls}>Cuenta a consignar</label>
-                <input type="text" value={form.cuenta_consignacion} onChange={(e) => set("cuenta_consignacion", e.target.value)} placeholder="Banco · No. cuenta" className={inputCls} />
-              </div>
             </div>
           </section>
 
