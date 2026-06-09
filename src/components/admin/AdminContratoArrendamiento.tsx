@@ -25,7 +25,6 @@ type Contrato = {
   docs_codeudor: string[];
   valor_canon: number | string;
   dia_pago_inquilino: number | string;
-  cuenta_consignacion: string;
   fecha_inicio: string;
   propietario_nombre: string;
   propietario_cedula: string;
