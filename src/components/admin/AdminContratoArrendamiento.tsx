@@ -114,8 +114,8 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         toast({ title: `Error subiendo ${file.name}`, variant: "destructive" });
         continue;
       }
-      const { data } = supabase.storage.from("contratos-docs").getPublicUrl(path);
-      urls.push(data.publicUrl);
+      // Store the storage path; we'll generate signed URLs on demand
+      urls.push(path);
     }
     if (tipo === "inquilino") {
       set("docs_inquilino", [...form.docs_inquilino, ...urls]);
