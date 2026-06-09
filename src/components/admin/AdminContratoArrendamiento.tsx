@@ -150,7 +150,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         docs_codeudor: form.docs_codeudor,
         valor_canon: Number(form.valor_canon) || null,
         dia_pago_inquilino: Number(form.dia_pago_inquilino) || null,
-        cuenta_consignacion: form.cuenta_consignacion.trim(),
+        fecha_inicio: form.fecha_inicio || null,
         fecha_inicio: form.fecha_inicio || null,
         propietario_nombre: form.propietario_nombre.trim(),
         propietario_cedula: form.propietario_cedula.trim(),
