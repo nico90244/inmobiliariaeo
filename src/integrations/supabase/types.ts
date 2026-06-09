@@ -145,6 +145,86 @@ export type Database = {
           },
         ]
       }
+      contratos_arrendamiento: {
+        Row: {
+          created_at: string
+          dia_pago_inquilino: number | null
+          dia_pago_propietario: number | null
+          docs_codeudor: string[]
+          docs_inquilino: string[]
+          fecha_inicio: string | null
+          id: string
+          inquilino_cedula: string
+          inquilino_celular: string
+          inquilino_correo: string | null
+          inquilino_nombre: string
+          notas: string | null
+          propiedad_id: string
+          propietario_banco: string | null
+          propietario_cedula: string | null
+          propietario_nombre: string | null
+          propietario_num_cuenta: string | null
+          propietario_tipo_cuenta: string | null
+          updated_at: string
+          valor_canon: number | null
+          valor_pago_propietario: number | null
+        }
+        Insert: {
+          created_at?: string
+          dia_pago_inquilino?: number | null
+          dia_pago_propietario?: number | null
+          docs_codeudor?: string[]
+          docs_inquilino?: string[]
+          fecha_inicio?: string | null
+          id?: string
+          inquilino_cedula: string
+          inquilino_celular: string
+          inquilino_correo?: string | null
+          inquilino_nombre: string
+          notas?: string | null
+          propiedad_id: string
+          propietario_banco?: string | null
+          propietario_cedula?: string | null
+          propietario_nombre?: string | null
+          propietario_num_cuenta?: string | null
+          propietario_tipo_cuenta?: string | null
+          updated_at?: string
+          valor_canon?: number | null
+          valor_pago_propietario?: number | null
+        }
+        Update: {
+          created_at?: string
+          dia_pago_inquilino?: number | null
+          dia_pago_propietario?: number | null
+          docs_codeudor?: string[]
+          docs_inquilino?: string[]
+          fecha_inicio?: string | null
+          id?: string
+          inquilino_cedula?: string
+          inquilino_celular?: string
+          inquilino_correo?: string | null
+          inquilino_nombre?: string
+          notas?: string | null
+          propiedad_id?: string
+          propietario_banco?: string | null
+          propietario_cedula?: string | null
+          propietario_nombre?: string | null
+          propietario_num_cuenta?: string | null
+          propietario_tipo_cuenta?: string | null
+          updated_at?: string
+          valor_canon?: number | null
+          valor_pago_propietario?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contratos_arrendamiento_propiedad_id_fkey"
+            columns: ["propiedad_id"]
+            isOneToOne: false
+            referencedRelation: "propiedades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       propiedades: {
         Row: {
           administracion: number | null
