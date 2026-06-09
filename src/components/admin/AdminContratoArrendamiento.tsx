@@ -46,7 +46,6 @@ const emptyContrato = (propiedadId: string, canon: number): Contrato => ({
   docs_codeudor: [],
   valor_canon: canon,
   dia_pago_inquilino: 5,
-  cuenta_consignacion: "",
   fecha_inicio: new Date().toISOString().split("T")[0],
   propietario_nombre: "",
   propietario_cedula: "",
