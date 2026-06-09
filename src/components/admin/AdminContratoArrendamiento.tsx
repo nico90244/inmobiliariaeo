@@ -25,7 +25,6 @@ type Contrato = {
   docs_codeudor: string[];
   valor_canon: number | string;
   dia_pago_inquilino: number | string;
-  cuenta_consignacion: string;
   fecha_inicio: string;
   propietario_nombre: string;
   propietario_cedula: string;
@@ -47,7 +46,6 @@ const emptyContrato = (propiedadId: string, canon: number): Contrato => ({
   docs_codeudor: [],
   valor_canon: canon,
   dia_pago_inquilino: 5,
-  cuenta_consignacion: "",
   fecha_inicio: new Date().toISOString().split("T")[0],
   propietario_nombre: "",
   propietario_cedula: "",
@@ -116,8 +114,8 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         toast({ title: `Error subiendo ${file.name}`, variant: "destructive" });
         continue;
       }
-      const { data } = supabase.storage.from("contratos-docs").getPublicUrl(path);
-      urls.push(data.publicUrl);
+      // Store the storage path; we'll generate signed URLs on demand
+      urls.push(path);
     }
     if (tipo === "inquilino") {
       set("docs_inquilino", [...form.docs_inquilino, ...urls]);
@@ -152,7 +150,6 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         docs_codeudor: form.docs_codeudor,
         valor_canon: Number(form.valor_canon) || null,
         dia_pago_inquilino: Number(form.dia_pago_inquilino) || null,
-        cuenta_consignacion: form.cuenta_consignacion.trim(),
         fecha_inicio: form.fecha_inicio || null,
         propietario_nombre: form.propietario_nombre.trim(),
         propietario_cedula: form.propietario_cedula.trim(),
@@ -296,10 +293,6 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
               <div>
                 <label className={labelCls}>Fecha inicio contrato</label>
                 <input type="date" value={form.fecha_inicio} onChange={(e) => set("fecha_inicio", e.target.value)} className={inputCls} />
-              </div>
-              <div>
-                <label className={labelCls}>Cuenta a consignar</label>
-                <input type="text" value={form.cuenta_consignacion} onChange={(e) => set("cuenta_consignacion", e.target.value)} placeholder="Banco · No. cuenta" className={inputCls} />
               </div>
             </div>
           </section>
