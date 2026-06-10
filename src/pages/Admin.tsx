@@ -745,6 +745,8 @@ const Admin = () => {
 
         {section === "citas-disponibilidad" && <AdminCitasDisponibilidad />}
         {section === "citas-reservas" && <AdminCitasReservas />}
+        {section === "alquileres" && <AdminAlquileres />}
+        {section === "reportes" && <AdminReportes />}
 
         {/* Property form modal */}
         <Dialog open={formOpen} onOpenChange={(o) => !o && setFormOpen(false)}>
