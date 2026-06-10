@@ -25,8 +25,9 @@ const Index = () => {
       addressCountry: "CO",
     },
     sameAs: [
-      "https://instagram.com/inmobiliaria_eo",
-      "https://facebook.com/inmobiliariaeo",
+      "https://www.instagram.com/inmobiliaria_eo?igsh=anpmd2ltY3Brdmhj",
+      "https://www.facebook.com/share/1RNxRhpUUb/?mibextid=wwXIfr",
+      "https://www.tiktok.com/@inmboliaria_eo?is_from_webapp=1&sender_device=pc",
     ],
   };
 

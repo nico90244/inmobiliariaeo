@@ -117,7 +117,7 @@ const ContactSection = () => {
               </svg>
               <div>
                 <p className="font-heading text-sm font-semibold text-foreground">Instagram</p>
-                <a href="https://instagram.com/inmobiliaria_eo" target="_blank" rel="noopener noreferrer" className="font-body text-muted-foreground hover:text-primary transition-colors">
+                <a href="https://www.instagram.com/inmobiliaria_eo?igsh=anpmd2ltY3Brdmhj" target="_blank" rel="noopener noreferrer" className="font-body text-muted-foreground hover:text-primary transition-colors">
                   @inmobiliaria_eo
                 </a>
               </div>
