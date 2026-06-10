@@ -38,7 +38,7 @@ const EMPTY_FORM = {
   fecha: "",
   hora: "8:00",
   propiedadId: null as string | null,
-  agente: AGENTES[0],
+  agente: AGENTES[0] as string,
 };
 
 const AdminCitasDisponibilidad = () => {
