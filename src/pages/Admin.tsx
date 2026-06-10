@@ -7,12 +7,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
-  TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList,
+  TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList, Wallet,
   ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
 import AdminContratoArrendamiento from "@/components/admin/AdminContratoArrendamiento";
+import AdminReportes from "@/components/admin/AdminReportes";
+import AdminAlquileres from "@/components/admin/AdminAlquileres";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -38,7 +40,7 @@ const Admin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas">("propiedades");
+  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas" | "alquileres" | "reportes">("propiedades");
   const [pendingReservas, setPendingReservas] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
@@ -378,6 +380,15 @@ const Admin = () => {
             {pendingReservas > 0 && (
               <span className="ml-auto bg-destructive text-destructive-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{pendingReservas}</span>
             )}
+          </button>
+          <div className="pt-2 pb-1 px-4">
+            <span className="font-heading text-[10px] font-semibold tracking-widest text-secondary-foreground/40 uppercase">Gestión</span>
+          </div>
+          <button onClick={() => { setSection("alquileres"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "alquileres" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <Wallet size={18} /> Alquileres
+          </button>
+          <button onClick={() => { setSection("reportes"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "reportes" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <BarChart3 size={18} /> Reportes
           </button>
         </nav>
         <div className="p-4 border-t border-secondary-foreground/10">
