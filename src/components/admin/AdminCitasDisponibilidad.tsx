@@ -8,6 +8,7 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import { AGENTES, HOURS, formatHora12 } from "@/lib/horarios";
 
 type Slot = {
   id: string;
@@ -22,13 +23,6 @@ type Slot = {
 
 type Propiedad = { id: string; nombre_inmueble: string; direccion: string | null };
 
-// ✅ Horarios completos incluyendo 12:00 y 13:00
-const HOURS = [
-  "8:00", "9:00", "10:00", "11:00",
-  "12:00", "13:00",
-  "14:00", "15:00", "16:00", "17:00", "18:00",
-];
-
 const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
 const getFirstDayOfWeek = (year: number, month: number) => {
   const d = new Date(year, month, 1).getDay();
@@ -42,9 +36,9 @@ const MONTH_NAMES = [
 
 const EMPTY_FORM = {
   fecha: "",
-  hora: "9:00",
+  hora: "8:00",
   propiedadId: null as string | null,
-  agente: "Eliana Osorio",
+  agente: AGENTES[0],
 };
 
 const AdminCitasDisponibilidad = () => {
@@ -158,9 +152,9 @@ const AdminCitasDisponibilidad = () => {
     setEditingSlot(null);
     setForm({
       fecha: `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`,
-      hora: "9:00",
+      hora: "8:00",
       propiedadId: null,
-      agente: "Eliana Osorio",
+      agente: AGENTES[0],
     });
     setFormOpen(true);
   };
@@ -398,7 +392,7 @@ const AdminCitasDisponibilidad = () => {
                           >
                             {/* Header row */}
                             <div className="flex items-center justify-between mb-2">
-                              <span className="font-heading text-base font-bold">{slot.hora}</span>
+                              <span className="font-heading text-base font-bold">{formatHora12(slot.hora)}</span>
                               <div className="flex items-center gap-2">
                                 <span className={`px-2 py-0.5 font-heading text-[10px] font-semibold tracking-widest uppercase ${
                                   slot.estado === "Disponible" ? "bg-primary/10 text-primary" :
@@ -531,7 +525,7 @@ const AdminCitasDisponibilidad = () => {
                 className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
               >
                 {HOURS.map(h => (
-                  <option key={h} value={h}>{h}</option>
+                  <option key={h} value={h}>{formatHora12(h)}</option>
                 ))}
               </select>
             </div>
@@ -557,13 +551,14 @@ const AdminCitasDisponibilidad = () => {
               <label htmlFor="cf-agente" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
                 Agente
               </label>
-              <input
+              <select
                 id="cf-agente"
-                type="text"
                 value={form.agente}
                 onChange={e => setForm(f => ({ ...f, agente: e.target.value }))}
                 className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
-              />
+              >
+                {AGENTES.map(a => <option key={a} value={a}>{a}</option>)}
+              </select>
             </div>
 
             <div className="flex gap-3 pt-2">
@@ -604,7 +599,7 @@ const AdminCitasDisponibilidad = () => {
             ) : (
               <p className="font-body text-sm text-muted-foreground">
                 La cita del{" "}
-                <strong>{deleteTarget?.fecha} a las {deleteTarget?.hora}</strong>{" "}
+                <strong>{deleteTarget?.fecha} a las {deleteTarget && formatHora12(deleteTarget.hora)}</strong>{" "}
                 será eliminada permanentemente. ¿Confirmas?
               </p>
             )}
