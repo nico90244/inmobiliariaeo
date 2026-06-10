@@ -4,6 +4,7 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import type { Propiedad } from "@/hooks/usePropiedades";
+import { formatHora12 } from "@/lib/horarios";
 
 type Slot = {
   id: string;
