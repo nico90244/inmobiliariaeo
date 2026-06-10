@@ -225,6 +225,68 @@ export type Database = {
           },
         ]
       }
+      pagos_alquiler: {
+        Row: {
+          anio: number
+          contrato_id: string
+          created_at: string
+          estado_inquilino: string
+          estado_propietario: string
+          fecha_pago_inquilino: string | null
+          fecha_pago_propietario: string | null
+          id: string
+          mes: number
+          notas: string | null
+          updated_at: string
+          valor_administracion: number | null
+          valor_canon: number | null
+          valor_propietario: number | null
+          valor_recibido: number | null
+        }
+        Insert: {
+          anio: number
+          contrato_id: string
+          created_at?: string
+          estado_inquilino?: string
+          estado_propietario?: string
+          fecha_pago_inquilino?: string | null
+          fecha_pago_propietario?: string | null
+          id?: string
+          mes: number
+          notas?: string | null
+          updated_at?: string
+          valor_administracion?: number | null
+          valor_canon?: number | null
+          valor_propietario?: number | null
+          valor_recibido?: number | null
+        }
+        Update: {
+          anio?: number
+          contrato_id?: string
+          created_at?: string
+          estado_inquilino?: string
+          estado_propietario?: string
+          fecha_pago_inquilino?: string | null
+          fecha_pago_propietario?: string | null
+          id?: string
+          mes?: number
+          notas?: string | null
+          updated_at?: string
+          valor_administracion?: number | null
+          valor_canon?: number | null
+          valor_propietario?: number | null
+          valor_recibido?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pagos_alquiler_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos_arrendamiento"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       propiedades: {
         Row: {
           administracion: number | null

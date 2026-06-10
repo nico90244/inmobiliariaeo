@@ -7,8 +7,8 @@ import logoGold from "@/assets/logo-gold.png";
 const WhatsAppLink = ({ size = 16 }: { size?: number }) => <WhatsAppIcon size={size} />;
 
 const socialLinks = [
-{ icon: Instagram, href: "https://instagram.com/inmobiliaria_eo", label: "Instagram" },
-{ icon: Facebook, href: "https://facebook.com/inmobiliariaeo", label: "Facebook" },
+{ icon: Instagram, href: "https://www.instagram.com/inmobiliaria_eo?igsh=anpmd2ltY3Brdmhj", label: "Instagram" },
+{ icon: Facebook, href: "https://www.facebook.com/share/1RNxRhpUUb/?mibextid=wwXIfr", label: "Facebook" },
 // TikTok uses custom SVG below
 ];
 
@@ -120,7 +120,7 @@ const Footer = () => {
               )}
               {/* TikTok */}
               <a
-                href="https://tiktok.com/@inmobiliaria_eo"
+                href="https://www.tiktok.com/@inmboliaria_eo?is_from_webapp=1&sender_device=pc"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/80 transition-colors"
