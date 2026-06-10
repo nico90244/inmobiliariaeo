@@ -104,7 +104,7 @@ const AppointmentBooking = ({ property }: { property: Propiedad }) => {
       // Build WhatsApp message
       const fechaFormatted = selectedSlot.fecha.split("-").reverse().join("/");
       const shortId = property.id.slice(0, 8);
-      const text = `*Nueva solicitud de visita*\nInmueble: ${property.nombre_inmueble}\nID: ${shortId}\nDirección: ${property.direccion || "Sin dirección"}\nFecha: ${fechaFormatted}\nHora: ${selectedSlot.hora}\nAgente: ${selectedSlot.agente}\n---\n*Datos del interesado:*\nNombre: ${nombre}\nCelular: ${celular}`;
+      const text = `*Nueva solicitud de visita*\nInmueble: ${property.nombre_inmueble}\nID: ${shortId}\nDirección: ${property.direccion || "Sin dirección"}\nFecha: ${fechaFormatted}\nHora: ${formatHora12(selectedSlot.hora)}\nAgente: ${selectedSlot.agente}\n---\n*Datos del interesado:*\nNombre: ${nombre}\nCelular: ${celular}`;
       window.open(`https://wa.me/573162225604?text=${encodeURIComponent(text)}`, "_blank");
 
       setConfirmed(true);
@@ -118,9 +118,10 @@ const AppointmentBooking = ({ property }: { property: Propiedad }) => {
   const buildClientGCalLink = () => {
     if (!selectedSlot) return "#";
     const dateStr = selectedSlot.fecha.replace(/-/g, "");
-    const [h] = selectedSlot.hora.split(":");
-    const start = `${dateStr}T${h.padStart(2, "0")}0000`;
-    const end = `${dateStr}T${String(parseInt(h) + 1).padStart(2, "0")}0000`;
+    const [hStr, mStr = "00"] = selectedSlot.hora.split(":");
+    const h = parseInt(hStr, 10);
+    const start = `${dateStr}T${String(h).padStart(2, "0")}${mStr.padStart(2, "0")}00`;
+    const end = `${dateStr}T${String(h + 1).padStart(2, "0")}${mStr.padStart(2, "0")}00`;
     const location = [property.direccion, property.barrio, "Cali", "Colombia"].filter(Boolean).join(", ");
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Visita inmueble ${property.nombre_inmueble}`)}&dates=${start}/${end}&details=${encodeURIComponent(`Inmobiliaria Eliana Osorio - Agente: ${selectedSlot.agente} - Tel: 3186531598`)}&location=${encodeURIComponent(location)}`;
   };
@@ -204,7 +205,7 @@ const AppointmentBooking = ({ property }: { property: Propiedad }) => {
                         : "bg-background text-foreground border-primary/30 hover:border-primary"
                     }`}
                   >
-                    {slot.hora}
+                    {formatHora12(slot.hora)}
                   </button>
                 ))}
               </div>
