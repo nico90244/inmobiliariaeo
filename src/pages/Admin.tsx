@@ -105,10 +105,9 @@ const Admin = () => {
     loadData();
     queryClient.invalidateQueries({ queryKey: ["propiedades"] });
     // If marking as Arrendado on an Alquiler property, open contract form
+    // (reusa openContrato para detectar si ya existe un contrato activo y no crear uno duplicado)
     if (nuevoEstado === "Arrendado" && p.tipo_negocio === "Alquiler") {
-      setContratoPropiedad({ ...p, estado: nuevoEstado });
-      setContratoExistingId(null);
-      setContratoOpen(true);
+      openContrato({ ...p, estado: nuevoEstado });
     }
   };
 
