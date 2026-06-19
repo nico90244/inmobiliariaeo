@@ -5,6 +5,7 @@ import { Loader2, DollarSign, AlertCircle, CheckCircle2, Building2, Plus } from 
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import AdminFichaInmueble from "@/components/admin/AdminFichaInmueble";
 
 type Contrato = {
   id: string;
@@ -13,6 +14,7 @@ type Contrato = {
   valor_canon: number | null;
   dia_pago_inquilino: number | null;
   fecha_inicio: string | null;
+  fecha_fin: string | null;
   propietario_nombre: string | null;
   valor_pago_propietario: number | null;
   dia_pago_propietario: number | null;
@@ -55,11 +57,12 @@ const AdminAlquileres = () => {
   const [pagoOpen, setPagoOpen] = useState(false);
   const [pagoForm, setPagoForm] = useState<Partial<Pago>>({});
   const [saving, setSaving] = useState(false);
+  const [fichaPropiedadId, setFichaPropiedadId] = useState<string | null>(null);
 
   const loadData = async () => {
     setLoading(true);
     const [cRes, pRes, prRes] = await Promise.all([
-      (supabase as any).from("contratos_arrendamiento").select("*"),
+      (supabase as any).from("contratos_arrendamiento").select("*").eq("estado_contrato", "Activo"),
       (supabase as any).from("pagos_alquiler").select("*").eq("anio", year),
       supabase.from("propiedades").select("id, nombre_inmueble, direccion"),
     ]);
@@ -87,10 +90,28 @@ const AdminAlquileres = () => {
       .filter(p => p.estado_inquilino === "Recibido")
       .reduce((s, p) => s + (p.valor_administracion || 0), 0);
 
-    // Cartera vencida: pagos del mes actual o anteriores no recibidos
+    // Cartera vencida: pagos no recibidos, solo dentro del rango [fecha_inicio del contrato, mes actual]
     const cartera = contratos.reduce((sum, c) => {
-      for (let m = 1; m <= today.getMonth() + 1; m++) {
-        if (year > today.getFullYear()) continue;
+      if (!c.fecha_inicio) return sum; // sin fecha_inicio no se puede acotar el rango, se omite
+      const inicio = new Date(c.fecha_inicio + "T00:00:00");
+      const inicioAnio = inicio.getFullYear();
+      const inicioMes = inicio.getMonth() + 1;
+
+      if (inicioAnio > year) return sum; // el contrato aún no había iniciado en el año mostrado
+      const mesDesde = inicioAnio === year ? inicioMes : 1;
+
+      let mesHasta: number;
+      if (year < today.getFullYear()) mesHasta = 12;
+      else if (year === today.getFullYear()) mesHasta = today.getMonth() + 1;
+      else return sum; // año futuro respecto a hoy, todavía no hay meses vencidos
+
+      if (c.fecha_fin) {
+        const fin = new Date(c.fecha_fin + "T00:00:00");
+        if (fin.getFullYear() < year) return sum;
+        if (fin.getFullYear() === year) mesHasta = Math.min(mesHasta, fin.getMonth() + 1);
+      }
+
+      for (let m = mesDesde; m <= mesHasta; m++) {
         const p = pagoOf(c.id, m);
         if (!p || p.estado_inquilino !== "Recibido") {
           sum += c.valor_canon || 0;
@@ -203,7 +224,7 @@ const AdminAlquileres = () => {
               {contratos.map(c => {
                 const prop = props[c.propiedad_id];
                 return (
-                  <tr key={c.id} className="border-t border-foreground/5 hover:bg-muted/20">
+                  <tr key={c.id} onClick={() => setFichaPropiedadId(c.propiedad_id)} className="border-t border-foreground/5 hover:bg-muted/20 cursor-pointer">
                     <td className="p-3 font-body">
                       <p className="font-semibold text-foreground truncate max-w-[200px]">{prop?.nombre_inmueble || "Inmueble"}</p>
                       <p className="text-muted-foreground text-[11px] truncate max-w-[200px]">{c.inquilino_nombre}</p>
@@ -228,7 +249,7 @@ const AdminAlquileres = () => {
                       return (
                         <td key={mes} className="p-1 text-center">
                           <button
-                            onClick={() => openPagoForm(c, mes)}
+                            onClick={(e) => { e.stopPropagation(); openPagoForm(c, mes); }}
                             className={`w-full px-1.5 py-2 border text-[10px] font-heading font-bold uppercase tracking-wider transition-opacity hover:opacity-80 ${colors[status]}`}
                             title={`${MESES_LARGO[idx]} ${year}`}
                           >
@@ -321,6 +342,15 @@ const AdminAlquileres = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {fichaPropiedadId && (
+        <AdminFichaInmueble
+          open={!!fichaPropiedadId}
+          onClose={() => setFichaPropiedadId(null)}
+          propiedadId={fichaPropiedadId}
+          onChanged={loadData}
+        />
+      )}
     </div>
   );
 };

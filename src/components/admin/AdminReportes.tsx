@@ -5,6 +5,7 @@ import { Loader2, Home, Calendar, DollarSign, TrendingUp, Building2, ClipboardLi
 type Propiedad = { id: string; nombre_inmueble: string; tipo_negocio: string; tipo_inmueble: string; estado: string; precio: number | null };
 type Reserva = { id: string; propiedad_id: string | null; slot_id: string | null; estado: string };
 type Slot = { id: string; propiedad_id: string | null };
+type PagoAlquiler = { anio: number; valor_administracion: number | null; estado_inquilino: string };
 
 const formatCurrency = (n: number) =>
   new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(n);
@@ -14,17 +15,20 @@ const AdminReportes = () => {
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [slots, setSlots] = useState<Slot[]>([]);
+  const [pagosAlquiler, setPagosAlquiler] = useState<PagoAlquiler[]>([]);
 
   useEffect(() => {
     (async () => {
-      const [pRes, rRes, sRes] = await Promise.all([
+      const [pRes, rRes, sRes, paRes] = await Promise.all([
         supabase.from("propiedades").select("id, nombre_inmueble, tipo_negocio, tipo_inmueble, estado, precio"),
         supabase.from("citas_reservas").select("id, propiedad_id, slot_id, estado").neq("estado", "Eliminada"),
         supabase.from("citas_disponibles").select("id, propiedad_id"),
+        (supabase as any).from("pagos_alquiler").select("anio, valor_administracion, estado_inquilino"),
       ]);
       setPropiedades((pRes.data || []) as Propiedad[]);
       setReservas((rRes.data || []) as Reserva[]);
       setSlots((sRes.data || []) as Slot[]);
+      setPagosAlquiler((paRes.data || []) as PagoAlquiler[]);
       setLoading(false);
     })();
   }, []);
@@ -57,25 +61,39 @@ const AdminReportes = () => {
     return { total, pendientes, confirmadas, canceladas };
   }, [reservas]);
 
-  // Citas por inmueble (top 10)
+  const comisionesStats = useMemo(() => {
+    const recibidos = pagosAlquiler.filter(p => p.estado_inquilino === "Recibido");
+    const totalHistorico = recibidos.reduce((s, p) => s + (p.valor_administracion || 0), 0);
+    const anioActual = new Date().getFullYear();
+    const totalAnioActual = recibidos
+      .filter(p => p.anio === anioActual)
+      .reduce((s, p) => s + (p.valor_administracion || 0), 0);
+    return { totalHistorico, totalAnioActual };
+  }, [pagosAlquiler]);
+
+  // Citas por inmueble (top 10), con desglose por estado
   const citasPorInmueble = useMemo(() => {
-    const map: Record<string, number> = {};
+    const map: Record<string, { total: number; pendiente: number; confirmada: number; cancelada: number }> = {};
     const slotProp: Record<string, string | null> = {};
     slots.forEach(s => { slotProp[s.id] = s.propiedad_id; });
 
     reservas.forEach(r => {
       const pid = r.propiedad_id || (r.slot_id ? slotProp[r.slot_id] : null);
       if (!pid) return;
-      map[pid] = (map[pid] || 0) + 1;
+      if (!map[pid]) map[pid] = { total: 0, pendiente: 0, confirmada: 0, cancelada: 0 };
+      map[pid].total++;
+      if (r.estado === "Pendiente") map[pid].pendiente++;
+      else if (r.estado === "Confirmada") map[pid].confirmada++;
+      else if (r.estado === "Cancelada") map[pid].cancelada++;
     });
 
     return Object.entries(map)
-      .map(([pid, count]) => ({
+      .map(([pid, counts]) => ({
         prop: propiedades.find(p => p.id === pid),
-        count,
+        ...counts,
       }))
       .filter(x => x.prop)
-      .sort((a, b) => b.count - a.count)
+      .sort((a, b) => b.total - a.total)
       .slice(0, 10);
   }, [reservas, slots, propiedades]);
 
@@ -127,6 +145,15 @@ const AdminReportes = () => {
         </div>
       </section>
 
+      {/* Comisiones */}
+      <section>
+        <h3 className="font-heading text-sm font-semibold tracking-widest text-muted-foreground uppercase mb-3">Comisiones (alquiler)</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <Card icon={DollarSign} label="Total histórico" value={formatCurrency(comisionesStats.totalHistorico)} color="text-green-600" />
+          <Card icon={DollarSign} label={`Total ${new Date().getFullYear()}`} value={formatCurrency(comisionesStats.totalAnioActual)} color="text-green-600" />
+        </div>
+      </section>
+
       {/* Citas */}
       <section>
         <h3 className="font-heading text-sm font-semibold tracking-widest text-muted-foreground uppercase mb-3">Citas</h3>
@@ -150,15 +177,21 @@ const AdminReportes = () => {
                 <tr>
                   <th className="text-left p-3 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Inmueble</th>
                   <th className="text-left p-3 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Estado</th>
+                  <th className="text-right p-3 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Pendientes</th>
+                  <th className="text-right p-3 font-heading text-xs font-semibold tracking-widest text-green-600 uppercase">Confirmadas</th>
+                  <th className="text-right p-3 font-heading text-xs font-semibold tracking-widest text-destructive uppercase">Canceladas</th>
                   <th className="text-right p-3 font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">Citas</th>
                 </tr>
               </thead>
               <tbody>
-                {citasPorInmueble.map(({ prop, count }) => (
+                {citasPorInmueble.map(({ prop, total, pendiente, confirmada, cancelada }) => (
                   <tr key={prop!.id} className="border-t border-foreground/5">
                     <td className="p-3 font-body">{prop!.nombre_inmueble}</td>
                     <td className="p-3 font-body text-muted-foreground">{prop!.estado}</td>
-                    <td className="p-3 font-heading font-bold text-primary text-right">{count}</td>
+                    <td className="p-3 font-body text-right">{pendiente}</td>
+                    <td className="p-3 font-body text-green-600 text-right">{confirmada}</td>
+                    <td className="p-3 font-body text-destructive text-right">{cancelada}</td>
+                    <td className="p-3 font-heading font-bold text-primary text-right">{total}</td>
                   </tr>
                 ))}
               </tbody>

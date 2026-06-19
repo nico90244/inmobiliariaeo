@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
-  TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList, Wallet,
+  TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList, Wallet, ShieldCheck,
   ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
@@ -15,6 +15,7 @@ import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
 import AdminContratoArrendamiento from "@/components/admin/AdminContratoArrendamiento";
 import AdminReportes from "@/components/admin/AdminReportes";
 import AdminAlquileres from "@/components/admin/AdminAlquileres";
+import AdminPolizas from "@/components/admin/AdminPolizas";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -40,7 +41,7 @@ const Admin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas" | "alquileres" | "reportes">("propiedades");
+  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas" | "alquileres" | "polizas" | "reportes">("propiedades");
   const [pendingReservas, setPendingReservas] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
@@ -84,7 +85,8 @@ const Admin = () => {
       .from("contratos_arrendamiento")
       .select("id")
       .eq("propiedad_id", p.id)
-      .order("fecha_creacion", { ascending: false })
+      .eq("estado_contrato", "Activo")
+      .order("created_at", { ascending: false })
       .limit(1)
       .single();
     setContratoExistingId(data?.id ?? null);
@@ -386,6 +388,9 @@ const Admin = () => {
           </div>
           <button onClick={() => { setSection("alquileres"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "alquileres" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <Wallet size={18} /> Alquileres
+          </button>
+          <button onClick={() => { setSection("polizas"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "polizas" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <ShieldCheck size={18} /> Pólizas
           </button>
           <button onClick={() => { setSection("reportes"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "reportes" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <BarChart3 size={18} /> Reportes
@@ -746,6 +751,7 @@ const Admin = () => {
         {section === "citas-disponibilidad" && <AdminCitasDisponibilidad />}
         {section === "citas-reservas" && <AdminCitasReservas />}
         {section === "alquileres" && <AdminAlquileres />}
+        {section === "polizas" && <AdminPolizas />}
         {section === "reportes" && <AdminReportes />}
 
         {/* Property form modal */}

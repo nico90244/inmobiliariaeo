@@ -33,8 +33,15 @@ type Contrato = {
   propietario_num_cuenta: string;
   valor_pago_propietario: number | string;
   dia_pago_propietario: number | string;
+  poliza_asegurado: boolean;
+  poliza_compania: string;
+  poliza_compania_otra: string;
+  poliza_valor: number | string;
+  poliza_fecha_inicio: string;
   notas: string;
 };
+
+const COMPANIAS_POLIZA = ["Fianzacredito", "El Libertador", "Sura", "Otra"];
 
 const emptyContrato = (propiedadId: string, canon: number): Contrato => ({
   propiedad_id: propiedadId,
@@ -54,6 +61,11 @@ const emptyContrato = (propiedadId: string, canon: number): Contrato => ({
   propietario_num_cuenta: "",
   valor_pago_propietario: Math.round(canon * 0.9),
   dia_pago_propietario: 10,
+  poliza_asegurado: false,
+  poliza_compania: "",
+  poliza_compania_otra: "",
+  poliza_valor: "",
+  poliza_fecha_inicio: "",
   notas: "",
 });
 
@@ -158,6 +170,11 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         propietario_num_cuenta: form.propietario_num_cuenta.trim(),
         valor_pago_propietario: Number(form.valor_pago_propietario) || null,
         dia_pago_propietario: Number(form.dia_pago_propietario) || null,
+        poliza_asegurado: form.poliza_asegurado,
+        poliza_compania: form.poliza_asegurado ? (form.poliza_compania || null) : null,
+        poliza_compania_otra: form.poliza_asegurado && form.poliza_compania === "Otra" ? form.poliza_compania_otra.trim() : null,
+        poliza_valor: form.poliza_asegurado ? (Number(form.poliza_valor) || null) : null,
+        poliza_fecha_inicio: form.poliza_asegurado ? (form.poliza_fecha_inicio || null) : null,
         notas: form.notas.trim(),
       };
 
@@ -363,6 +380,64 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
                 El valor se calcula automáticamente como 90% del canon. Puedes ajustarlo manualmente.
               </p>
             </div>
+          </section>
+
+          {/* ── Seguro / Póliza ── */}
+          <section>
+            <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4 pb-2 border-b border-foreground/10">
+              <FileText size={15} className="text-primary" /> Seguro / Póliza
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>Inmueble asegurado</label>
+                <select
+                  value={form.poliza_asegurado ? "si" : "no"}
+                  onChange={(e) => set("poliza_asegurado", e.target.value === "si")}
+                  className={inputCls}
+                >
+                  <option value="no">No</option>
+                  <option value="si">Sí</option>
+                </select>
+              </div>
+              {form.poliza_asegurado && (
+                <div>
+                  <label className={labelCls}>Seleccionar póliza</label>
+                  <select value={form.poliza_compania} onChange={(e) => set("poliza_compania", e.target.value)} className={inputCls}>
+                    <option value="">Seleccionar…</option>
+                    {COMPANIAS_POLIZA.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+
+            {form.poliza_asegurado && (
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                {form.poliza_compania === "Otra" && (
+                  <div>
+                    <label className={labelCls}>¿Cuál?</label>
+                    <input type="text" value={form.poliza_compania_otra} onChange={(e) => set("poliza_compania_otra", e.target.value)} className={inputCls} />
+                  </div>
+                )}
+                <div>
+                  <label className={labelCls}>Valor de la póliza</label>
+                  <input
+                    type="number" value={form.poliza_valor}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => set("poliza_valor", e.target.value)}
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>Fecha inicio póliza</label>
+                  <input type="date" value={form.poliza_fecha_inicio} onChange={(e) => set("poliza_fecha_inicio", e.target.value)} className={inputCls} />
+                  {form.poliza_compania === "Sura" && (
+                    <p className="font-body text-xs text-muted-foreground mt-1">Sura vence al año desde esta fecha — se hará seguimiento en "Pólizas".</p>
+                  )}
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Notas */}
