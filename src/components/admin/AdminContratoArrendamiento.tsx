@@ -152,30 +152,31 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
     }
     setSaving(true);
     try {
+      const safeTrim = (v: string | null | undefined) => (v ?? "").trim();
       const record = {
         propiedad_id: form.propiedad_id,
-        inquilino_nombre: form.inquilino_nombre.trim(),
-        inquilino_cedula: form.inquilino_cedula.trim(),
-        inquilino_celular: form.inquilino_celular.trim(),
-        inquilino_correo: form.inquilino_correo.trim(),
+        inquilino_nombre: safeTrim(form.inquilino_nombre),
+        inquilino_cedula: safeTrim(form.inquilino_cedula),
+        inquilino_celular: safeTrim(form.inquilino_celular),
+        inquilino_correo: safeTrim(form.inquilino_correo),
         docs_inquilino: form.docs_inquilino,
         docs_codeudor: form.docs_codeudor,
         valor_canon: Number(form.valor_canon) || null,
         dia_pago_inquilino: Number(form.dia_pago_inquilino) || null,
         fecha_inicio: form.fecha_inicio || null,
-        propietario_nombre: form.propietario_nombre.trim(),
-        propietario_cedula: form.propietario_cedula.trim(),
-        propietario_banco: form.propietario_banco.trim(),
+        propietario_nombre: safeTrim(form.propietario_nombre),
+        propietario_cedula: safeTrim(form.propietario_cedula),
+        propietario_banco: safeTrim(form.propietario_banco),
         propietario_tipo_cuenta: form.propietario_tipo_cuenta,
-        propietario_num_cuenta: form.propietario_num_cuenta.trim(),
+        propietario_num_cuenta: safeTrim(form.propietario_num_cuenta),
         valor_pago_propietario: Number(form.valor_pago_propietario) || null,
         dia_pago_propietario: Number(form.dia_pago_propietario) || null,
         poliza_asegurado: form.poliza_asegurado,
         poliza_compania: form.poliza_asegurado ? (form.poliza_compania || null) : null,
-        poliza_compania_otra: form.poliza_asegurado && form.poliza_compania === "Otra" ? form.poliza_compania_otra.trim() : null,
+        poliza_compania_otra: form.poliza_asegurado && form.poliza_compania === "Otra" ? safeTrim(form.poliza_compania_otra) : null,
         poliza_valor: form.poliza_asegurado ? (Number(form.poliza_valor) || null) : null,
         poliza_fecha_inicio: form.poliza_asegurado ? (form.poliza_fecha_inicio || null) : null,
-        notas: form.notas.trim(),
+        notas: safeTrim(form.notas),
       };
 
       if (existingId) {
