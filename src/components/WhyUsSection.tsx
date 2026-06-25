@@ -38,7 +38,7 @@ const stats = [
 
 const WhyUsSection = () => {
   return (
-    <section className="py-24 md:py-40 bg-secondary text-secondary-foreground overflow-hidden">
+    <section className="py-16 md:py-32 bg-secondary text-secondary-foreground overflow-hidden">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-12 gap-16 lg:gap-24">
 

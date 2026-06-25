@@ -57,11 +57,11 @@ const services = [
 
 const ServicesSection = () => {
   return (
-    <section id="servicios" className="py-24 md:py-40">
+    <section id="servicios" className="py-16 md:py-32">
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="section-divider mb-24" />
+        <div className="section-divider mb-10 md:mb-20" />
 
-        <div className="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+        <div className="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-16">
           <div className="max-w-lg">
             <p className="font-heading text-xs font-semibold tracking-widest text-primary uppercase mb-4">
               Lo que hacemos

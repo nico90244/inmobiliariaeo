@@ -7,9 +7,9 @@ const PropertiesSection = () => {
   const properties = data ?? [];
 
   return (
-    <section id="propiedades" className="py-24 md:py-40">
+    <section id="propiedades" className="py-16 md:py-32">
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="reveal max-w-3xl mb-16">
+        <div className="reveal max-w-3xl mb-10 md:mb-16">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
             Propiedades Destacadas
           </h2>

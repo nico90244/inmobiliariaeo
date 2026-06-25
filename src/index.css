@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Josefin+Sans:wght@300;400;600;700&display=swap');
-@import url('https://fonts.cdnfonts.com/css/catchy-mager?display=swap');
+/* Fuentes cargadas via <link rel="stylesheet"> en index.html para carga en paralelo desde el HTML.
+   Ambas URLs incluyen display=swap para mostrar texto con fuente fallback mientras carga la fuente custom. */
 
 @tailwind base;
 @tailwind components;

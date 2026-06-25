@@ -17,9 +17,9 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contacto" className="py-24 md:py-40">
+    <section id="contacto" className="py-16 md:py-32">
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="section-divider mb-24" />
+        <div className="section-divider mb-10 md:mb-20" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           <div className="reveal lg:col-span-7">
