@@ -1,0 +1,19 @@
+# Inmobiliaria Eliana Osorio
+
+> Inmobiliaria con más de 10 años de experiencia en venta, alquiler y asesoría jurídica de propiedad raíz en Cali y el Valle del Cauca. Acompañamiento integral con respaldo jurídico.
+
+## Pages
+
+- [Inicio](/): Presentación, propiedades destacadas y servicios.
+- [Propiedades](/propiedades): Catálogo completo con filtros por barrio, tipo y precio.
+- [Venta](/venta): Inmuebles disponibles para compra.
+- [Alquiler](/alquiler): Inmuebles disponibles para arriendo.
+- [Servicios](/servicios): Venta, alquiler, asesoría jurídica y acompañamiento notarial.
+- [Captación](/captacion): Publica tu inmueble con nosotros.
+- [Contacto](/contacto): WhatsApp, teléfono, correo y redes sociales.
+
+## Contact
+- WhatsApp: +57 316 222 5604
+- Teléfono: +57 318 653 1598
+- Email: info@inmobiliariaeo.com
+- Instagram: @inmobiliaria_eo

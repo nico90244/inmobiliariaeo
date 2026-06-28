@@ -1,0 +1,1 @@
+ALTER TABLE public.propiedades ADD COLUMN IF NOT EXISTS ciudad TEXT DEFAULT 'Cali';

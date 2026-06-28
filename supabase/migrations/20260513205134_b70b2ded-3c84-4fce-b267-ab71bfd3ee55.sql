@@ -1,0 +1,1 @@
+ALTER TABLE public.propiedades ADD COLUMN IF NOT EXISTS foto_portada_pos TEXT DEFAULT 'center';
