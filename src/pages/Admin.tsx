@@ -8,7 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
   TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList, Wallet, ShieldCheck,
-  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu, User,
+  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu, User, ChevronDown,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
@@ -43,6 +43,7 @@ const Admin = () => {
   const queryClient = useQueryClient();
 
   const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas" | "alquileres" | "propietarios" | "polizas" | "reportes">("propiedades");
+  const [alquileresExpanded, setAlquileresExpanded] = useState(false);
   const [pendingReservas, setPendingReservas] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [propiedades, setPropiedades] = useState<Propiedad[]>([]);
@@ -152,6 +153,13 @@ const Admin = () => {
   useEffect(() => {
     if (user) loadData();
   }, [user, section]);
+
+  // Auto-expand Alquileres group when navigating to its sub-sections
+  useEffect(() => {
+    if (section === "alquileres" || section === "propietarios") {
+      setAlquileresExpanded(true);
+    }
+  }, [section]);
 
   // Load pending reservas count
   useEffect(() => {
@@ -386,12 +394,32 @@ const Admin = () => {
           <div className="pt-2 pb-1 px-4">
             <span className="font-heading text-[10px] font-semibold tracking-widest text-secondary-foreground/40 uppercase">Gestión</span>
           </div>
-          <button onClick={() => { setSection("alquileres"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "alquileres" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
-            <Wallet size={18} /> Alquileres
-          </button>
-          <button onClick={() => { setSection("propietarios"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 pl-10 pr-4 py-2.5 font-heading text-xs font-medium transition-colors ${section === "propietarios" ? "bg-primary/20 text-primary" : "text-secondary-foreground/45 hover:text-secondary-foreground"}`}>
-            <User size={15} /> Propietarios
-          </button>
+          {/* Alquileres accordion group */}
+          <div>
+            <div className="flex items-center">
+              <button
+                onClick={() => { setSection("alquileres"); setSidebarOpen(false); setAlquileresExpanded(true); }}
+                className={`flex-1 flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "alquileres" ? "bg-primary text-primary-foreground" : section === "propietarios" ? "bg-primary/10 text-primary" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}
+              >
+                <Wallet size={18} /> Alquileres
+              </button>
+              <button
+                onClick={() => setAlquileresExpanded(v => !v)}
+                className={`px-3 py-3 transition-colors ${section === "alquileres" ? "bg-primary text-primary-foreground" : section === "propietarios" ? "text-primary" : "text-secondary-foreground/40 hover:text-secondary-foreground"}`}
+                aria-label="Expandir Alquileres"
+              >
+                <ChevronDown size={14} className={`transition-transform duration-200 ${alquileresExpanded ? "rotate-180" : ""}`} />
+              </button>
+            </div>
+            {alquileresExpanded && (
+              <button
+                onClick={() => { setSection("propietarios"); setSidebarOpen(false); }}
+                className={`w-full flex items-center gap-3 pl-11 pr-4 py-2.5 font-heading text-xs font-medium transition-colors border-l-2 ml-4 ${section === "propietarios" ? "border-primary text-primary bg-primary/10" : "border-secondary-foreground/10 text-secondary-foreground/50 hover:text-secondary-foreground hover:border-secondary-foreground/30"}`}
+              >
+                <User size={14} /> Propietarios
+              </button>
+            )}
+          </div>
           <button onClick={() => { setSection("polizas"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "polizas" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <ShieldCheck size={18} /> Pólizas
           </button>
