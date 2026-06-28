@@ -59,7 +59,7 @@ const PropertiesSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {properties.map((property, i) => (
-            <div key={property.id} className={`reveal reveal-delay-${(i % 3) + 1}`}>
+            <div key={property.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}>
               <PropertyCard property={property} />
             </div>
           ))}

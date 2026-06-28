@@ -338,6 +338,12 @@
     opacity: 1;
     transform: none;
   }
+  /* Stagger cards: deshabilitar */
+  .animate-fade-in-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 @layer utilities {
