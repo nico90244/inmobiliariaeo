@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { Loader2, AlertCircle } from "lucide-react";
+import { AlertCircle, Search, FilterX } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -69,16 +69,16 @@ const Propiedades = () => {
       <Header />
       <main className="pt-20">
         {/* Banner */}
-        <div className="py-10" style={{ background: "#F5F5F5" }}>
+        <div className="py-10 bg-muted/40 border-b border-foreground/5">
           <div className="container mx-auto px-6 lg:px-12 text-center">
-            <h1 className="font-display text-3xl md:text-5xl font-bold mb-2" style={{ color: "#1A1A1A" }}>{title}</h1>
-            <p className="font-body text-sm md:text-base mb-3" style={{ color: "#666666" }}>
+            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-2">{title}</h1>
+            <p className="font-body text-sm md:text-base text-muted-foreground mb-3">
               Encuentra tu inmueble ideal en Cali y el Valle del Cauca
             </p>
-            <nav className="flex items-center justify-center gap-2 font-body text-xs" style={{ color: "#999999" }}>
+            <nav className="flex items-center justify-center gap-2 font-body text-xs text-muted-foreground/60" aria-label="Breadcrumb">
               <Link to="/" className="hover:text-foreground transition-colors">Inicio</Link>
-              <span>&gt;</span>
-              <span style={{ color: "#666666" }}>Propiedades</span>
+              <span aria-hidden="true">/</span>
+              <span className="text-muted-foreground">Propiedades</span>
             </nav>
           </div>
         </div>
@@ -124,8 +124,26 @@ const Propiedades = () => {
             </div>
 
             {isLoading && (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="animate-spin text-primary" size={40} />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="bg-background border border-foreground/5 overflow-hidden">
+                    <div className="aspect-video bg-muted animate-pulse" />
+                    <div className="p-4 space-y-3">
+                      <div className="h-2.5 w-1/4 bg-muted animate-pulse" />
+                      <div className="h-5 w-3/4 bg-muted animate-pulse" />
+                      <div className="h-2.5 w-1/2 bg-muted animate-pulse" />
+                      <div className="h-6 w-1/3 bg-muted animate-pulse" />
+                      <div className="border-t border-foreground/5 pt-3 flex gap-4">
+                        <div className="h-2.5 w-16 bg-muted animate-pulse" />
+                        <div className="h-2.5 w-12 bg-muted animate-pulse" />
+                      </div>
+                      <div className="mt-2 space-y-2">
+                        <div className="h-10 bg-muted animate-pulse" />
+                        <div className="h-10 bg-muted animate-pulse" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -136,8 +154,22 @@ const Propiedades = () => {
               </div>
             )}
 
-            {data && data.length === 0 && (
-              <p className="font-body text-muted-foreground text-center py-20">No se encontraron propiedades con los filtros seleccionados.</p>
+            {data && data.length === 0 && !isLoading && (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <div className="w-16 h-16 bg-muted flex items-center justify-center mb-6">
+                  <Search size={28} className="text-muted-foreground" />
+                </div>
+                <h3 className="font-heading text-xl font-semibold text-foreground mb-3">Sin resultados</h3>
+                <p className="font-body text-muted-foreground max-w-sm mb-6">
+                  Ninguna propiedad coincide con los filtros actuales. Intenta ampliar la búsqueda.
+                </p>
+                <button
+                  onClick={() => { setTipoNegocio(""); setTipoInmueble(""); setBarrio(""); setCiudad(""); setPrecioMin(""); setPrecioMax(""); }}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+                >
+                  <FilterX size={14} /> Limpiar filtros
+                </button>
+              </div>
             )}
 
             {data && data.length > 0 && (() => {

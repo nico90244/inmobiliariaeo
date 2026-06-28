@@ -69,7 +69,7 @@ const Header = () => {
                 Propiedades <ChevronDown size={14} aria-hidden="true" />
               </button>
               {propDropdown && (
-                <div className="absolute top-full left-0 mt-1 bg-[#1A1A1A] border border-white/10 shadow-lg min-w-[180px] z-50" role="menu">
+                <div className="dropdown-animate absolute top-full left-0 mt-1 bg-[#1A1A1A] border border-white/10 shadow-lg min-w-[180px] z-50" role="menu">
                   <Link to="/propiedades" onClick={() => setPropDropdown(false)} role="menuitem" className="block px-5 py-3 font-heading text-sm text-white/70 hover:text-primary hover:bg-white/5 transition-colors">
                     Ver todas
                   </Link>
@@ -101,7 +101,7 @@ const Header = () => {
       </div>
 
       {isOpen && (
-        <div id="mobile-nav" className="lg:hidden bg-[#1A1A1A] border-t border-white/10">
+        <div id="mobile-nav" className="menu-animate lg:hidden bg-[#1A1A1A] border-t border-white/10">
           <nav className="container mx-auto px-6 py-6 flex flex-col gap-4" aria-label="Navegación móvil">
             <Link to="/" onClick={() => setIsOpen(false)} className="font-heading text-sm font-medium tracking-wide text-white/70 hover:text-primary transition-colors py-2">
               Inicio

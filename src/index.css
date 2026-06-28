@@ -173,6 +173,25 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
+   NAV ANIMATIONS – menú móvil y dropdown de escritorio.
+   ───────────────────────────────────────────────────────────── */
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-drop {
+  from { opacity: 0; transform: translateY(-6px) scaleY(0.95); }
+  to   { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+.menu-animate {
+  animation: slide-down 0.22s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+.dropdown-animate {
+  transform-origin: top center;
+  animation: fade-drop 0.18s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────
    SHIMMER TEXT – efecto destello dorado en textos especiales.
    ───────────────────────────────────────────────────────────── */
 .shimmer-gold {
@@ -287,6 +306,37 @@
   [data-ficha-gallery] {
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PREFERS-REDUCED-MOTION – respeto de preferencias de accesibilidad.
+   Los usuarios con esta preferencia activa ven el contenido
+   inmediatamente sin transiciones que puedan causar malestar.
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* Scroll reveal: mostrar elementos sin animación */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  /* Hero: el texto oculto por animation-delay se vuelve visible */
+  .hero-animate-1 { animation: none; }
+  .hero-animate-2 { animation: none; opacity: 1; }
+  .hero-animate-3 { animation: none; opacity: 1; }
+  /* Shimmer: mostrar el dorado de forma estática */
+  .shimmer-gold {
+    animation: none;
+    -webkit-text-fill-color: hsl(40, 47%, 50%);
+    background: none;
+  }
+  /* Nav animations: deshabilitar */
+  .menu-animate,
+  .dropdown-animate {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
 

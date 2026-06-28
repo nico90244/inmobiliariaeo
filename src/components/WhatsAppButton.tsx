@@ -30,7 +30,7 @@ const WhatsAppButton = () => {
 
       {/* Eli popup */}
       {chatOpen && (
-        <div className="fixed bottom-24 left-6 z-50 w-80 bg-background border border-foreground/10 shadow-2xl p-6 animate-fade-in-up">
+        <div className="fixed bottom-24 left-6 z-50 w-80 bg-background border border-foreground/10 shadow-2xl p-6 animate-scale-in origin-bottom-left">
           <button
             onClick={() => setChatOpen(false)}
             aria-label="Cerrar chat de Eli"

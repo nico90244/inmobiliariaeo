@@ -1,6 +1,26 @@
-import { Loader2, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { usePropiedades } from "@/hooks/usePropiedades";
 import PropertyCard from "@/components/PropertyCard";
+
+const PropertySkeleton = () => (
+  <div className="bg-background border border-foreground/5 overflow-hidden">
+    <div className="aspect-video bg-muted animate-pulse" />
+    <div className="p-4 space-y-3">
+      <div className="h-2.5 w-1/4 bg-muted animate-pulse" />
+      <div className="h-5 w-3/4 bg-muted animate-pulse" />
+      <div className="h-2.5 w-1/2 bg-muted animate-pulse" />
+      <div className="h-6 w-1/3 bg-muted animate-pulse" />
+      <div className="border-t border-foreground/5 pt-3 flex gap-4">
+        <div className="h-2.5 w-16 bg-muted animate-pulse" />
+        <div className="h-2.5 w-12 bg-muted animate-pulse" />
+      </div>
+      <div className="mt-2 space-y-2">
+        <div className="h-10 bg-muted animate-pulse" />
+        <div className="h-10 bg-muted animate-pulse" />
+      </div>
+    </div>
+  </div>
+);
 
 const PropertiesSection = () => {
   const { data, isLoading, error } = usePropiedades({ destacada: true });
@@ -19,8 +39,8 @@ const PropertiesSection = () => {
         </div>
 
         {isLoading && (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="animate-spin text-primary" size={40} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => <PropertySkeleton key={i} />)}
           </div>
         )}
 
@@ -38,8 +58,10 @@ const PropertiesSection = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+          {properties.map((property, i) => (
+            <div key={property.id} className={`reveal reveal-delay-${(i % 3) + 1}`}>
+              <PropertyCard property={property} />
+            </div>
           ))}
         </div>
       </div>

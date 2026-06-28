@@ -1,23 +1,28 @@
 import { useState } from "react";
-import { Phone, MapPin } from "lucide-react";
+import { Phone, MapPin, Loader2, CheckCircle2 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 const ContactSection = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
     const text = `Hola, soy ${name}. Mi teléfono es ${phone}. ${message}`;
-    const popup = window.open(`https://wa.me/573162225604?text=${encodeURIComponent(text)}`, "_blank");
-    if (popup) {
-      setSubmitted(true);
-      setTimeout(() => setSubmitted(false), 3000);
-    } else {
-      alert("Por favor permite ventanas emergentes para abrir WhatsApp, o contáctanos directamente al 316 222 5604.");
-    }
+    setTimeout(() => {
+      const popup = window.open(`https://wa.me/573162225604?text=${encodeURIComponent(text)}`, "_blank");
+      setSubmitting(false);
+      if (popup) {
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 4000);
+      } else {
+        alert("Por favor permite ventanas emergentes para abrir WhatsApp, o contáctanos directamente al 316 222 5604.");
+      }
+    }, 150);
   };
 
   return (
@@ -82,9 +87,14 @@ const ContactSection = () => {
 
               <button
                 type="submit"
-                className="px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+                disabled={submitting}
+                className="inline-flex items-center gap-2 px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {submitted ? "¡Enviado!" : "Enviar"}
+                {submitting ? (
+                  <><Loader2 size={16} className="animate-spin" /> Abriendo...</>
+                ) : submitted ? (
+                  <><CheckCircle2 size={16} /> ¡Enviado!</>
+                ) : "Enviar"}
               </button>
             </form>
           </div>
