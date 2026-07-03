@@ -17,7 +17,7 @@ type Propiedad = {
 };
 type Reserva = {
   id: string; propiedad_id: string | null; slot_id: string | null;
-  estado: string; created_at: string;
+  estado: string; fecha_creacion: string;
 };
 type Slot = { id: string; propiedad_id: string | null };
 type PagoAlquiler = {
