@@ -152,6 +152,8 @@ export type Database = {
           dia_pago_propietario: number | null
           docs_codeudor: string[]
           docs_inquilino: string[]
+          estado_contrato: string
+          fecha_fin: string | null
           fecha_inicio: string | null
           id: string
           inquilino_cedula: string
@@ -159,6 +161,11 @@ export type Database = {
           inquilino_correo: string | null
           inquilino_nombre: string
           notas: string | null
+          poliza_asegurado: boolean
+          poliza_compania: string | null
+          poliza_compania_otra: string | null
+          poliza_fecha_inicio: string | null
+          poliza_valor: number | null
           propiedad_id: string
           propietario_banco: string | null
           propietario_cedula: string | null
@@ -175,6 +182,8 @@ export type Database = {
           dia_pago_propietario?: number | null
           docs_codeudor?: string[]
           docs_inquilino?: string[]
+          estado_contrato?: string
+          fecha_fin?: string | null
           fecha_inicio?: string | null
           id?: string
           inquilino_cedula: string
@@ -182,6 +191,11 @@ export type Database = {
           inquilino_correo?: string | null
           inquilino_nombre: string
           notas?: string | null
+          poliza_asegurado?: boolean
+          poliza_compania?: string | null
+          poliza_compania_otra?: string | null
+          poliza_fecha_inicio?: string | null
+          poliza_valor?: number | null
           propiedad_id: string
           propietario_banco?: string | null
           propietario_cedula?: string | null
@@ -198,6 +212,8 @@ export type Database = {
           dia_pago_propietario?: number | null
           docs_codeudor?: string[]
           docs_inquilino?: string[]
+          estado_contrato?: string
+          fecha_fin?: string | null
           fecha_inicio?: string | null
           id?: string
           inquilino_cedula?: string
@@ -205,6 +221,11 @@ export type Database = {
           inquilino_correo?: string | null
           inquilino_nombre?: string
           notas?: string | null
+          poliza_asegurado?: boolean
+          poliza_compania?: string | null
+          poliza_compania_otra?: string | null
+          poliza_fecha_inicio?: string | null
+          poliza_valor?: number | null
           propiedad_id?: string
           propietario_banco?: string | null
           propietario_cedula?: string | null
@@ -280,6 +301,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "pagos_alquiler_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos_arrendamiento"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pagos_poliza: {
+        Row: {
+          anio: number
+          contrato_id: string
+          created_at: string
+          estado: string
+          fecha_pago: string | null
+          id: string
+          mes: number | null
+          notas: string | null
+          updated_at: string
+          valor: number | null
+        }
+        Insert: {
+          anio: number
+          contrato_id: string
+          created_at?: string
+          estado?: string
+          fecha_pago?: string | null
+          id?: string
+          mes?: number | null
+          notas?: string | null
+          updated_at?: string
+          valor?: number | null
+        }
+        Update: {
+          anio?: number
+          contrato_id?: string
+          created_at?: string
+          estado?: string
+          fecha_pago?: string | null
+          id?: string
+          mes?: number | null
+          notas?: string | null
+          updated_at?: string
+          valor?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pagos_poliza_contrato_id_fkey"
             columns: ["contrato_id"]
             isOneToOne: false
             referencedRelation: "contratos_arrendamiento"
