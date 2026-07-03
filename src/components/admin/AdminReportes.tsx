@@ -17,7 +17,7 @@ type Propiedad = {
 };
 type Reserva = {
   id: string; propiedad_id: string | null; slot_id: string | null;
-  estado: string; created_at: string;
+  estado: string; fecha_creacion: string;
 };
 type Slot = { id: string; propiedad_id: string | null };
 type PagoAlquiler = {
@@ -195,7 +195,7 @@ const AdminReportes = () => {
     (async () => {
       const [pRes, rRes, sRes, paRes, cRes] = await Promise.all([
         supabase.from("propiedades").select("id, nombre_inmueble, tipo_negocio, tipo_inmueble, estado, precio"),
-        supabase.from("citas_reservas").select("id, propiedad_id, slot_id, estado, created_at").neq("estado", "Eliminada"),
+        supabase.from("citas_reservas").select("id, propiedad_id, slot_id, estado, fecha_creacion").neq("estado", "Eliminada"),
         supabase.from("citas_disponibles").select("id, propiedad_id"),
         (supabase as any).from("pagos_alquiler").select("anio, mes, valor_administracion, estado_inquilino"),
         (supabase as any).from("contratos_arrendamiento").select("id, valor_canon, estado_contrato"),
@@ -248,7 +248,7 @@ const AdminReportes = () => {
     const tasaConversion = total > 0 ? Math.round((confirmadas / total) * 100) : 0;
     const now = new Date();
     const esteMes = reservas.filter(r => {
-      const d = new Date(r.created_at);
+      const d = new Date(r.fecha_creacion);
       return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
     }).length;
     return { total, pendientes, confirmadas, canceladas, tasaConversion, esteMes };

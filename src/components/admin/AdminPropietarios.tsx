@@ -107,10 +107,10 @@ const AdminPropietarios = () => {
     setLoading(true);
     const [pRes, prRes] = await Promise.all([
       (supabase as any).from("propietarios").select("*").order("nombre"),
-      supabase.from("propiedades").select("id, nombre_inmueble, tipo_inmueble, tipo_negocio, barrio, estado, precio, propietario_id"),
+      (supabase as any).from("propiedades").select("id, nombre_inmueble, tipo_inmueble, tipo_negocio, barrio, estado, precio, propietario_id"),
     ]);
     const propietariosList: Propietario[] = pRes.data || [];
-    const propiedadesList: (PropiedadResumen & { propietario_id: string | null })[] = prRes.data || [];
+    const propiedadesList: (PropiedadResumen & { propietario_id: string | null })[] = (prRes.data as any) || [];
 
     const map: Record<string, PropiedadResumen[]> = {};
     propietariosList.forEach(p => { map[p.id] = []; });
