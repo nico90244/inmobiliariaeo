@@ -248,7 +248,7 @@ const AdminReportes = () => {
     const tasaConversion = total > 0 ? Math.round((confirmadas / total) * 100) : 0;
     const now = new Date();
     const esteMes = reservas.filter(r => {
-      const d = new Date(r.created_at);
+      const d = new Date(r.fecha_creacion);
       return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
     }).length;
     return { total, pendientes, confirmadas, canceladas, tasaConversion, esteMes };
