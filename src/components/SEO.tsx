@@ -29,8 +29,8 @@ const SEO = ({ title, description, path = "/", image = DEFAULT_IMAGE, type = "we
       <meta name="ICBM" content="3.4516, -76.5320" />
 
       {/* hreflang — una sola versión en español para todos los mercados */}
-      <link rel="alternate" hreflang="es" href={url} />
-      <link rel="alternate" hreflang="x-default" href={url} />
+      <link rel="alternate" hrefLang="es" href={url} />
+      <link rel="alternate" hrefLang="x-default" href={url} />
 
       {/* Open Graph */}
       <meta property="og:type" content={type} />
