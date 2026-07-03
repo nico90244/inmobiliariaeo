@@ -195,7 +195,7 @@ const AdminReportes = () => {
     (async () => {
       const [pRes, rRes, sRes, paRes, cRes] = await Promise.all([
         supabase.from("propiedades").select("id, nombre_inmueble, tipo_negocio, tipo_inmueble, estado, precio"),
-        supabase.from("citas_reservas").select("id, propiedad_id, slot_id, estado, created_at").neq("estado", "Eliminada"),
+        supabase.from("citas_reservas").select("id, propiedad_id, slot_id, estado, fecha_creacion").neq("estado", "Eliminada"),
         supabase.from("citas_disponibles").select("id, propiedad_id"),
         (supabase as any).from("pagos_alquiler").select("anio, mes, valor_administracion, estado_inquilino"),
         (supabase as any).from("contratos_arrendamiento").select("id, valor_canon, estado_contrato"),
