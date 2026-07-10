@@ -44,10 +44,11 @@ const WhyUsSection = () => {
 
           {/* Left: Editorial content */}
           <div className="lg:col-span-5 reveal flex flex-col justify-center">
-            <p className="font-heading text-xs font-semibold tracking-widest text-primary uppercase mb-5">
+            <div className="w-8 h-0.5 bg-primary mb-5" aria-hidden="true" />
+            <p className="font-heading text-xs font-semibold tracking-widest text-primary uppercase mb-4">
               Por qué elegirnos
             </p>
-            <h2 className="font-display text-3xl md:text-5xl font-bold mb-6 leading-tight">
+            <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
               Más que una inmobiliaria, somos tu aliado
             </h2>
             <p className="font-body text-secondary-foreground/65 leading-relaxed mb-8">

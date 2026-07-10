@@ -48,7 +48,7 @@ const HeroSection = () => {
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
             <div className="col-span-2 md:col-span-1">
-              <label className="font-heading text-[10px] sm:text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Tipo
               </label>
               <div className="flex border-b border-foreground/20" role="group" aria-label="Tipo de negocio">
@@ -68,7 +68,7 @@ const HeroSection = () => {
             </div>
 
             <div>
-              <label htmlFor="hero-inmueble" className="font-heading text-[10px] sm:text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label htmlFor="hero-inmueble" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Inmueble
               </label>
               <select
@@ -85,7 +85,7 @@ const HeroSection = () => {
             </div>
 
             <div>
-              <label htmlFor="hero-barrio" className="font-heading text-[10px] sm:text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label htmlFor="hero-barrio" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Barrio
               </label>
               <input
@@ -99,7 +99,7 @@ const HeroSection = () => {
             </div>
 
             <div>
-              <label htmlFor="hero-precio-min" className="font-heading text-[10px] sm:text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label htmlFor="hero-precio-min" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Precio mín.
               </label>
               <input
@@ -114,7 +114,7 @@ const HeroSection = () => {
             </div>
 
             <div>
-              <label htmlFor="hero-precio-max" className="font-heading text-[10px] sm:text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
+              <label htmlFor="hero-precio-max" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-2 block">
                 Precio máx.
               </label>
               <input

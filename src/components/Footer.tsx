@@ -113,7 +113,7 @@ const Footer = () => {
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/80 transition-colors"
+                className="w-9 h-9 bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/80 transition-colors"
                 aria-label={s.label}>
                   <s.icon size={16} />
                 </a>
@@ -123,7 +123,7 @@ const Footer = () => {
                 href="https://www.tiktok.com/@inmobiliaria_eo?is_from_webapp=1&sender_device=pc"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/80 transition-colors"
+                className="w-9 h-9 bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/80 transition-colors"
                 aria-label="TikTok">
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                   <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.8a8.18 8.18 0 004.77 1.53V6.86a4.83 4.83 0 01-1-.17z" />

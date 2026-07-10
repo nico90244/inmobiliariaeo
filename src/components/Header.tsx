@@ -90,7 +90,7 @@ const Header = () => {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden text-white"
+            className="lg:hidden text-white cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={isOpen}
             aria-controls="mobile-nav"

@@ -29,11 +29,12 @@ const PropertiesSection = () => {
   return (
     <section id="propiedades" className="py-16 md:py-32">
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="reveal max-w-3xl mb-10 md:mb-16">
-          <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
+        <div className="animate-fade-in-up max-w-3xl mb-10 md:mb-16">
+          <div className="w-8 h-0.5 bg-primary mb-6" aria-hidden="true" />
+          <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
             Propiedades Destacadas
           </h2>
-          <p className="font-body text-lg text-muted-foreground">
+          <p className="font-body text-lg text-muted-foreground leading-relaxed">
             Descubre inmuebles seleccionados en las mejores zonas de Cali y el Valle del Cauca.
           </p>
         </div>

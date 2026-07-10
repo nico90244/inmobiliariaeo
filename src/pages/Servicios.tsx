@@ -23,10 +23,11 @@ const Servicios = () => {
       <main className="pt-20">
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
-            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
+            <div className="w-8 h-0.5 bg-primary mb-6" aria-hidden="true" />
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
               Nuestros Servicios
             </h1>
-            <p className="font-body text-lg text-muted-foreground mb-16 max-w-2xl">
+            <p className="font-body text-lg text-muted-foreground mb-16 max-w-2xl leading-relaxed">
               Un acompañamiento completo para cada etapa de tu inversión inmobiliaria en Cali y el Valle del Cauca.
             </p>
 

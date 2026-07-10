@@ -71,6 +71,7 @@ const Propiedades = () => {
         {/* Banner */}
         <div className="py-10 bg-muted/40 border-b border-foreground/5">
           <div className="container mx-auto px-6 lg:px-12 text-center">
+            <div className="w-8 h-0.5 bg-primary mb-5 mx-auto" aria-hidden="true" />
             <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-2">{title}</h1>
             <p className="font-body text-sm md:text-base text-muted-foreground mb-3">
               Encuentra tu inmueble ideal en Cali y el Valle del Cauca

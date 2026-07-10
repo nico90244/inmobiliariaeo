@@ -9,9 +9,9 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
     `https://wa.me/573162225604?text=${encodeURIComponent(`Hola, me interesa ${property.nombre_inmueble} en ${property.barrio}`)}`;
 
   return (
-    <div className="group bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-200 ease-out hover:-translate-y-1 border border-foreground/5">
+    <div className="group bg-background overflow-hidden transition-all duration-300 ease-out hover:-translate-y-0.5 border border-foreground/10 hover:border-primary/30 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
       {/* Image — clickable */}
-      <Link to={`/propiedades/${property.id}`} className="relative aspect-video overflow-hidden block">
+      <Link to={`/propiedades/${property.id}`} className="relative aspect-video overflow-hidden block cursor-pointer">
         <img
           src={property.foto_portada || "/placeholder.svg"}
           alt={`${property.tipo_inmueble || 'Propiedad'} en ${property.tipo_negocio?.toLowerCase() || 'venta'} en ${property.barrio || property.ciudad || 'Cali'} — ${property.nombre_inmueble}`}
@@ -25,8 +25,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
         />
         {/* Badge */}
         <span
-          className="absolute top-2.5 left-2.5 font-heading text-[11px] font-bold tracking-widest uppercase px-3 py-1 rounded text-white"
-          style={{ background: "#C9A84C" }}
+          className="absolute top-2.5 left-2.5 font-heading text-[11px] font-bold tracking-widest uppercase px-3 py-1 bg-primary text-primary-foreground"
         >
           {property.tipo_negocio}
           {property.zona && <> | {property.zona}</>}
@@ -55,7 +54,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
         </div>
 
         {/* Precio */}
-        <p className="font-body text-xl font-bold text-primary mb-3">
+        <p className="font-body text-xl font-bold text-primary mb-3 tabular-nums">
           {formatPrice(property.precio)}
         </p>
 

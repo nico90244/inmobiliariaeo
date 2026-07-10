@@ -54,7 +54,8 @@ const Contacto = () => {
           <div className="container mx-auto px-6 lg:px-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
               <div className="lg:col-span-7">
-                <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">Contáctanos</h1>
+                <div className="w-8 h-0.5 bg-primary mb-6" aria-hidden="true" />
+                <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">Contáctanos</h1>
                 <p className="font-body text-lg text-muted-foreground mb-2">Cuéntanos qué buscas y te asesoramos sin compromiso.</p>
                 <p className="font-body text-sm text-muted-foreground mb-12">Atendemos colombianos en Colombia y en el exterior — España, Suiza, Estados Unidos y México.</p>
                 <form onSubmit={handleSubmit} className="space-y-8 max-w-lg">

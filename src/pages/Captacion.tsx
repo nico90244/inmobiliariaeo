@@ -85,10 +85,11 @@ const Captacion = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
               {/* Left - Benefits */}
               <div className="flex flex-col justify-start pt-0">
-                <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+                <div className="w-8 h-0.5 bg-primary mb-6" aria-hidden="true" />
+                <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
                   Consigna tu inmueble con nosotros
                 </h1>
-                <p className="font-body text-lg text-muted-foreground mb-8">
+                <p className="font-body text-lg text-muted-foreground mb-8 leading-relaxed">
                   Te ayudamos a vender o arrendar tu propiedad con asesoría jurídica y gestión completa sin costos ocultos
                 </p>
                 <ul className="space-y-4">
