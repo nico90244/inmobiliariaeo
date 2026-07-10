@@ -82,15 +82,19 @@ const Admin = () => {
   const [contratoExistingId, setContratoExistingId] = useState<string | null>(null);
 
   const openContrato = async (p: Propiedad) => {
-    // Check if there's an existing contract for this property
-    const { data } = await (supabase as any)
+    // Buscar contrato activo existente (si no hay, maybeSingle devuelve data=null sin error)
+    const { data, error } = await (supabase as any)
       .from("contratos_arrendamiento")
       .select("id")
       .eq("propiedad_id", p.id)
       .eq("estado_contrato", "Activo")
       .order("created_at", { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
+    if (error) {
+      toast({ title: "Error al abrir contrato", description: error.message, variant: "destructive" });
+      return;
+    }
     setContratoExistingId(data?.id ?? null);
     setContratoPropiedad(p);
     setContratoOpen(true);
