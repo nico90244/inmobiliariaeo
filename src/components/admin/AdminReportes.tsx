@@ -53,12 +53,7 @@ const MESES = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov"
 const fCOP = (n: number) =>
   new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(n);
 
-const fK = (n: number) => {
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${Math.round(n / 1_000)}K`;
-  return fCOP(n);
-};
+const fK = fCOP;
 
 const daysUntil = (dateStr: string): number =>
   Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86_400_000);
@@ -628,9 +623,9 @@ const AdminReportes = () => {
               <XAxis dataKey="mes" tick={{ fontSize: 10, fontFamily: "Josefin Sans", fill: "#9ca3af" }}
                 axisLine={false} tickLine={false} />
               <YAxis
-                tickFormatter={v => v >= 1_000_000 ? `$${(v/1_000_000).toFixed(1)}M` : v >= 1_000 ? `$${Math.round(v/1_000)}K` : `$${v}`}
-                tick={{ fontSize: 10, fontFamily: "Josefin Sans", fill: "#9ca3af" }}
-                axisLine={false} tickLine={false} width={52} />
+                tickFormatter={v => v === 0 ? "$0" : fCOP(v)}
+                tick={{ fontSize: 9, fontFamily: "Josefin Sans", fill: "#9ca3af" }}
+                axisLine={false} tickLine={false} width={90} />
               <Tooltip content={(props: any) => <ChartTooltip {...props} currency />} />
               <Bar dataKey="total" fill={GOLD} radius={[2, 2, 0, 0]} animationDuration={700} />
             </BarChart>
@@ -892,11 +887,10 @@ const AdminReportes = () => {
             <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase mb-4">
               {item.label}
             </p>
-            <p className="font-heading text-2xl sm:text-3xl font-bold text-foreground mb-1 leading-none tabular-nums">
+            <p className="font-heading text-lg sm:text-xl font-bold text-foreground mb-1 leading-tight tabular-nums">
               {fK(item.value)}
             </p>
-            <p className="font-body text-xs text-muted-foreground mb-4 tabular-nums">{fCOP(item.value)}</p>
-            <div className="border-t border-foreground/5 pt-3">
+            <div className="border-t border-foreground/5 pt-3 mt-4">
               <p className="font-body text-xs text-muted-foreground">{item.sub}</p>
             </div>
           </div>
