@@ -81,7 +81,7 @@ const ServicesSection = () => {
           {services.map((service, i) => (
             <div
               key={service.number}
-              className={`reveal reveal-delay-${i + 1} group border-t border-foreground/10 last:border-b`}
+              className="reveal group border-t border-foreground/10 last:border-b"
             >
               <div className="grid md:grid-cols-12 gap-6 md:gap-12 py-10 md:py-12 items-start">
                 {/* Left: number + icon + title */}
