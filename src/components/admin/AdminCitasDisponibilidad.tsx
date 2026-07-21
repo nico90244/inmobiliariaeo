@@ -58,6 +58,7 @@ const AdminCitasDisponibilidad = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [editingSlot, setEditingSlot] = useState<Slot | null>(null); // null = nuevo
   const [form, setForm] = useState({ ...EMPTY_FORM });
+  const [horasSeleccionadas, setHorasSeleccionadas] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
   // Delete confirm
@@ -147,9 +148,15 @@ const AdminCitasDisponibilidad = () => {
     slot.estado === "Reservado" || reservedSlotIds.has(slot.id);
 
   /* ─── Open forms ─── */
+  const handleCloseForm = () => {
+    setFormOpen(false);
+    setHorasSeleccionadas([]);
+  };
+
   const openNew = () => {
     const d = selectedDay || today.getDate();
     setEditingSlot(null);
+    setHorasSeleccionadas([]);
     setForm({
       fecha: `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`,
       hora: "8:00",
@@ -172,14 +179,13 @@ const AdminCitasDisponibilidad = () => {
 
   /* ─── Save (create or update) ─── */
   const handleSave = async () => {
-    if (!form.fecha || !form.hora || !form.agente) {
-      toast({ title: "Completa todos los campos", variant: "destructive" });
-      return;
-    }
-    setSaving(true);
-
     if (editingSlot) {
-      // UPDATE
+      // ── Modo edición: igual que antes ──────────────────────────────────
+      if (!form.fecha || !form.hora || !form.agente) {
+        toast({ title: "Completa todos los campos", variant: "destructive" });
+        return;
+      }
+      setSaving(true);
       const { error } = await supabase
         .from("citas_disponibles")
         .update({
@@ -194,27 +200,54 @@ const AdminCitasDisponibilidad = () => {
         toast({ title: "Error al actualizar", description: error.message, variant: "destructive" });
       } else {
         toast({ title: "Cita actualizada correctamente" });
-        setFormOpen(false);
+        handleCloseForm();
         loadData();
       }
+      setSaving(false);
     } else {
-      // INSERT
-      const { error } = await supabase.from("citas_disponibles").insert({
+      // ── Modo creación: múltiples horas ────────────────────────────────
+      if (!form.fecha || !form.agente || horasSeleccionadas.length === 0) {
+        toast({ title: "Completa todos los campos", variant: "destructive" });
+        return;
+      }
+      setSaving(true);
+
+      // Filtra duplicados exactos (misma fecha + hora + propiedad_id + agente)
+      const horasAInsertar = horasSeleccionadas.filter(hora =>
+        !slots.some(
+          s =>
+            s.fecha === form.fecha &&
+            s.hora === hora &&
+            s.agente === form.agente &&
+            s.propiedad_id === form.propiedadId
+        )
+      );
+
+      if (horasAInsertar.length === 0) {
+        toast({ title: "Ya existen citas para todas las horas seleccionadas", variant: "destructive" });
+        setSaving(false);
+        return;
+      }
+
+      const rows = horasAInsertar.map(hora => ({
         fecha: form.fecha,
-        hora: form.hora,
+        hora,
         propiedad_id: form.propiedadId,
         agente: form.agente,
-      });
+      }));
+
+      const { error } = await supabase.from("citas_disponibles").insert(rows);
 
       if (error) {
         toast({ title: "Error al guardar", description: error.message, variant: "destructive" });
       } else {
-        toast({ title: "Cita creada correctamente" });
-        setFormOpen(false);
+        const n = horasAInsertar.length;
+        toast({ title: n === 1 ? "1 cita creada" : `${n} citas creadas` });
+        handleCloseForm();
         loadData();
       }
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   /* ─── Toggle activo ─── */
@@ -492,8 +525,8 @@ const AdminCitasDisponibilidad = () => {
       )}
 
       {/* ── Create / Edit Dialog ── */}
-      <Dialog open={formOpen} onOpenChange={(o) => !o && setFormOpen(false)}>
-        <DialogContent className="max-w-md">
+      <Dialog open={formOpen} onOpenChange={(o) => !o && handleCloseForm()}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="font-heading text-xl">
               {editingSlot ? "Editar cita" : "Nueva cita disponible"}
@@ -514,21 +547,81 @@ const AdminCitasDisponibilidad = () => {
               />
             </div>
 
-            <div>
-              <label htmlFor="cf-hora" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
-                Hora
-              </label>
-              <select
-                id="cf-hora"
-                value={form.hora}
-                onChange={e => setForm(f => ({ ...f, hora: e.target.value }))}
-                className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
-              >
-                {HOURS.map(h => (
-                  <option key={h} value={h}>{formatHora12(h)}</option>
-                ))}
-              </select>
-            </div>
+            {/* ── Hora: select para editar, grilla de chips para crear ── */}
+            {editingSlot ? (
+              <div>
+                <label htmlFor="cf-hora" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
+                  Hora
+                </label>
+                <select
+                  id="cf-hora"
+                  value={form.hora}
+                  onChange={e => setForm(f => ({ ...f, hora: e.target.value }))}
+                  className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                >
+                  {HOURS.map(h => (
+                    <option key={h} value={h}>{formatHora12(h)}</option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div>
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-2">
+                  Horas a crear
+                </label>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {HOURS.map(h => {
+                    const sel = horasSeleccionadas.includes(h);
+                    return (
+                      <button
+                        key={h}
+                        type="button"
+                        onClick={() =>
+                          setHorasSeleccionadas(prev =>
+                            prev.includes(h) ? prev.filter(x => x !== h) : [...prev, h]
+                          )
+                        }
+                        className={`py-1.5 px-2 font-heading text-[11px] tracking-widest uppercase border transition-all ${
+                          sel
+                            ? "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
+                            : "border-foreground/10 text-muted-foreground hover:bg-muted/20"
+                        }`}
+                      >
+                        {formatHora12(h)}
+                      </button>
+                    );
+                  })}
+                </div>
+                {horasSeleccionadas.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {[...horasSeleccionadas]
+                      .sort((a, b) => {
+                        const [ah, am = "0"] = a.split(":");
+                        const [bh, bm = "0"] = b.split(":");
+                        return parseInt(ah) !== parseInt(bh)
+                          ? parseInt(ah) - parseInt(bh)
+                          : parseInt(am) - parseInt(bm);
+                      })
+                      .map(h => (
+                        <span
+                          key={h}
+                          className="flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary font-heading text-[10px] tracking-widest uppercase transition-all"
+                        >
+                          {formatHora12(h)}
+                          <button
+                            type="button"
+                            onClick={() => setHorasSeleccionadas(prev => prev.filter(x => x !== h))}
+                            className="ml-0.5 hover:text-primary/70 transition-colors"
+                            aria-label={`Quitar ${formatHora12(h)}`}
+                          >
+                            <X size={10} />
+                          </button>
+                        </span>
+                      ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             <div>
               <label htmlFor="cf-prop" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
@@ -563,7 +656,7 @@ const AdminCitasDisponibilidad = () => {
 
             <div className="flex gap-3 pt-2">
               <button
-                onClick={() => setFormOpen(false)}
+                onClick={handleCloseForm}
                 className="flex-1 py-2.5 border border-foreground/20 text-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-muted/20 transition-colors"
               >
                 Cancelar
