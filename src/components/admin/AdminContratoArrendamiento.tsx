@@ -12,6 +12,7 @@ type Propiedad = {
   precio: number | null;
   direccion?: string | null;
   barrio?: string | null;
+  propietario_id?: string | null;
 };
 
 type Contrato = {
@@ -28,6 +29,7 @@ type Contrato = {
   fecha_inicio: string;
   propietario_nombre: string;
   propietario_cedula: string;
+  propietario_celular: string;
   propietario_banco: string;
   propietario_tipo_cuenta: string;
   propietario_num_cuenta: string;
@@ -56,6 +58,7 @@ const emptyContrato = (propiedadId: string, canon: number): Contrato => ({
   fecha_inicio: new Date().toISOString().split("T")[0],
   propietario_nombre: "",
   propietario_cedula: "",
+  propietario_celular: "",
   propietario_banco: "",
   propietario_tipo_cuenta: "Ahorros",
   propietario_num_cuenta: "",
@@ -92,7 +95,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<"inquilino" | "codeudor" | null>(null);
 
-  // Load existing contract if editing
+  // Load existing contract if editing; or preload propietario data for new contract
   useEffect(() => {
     if (!open) return;
     if (existingId) {
@@ -100,9 +103,25 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         if (data) setForm({ ...emptyContrato(propiedad.id, canon), ...data });
       });
     } else {
-      setForm(emptyContrato(propiedad.id, canon));
+      const base = emptyContrato(propiedad.id, canon);
+      if (propiedad.propietario_id) {
+        (supabase as any).from("propietarios").select("nombre, apellido, numero_documento, telefono").eq("id", propiedad.propietario_id).single().then(({ data }: any) => {
+          if (data) {
+            setForm({
+              ...base,
+              propietario_nombre: [data.nombre, data.apellido].filter(Boolean).join(" "),
+              propietario_cedula: data.numero_documento || "",
+              propietario_celular: data.telefono || "",
+            });
+          } else {
+            setForm(base);
+          }
+        });
+      } else {
+        setForm(base);
+      }
     }
-  }, [open, existingId, propiedad.id, canon]);
+  }, [open, existingId, propiedad.id, propiedad.propietario_id, canon]);
 
   const set = (field: keyof Contrato, value: any) => setForm((f) => ({ ...f, [field]: value }));
 
@@ -166,6 +185,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         fecha_inicio: form.fecha_inicio || null,
         propietario_nombre: safeTrim(form.propietario_nombre),
         propietario_cedula: safeTrim(form.propietario_cedula),
+        propietario_celular: safeTrim(form.propietario_celular) || null,
         propietario_banco: safeTrim(form.propietario_banco),
         propietario_tipo_cuenta: form.propietario_tipo_cuenta,
         propietario_num_cuenta: safeTrim(form.propietario_num_cuenta),
@@ -320,6 +340,16 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4 pb-2 border-b border-foreground/10">
               <Building2 size={15} className="text-primary" /> Datos del propietario
             </h3>
+            {!existingId && !propiedad.propietario_id && (
+              <p className="font-body text-xs text-muted-foreground bg-muted/30 border border-foreground/10 px-3 py-2 mb-4">
+                Esta propiedad no tiene propietario vinculado. Ingresa los datos manualmente o vincula un propietario desde la sección Propietarios.
+              </p>
+            )}
+            {!existingId && propiedad.propietario_id && (
+              <p className="font-body text-xs text-[hsl(142,70%,45%)] bg-[hsl(142,70%,45%)]/5 border border-[hsl(142,70%,45%)]/20 px-3 py-2 mb-4">
+                Datos cargados automáticamente desde el propietario vinculado.
+              </p>
+            )}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>Nombre completo</label>
@@ -328,6 +358,10 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
               <div>
                 <label className={labelCls}>Cédula</label>
                 <input type="text" value={form.propietario_cedula} onFocus={(e) => e.target.select()} onChange={(e) => set("propietario_cedula", e.target.value)} className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>Celular</label>
+                <input type="tel" value={form.propietario_celular} onChange={(e) => set("propietario_celular", e.target.value)} className={inputCls} />
               </div>
               <div>
                 <label className={labelCls}>Banco</label>

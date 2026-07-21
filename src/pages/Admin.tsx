@@ -81,6 +81,35 @@ const Admin = () => {
   const [contratoPropiedad, setContratoPropiedad] = useState<Propiedad | null>(null);
   const [contratoExistingId, setContratoExistingId] = useState<string | null>(null);
 
+  // Captación → propiedad: registra de qué captación provino el form abierto
+  const [captacionSource, setCaptacionSource] = useState<Captacion | null>(null);
+
+  const openFormFromCaptacion = (c: Captacion) => {
+    const precioNum = c.valor_aproximado
+      ? (Number(c.valor_aproximado.replace(/[^0-9]/g, "")) || 0)
+      : 0;
+    setForm({
+      ...emptyForm,
+      tipo_negocio: c.tipo_negocio || "Venta",
+      tipo_inmueble: c.tipo_inmueble || "",
+      barrio: c.barrio || "",
+      precio: precioNum,
+      descripcion: c.observaciones || "",
+      captacion_id: c.id,
+    });
+    setEditingId(null);
+    setCoverPreview(null);
+    setCoverFile(null);
+    setGalleryPreviews([]);
+    setGalleryFiles([]);
+    setCoverPosX(50);
+    setCoverPosY(50);
+    setCoverZoom(1.0);
+    setCaptacionSource(c);
+    setSelectedCaptacion(null);
+    setFormOpen(true);
+  };
+
   const openContrato = async (p: Propiedad) => {
     // Buscar contrato activo existente (si no hay, maybeSingle devuelve data=null sin error)
     const { data, error } = await (supabase as any)
@@ -301,6 +330,10 @@ const Admin = () => {
       }
 
       toast({ title: editingId ? "Propiedad actualizada" : "Propiedad creada" });
+      if (!editingId && captacionSource) {
+        await supabase.from("captaciones").update({ estado: "Convertida" }).eq("id", captacionSource.id);
+        setCaptacionSource(null);
+      }
       setFormOpen(false);
       queryClient.invalidateQueries({ queryKey: ["propiedades"] });
       loadData();
@@ -719,11 +752,15 @@ const Admin = () => {
                         onClick={(e) => e.stopPropagation()}
                         onChange={(e) => { e.stopPropagation(); updateCaptacionEstado(c.id, e.target.value); }}
                         className={`px-2 py-1 text-[11px] font-heading font-semibold border-0 bg-muted/40 focus:outline-none rounded-sm ${
-                          c.estado === "Pendiente" ? "text-primary" : c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" : "text-muted-foreground"
+                          c.estado === "Pendiente" ? "text-primary" :
+                          c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" :
+                          c.estado === "Convertida" ? "text-[hsl(142,70%,45%)]" :
+                          "text-muted-foreground"
                         }`}
                       >
                         <option value="Pendiente">Pendiente</option>
                         <option value="Contactado">Contactado</option>
+                        <option value="Convertida">Convertida</option>
                         <option value="Descartado">Descartado</option>
                       </select>
                     </button>
@@ -762,11 +799,15 @@ const Admin = () => {
                               onClick={(e) => e.stopPropagation()}
                               onChange={(e) => updateCaptacionEstado(c.id, e.target.value)}
                               className={`px-2 py-1 text-xs font-heading font-semibold border-0 bg-transparent focus:outline-none ${
-                                c.estado === "Pendiente" ? "text-primary" : c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" : "text-muted-foreground"
+                                c.estado === "Pendiente" ? "text-primary" :
+                                c.estado === "Contactado" ? "text-[hsl(142,70%,45%)]" :
+                                c.estado === "Convertida" ? "text-[hsl(142,70%,45%)]" :
+                                "text-muted-foreground"
                               }`}
                             >
                               <option value="Pendiente">Pendiente</option>
                               <option value="Contactado">Contactado</option>
+                              <option value="Convertida">Convertida</option>
                               <option value="Descartado">Descartado</option>
                             </select>
                           </td>
@@ -791,7 +832,7 @@ const Admin = () => {
         {section === "reportes" && <AdminReportes />}
 
         {/* Property form modal */}
-        <Dialog open={formOpen} onOpenChange={(o) => !o && setFormOpen(false)}>
+        <Dialog open={formOpen} onOpenChange={(o) => { if (!o) { setFormOpen(false); setCaptacionSource(null); } }}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="font-heading text-xl">{editingId ? "Editar propiedad" : "Nueva propiedad"}</DialogTitle>
@@ -1116,6 +1157,16 @@ const Admin = () => {
                     <p className="font-body text-foreground">{value || "-"}</p>
                   </div>
                 ))}
+                {selectedCaptacion.estado !== "Convertida" && (
+                  <div className="pt-3 border-t border-foreground/10">
+                    <button
+                      onClick={() => openFormFromCaptacion(selectedCaptacion)}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+                    >
+                      <Plus size={14} /> Crear inmueble desde esta captación
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </DialogContent>

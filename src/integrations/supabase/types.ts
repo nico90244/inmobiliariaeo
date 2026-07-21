@@ -169,6 +169,7 @@ export type Database = {
           propiedad_id: string
           propietario_banco: string | null
           propietario_cedula: string | null
+          propietario_celular: string | null
           propietario_nombre: string | null
           propietario_num_cuenta: string | null
           propietario_tipo_cuenta: string | null
@@ -199,6 +200,7 @@ export type Database = {
           propiedad_id: string
           propietario_banco?: string | null
           propietario_cedula?: string | null
+          propietario_celular?: string | null
           propietario_nombre?: string | null
           propietario_num_cuenta?: string | null
           propietario_tipo_cuenta?: string | null
@@ -229,6 +231,7 @@ export type Database = {
           propiedad_id?: string
           propietario_banco?: string | null
           propietario_cedula?: string | null
+          propietario_celular?: string | null
           propietario_nombre?: string | null
           propietario_num_cuenta?: string | null
           propietario_tipo_cuenta?: string | null
@@ -361,6 +364,7 @@ export type Database = {
           area_m2: number | null
           banos: number | null
           barrio: string | null
+          captacion_id: string | null
           ciudad: string | null
           descripcion: string | null
           destacada: boolean
@@ -392,6 +396,7 @@ export type Database = {
           area_m2?: number | null
           banos?: number | null
           barrio?: string | null
+          captacion_id?: string | null
           ciudad?: string | null
           descripcion?: string | null
           destacada?: boolean
@@ -423,6 +428,7 @@ export type Database = {
           area_m2?: number | null
           banos?: number | null
           barrio?: string | null
+          captacion_id?: string | null
           ciudad?: string | null
           descripcion?: string | null
           destacada?: boolean
@@ -449,7 +455,15 @@ export type Database = {
           tipo_negocio?: string
           zona?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "propiedades_captacion_id_fkey"
+            columns: ["captacion_id"]
+            isOneToOne: false
+            referencedRelation: "captaciones"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

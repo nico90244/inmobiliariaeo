@@ -341,7 +341,8 @@ const AdminReportes = () => {
       const e = c.estado || "Sin estado";
       byEstado[e] = (byEstado[e] || 0) + 1;
     });
-    return { total, esteMes, byEstado };
+    const convertidas = captaciones.filter(c => c.estado === "Convertida").length;
+    return { total, esteMes, byEstado, convertidas };
   }, [captaciones, now]);
 
   // ── Próximos vencimientos ────────────────────────────────────────────────
@@ -661,6 +662,15 @@ const AdminReportes = () => {
                       color={[GOLD, GREEN, BLUE, GOLD2][i] || GOLD3}
                     />
                   ))}
+              </div>
+              <div className="pt-4 mt-1 border-t border-foreground/5">
+                <HorizBar
+                  label="Convertidas a propiedad"
+                  value={captacionesStats.convertidas}
+                  max={captacionesStats.total || 1}
+                  color={GREEN}
+                  sub={captacionesStats.total > 0 ? `${Math.round(captacionesStats.convertidas / captacionesStats.total * 100)}% tasa de conversión` : undefined}
+                />
               </div>
             </>
           )}

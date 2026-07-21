@@ -242,6 +242,9 @@ const AdminFichaInmueble = ({ open, onClose, propiedadId, onChanged }: Props) =>
                       <div>
                         <p className="font-heading text-xs font-semibold text-primary uppercase mb-1">Propietario</p>
                         <p>{contratoActivo.propietario_nombre || "—"}</p>
+                        {contratoActivo.propietario_celular && (
+                          <p className="text-muted-foreground">{contratoActivo.propietario_celular}</p>
+                        )}
                         <p className="text-muted-foreground">{contratoActivo.propietario_banco} {contratoActivo.propietario_tipo_cuenta}</p>
                         <p className="text-muted-foreground">Cta: {contratoActivo.propietario_num_cuenta || "—"}</p>
                         <p className="text-muted-foreground mt-1">Pago: {fmt(contratoActivo.valor_pago_propietario)}</p>
