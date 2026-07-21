@@ -32,7 +32,7 @@ const stats = [
     unit: "países",
     label: "de atención internacional",
     detail:
-      "Atendemos colombianos residentes en España, Suiza, Estados Unidos y México que desean comprar, vender o arrendar en Cali.",
+      "Atendemos colombianos residentes en España, Suiza, Estados Unidos, Canadá y Chile que desean comprar, vender o arrendar en Cali.",
   },
 ];
 
@@ -56,7 +56,7 @@ const WhyUsSection = () => {
               en el mercado de Cali con asesoría jurídica especializada incluida
               en cada operación. Atendemos compradores, vendedores y propietarios
               en Colombia y colombianos residentes en el exterior — España, Suiza,
-              Estados Unidos y México.
+              Estados Unidos, Canadá y Chile.
             </p>
             <Link
               to="/servicios"

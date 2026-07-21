@@ -44,7 +44,8 @@ const Index = () => {
         { "@type": "Country", name: "España" },
         { "@type": "Country", name: "Suiza" },
         { "@type": "Country", name: "Estados Unidos" },
-        { "@type": "Country", name: "México" },
+        { "@type": "Country", name: "Canadá" },
+        { "@type": "Country", name: "Chile" },
       ],
       serviceArea: {
         "@type": "GeoCircle",
@@ -78,7 +79,7 @@ const Index = () => {
       mainEntity: [
         {
           "@type": "Question",
-          name: "¿Puedo comprar un inmueble en Cali desde España, Suiza, Estados Unidos o México?",
+          name: "¿Puedo comprar un inmueble en Cali desde España, Suiza, Estados Unidos, Canadá o Chile?",
           acceptedAnswer: {
             "@type": "Answer",
             text: "Sí. En Inmobiliaria Eliana Osorio atendemos colombianos residentes en el exterior que desean comprar o invertir en propiedad raíz en Cali y el Valle del Cauca. Te acompañamos en todo el proceso jurídico y notarial de forma remota.",
@@ -124,7 +125,7 @@ const Index = () => {
     <>
       <SEO
         title="Inmobiliaria en Cali, Colombia | Venta y Arriendo de Propiedades | Eliana Osorio"
-        description="Compra, vende o arrienda inmuebles en Cali y el Valle del Cauca con asesoría jurídica incluida. Casas, apartamentos y locales. Atendemos colombianos en Colombia y en el exterior — España, Suiza, EEUU y México."
+        description="Compra, vende o arrienda inmuebles en Cali y el Valle del Cauca con asesoría jurídica incluida. Casas, apartamentos y locales. Atendemos colombianos en Colombia y en el exterior — España, Suiza, EEUU, Canadá y Chile."
         path="/"
         jsonLd={orgJsonLd}
       />

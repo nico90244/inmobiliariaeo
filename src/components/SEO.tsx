@@ -40,7 +40,7 @@ const SEO = ({ title, description, path = "/", image = DEFAULT_IMAGE, type = "we
       <meta property="og:site_name" content="Inmobiliaria Eliana Osorio" />
       <meta property="og:locale" content="es_CO" />
       <meta property="og:locale:alternate" content="es_ES" />
-      <meta property="og:locale:alternate" content="es_MX" />
+      <meta property="og:locale:alternate" content="es_CL" />
       <meta property="og:locale:alternate" content="es_US" />
       <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />

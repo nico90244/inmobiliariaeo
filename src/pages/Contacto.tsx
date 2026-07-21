@@ -44,7 +44,7 @@ const Contacto = () => {
     <>
       <SEO
         title="Contacto | Inmobiliaria Eliana Osorio | Cali, Colombia"
-        description="Contáctanos por WhatsApp, teléfono o correo. Asesoría inmobiliaria y jurídica en Cali y el Valle del Cauca. Atendemos colombianos desde España, Suiza, Estados Unidos y México."
+        description="Contáctanos por WhatsApp, teléfono o correo. Asesoría inmobiliaria y jurídica en Cali y el Valle del Cauca. Atendemos colombianos desde España, Suiza, Estados Unidos, Canadá y Chile."
         path="/contacto"
         jsonLd={localBusinessJsonLd}
       />
@@ -57,7 +57,7 @@ const Contacto = () => {
                 <div className="w-8 h-0.5 bg-primary mb-6" aria-hidden="true" />
                 <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">Contáctanos</h1>
                 <p className="font-body text-lg text-muted-foreground mb-2">Cuéntanos qué buscas y te asesoramos sin compromiso.</p>
-                <p className="font-body text-sm text-muted-foreground mb-12">Atendemos colombianos en Colombia y en el exterior — España, Suiza, Estados Unidos y México.</p>
+                <p className="font-body text-sm text-muted-foreground mb-12">Atendemos colombianos en Colombia y en el exterior — España, Suiza, Estados Unidos, Canadá y Chile.</p>
                 <form onSubmit={handleSubmit} className="space-y-8 max-w-lg">
                   <div>
                     <label htmlFor="cto-nombre" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre</label>

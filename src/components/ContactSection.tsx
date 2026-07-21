@@ -40,7 +40,7 @@ const ContactSection = () => {
               Cuéntanos qué buscas y te asesoramos sin compromiso.
             </p>
             <p className="font-body text-sm text-muted-foreground mb-12">
-              Atendemos colombianos en Colombia y en el exterior — España, Suiza, Estados Unidos y México.
+              Atendemos colombianos en Colombia y en el exterior — España, Suiza, Estados Unidos, Canadá y Chile.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-8 max-w-lg">
