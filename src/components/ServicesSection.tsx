@@ -1,6 +1,16 @@
+import type { CSSProperties } from "react";
 import { Building2, Key, Scale, FileCheck } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-const services = [
+type Service = {
+  number: string;
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  bullets: string[];
+};
+
+const services: Service[] = [
   {
     number: "01",
     icon: Building2,
@@ -55,73 +65,192 @@ const services = [
   },
 ];
 
+const sd = (delay: string): CSSProperties => ({ "--sd": delay } as CSSProperties);
+const bd = (delay: string): CSSProperties => ({ "--bd": delay } as CSSProperties);
+
 const ServicesSection = () => {
+  const [feat, ...secondary] = services;
+
   return (
     <section id="servicios" className="py-16 md:py-32">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="section-divider mb-10 md:mb-20" />
 
+        {/* Header */}
         <div className="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-16">
-          <div className="max-w-lg">
-            <p className="font-heading text-xs font-semibold tracking-widest text-primary uppercase mb-4">
+          <div>
+            <p className="font-heading text-[10px] font-semibold tracking-[0.18em] text-primary uppercase mb-4">
               Lo que hacemos
             </p>
-            <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground">
+            <h2 className="font-display text-3xl md:text-5xl font-bold text-foreground leading-[.95]">
               Servicios
             </h2>
           </div>
-          <p className="font-body text-muted-foreground max-w-sm md:text-right leading-relaxed">
+          <p className="font-body text-[13px] text-muted-foreground max-w-[260px] md:text-right leading-relaxed">
             Acompañamiento integral en cada etapa de tu operación inmobiliaria,
             con respaldo jurídico en todo momento.
           </p>
         </div>
 
-        {/* Service list */}
-        <div>
-          {services.map((service, i) => (
-            <div
-              key={service.number}
-              className="reveal group border-t border-foreground/10 last:border-b"
-            >
-              <div className="grid md:grid-cols-12 gap-6 md:gap-12 py-10 md:py-12 items-start">
-                {/* Left: number + icon + title */}
-                <div className="md:col-span-4 flex gap-5 items-start">
-                  <span className="font-heading text-xs font-semibold tracking-widest text-primary/50 pt-1 select-none">
-                    {service.number}
-                  </span>
-                  <div>
-                    <div className="w-11 h-11 flex items-center justify-center border border-foreground/10 group-hover:border-primary group-hover:bg-primary/5 transition-all duration-400 mb-4">
-                      <service.icon
-                        size={20}
-                        className="text-foreground/50 group-hover:text-primary transition-colors duration-400"
-                      />
-                    </div>
-                    <h3 className="font-heading text-lg md:text-xl font-semibold text-foreground leading-snug">
-                      {service.title}
-                    </h3>
-                  </div>
-                </div>
+        {/* ── 01 FEATURED (dark block) ────────────────────────── */}
+        <article className="reveal">
+          <div className="relative bg-secondary overflow-hidden px-8 md:px-14 py-12 md:py-[72px]">
 
-                {/* Right: description + bullets */}
-                <div className="md:col-span-8">
-                  <p className="font-body text-muted-foreground leading-relaxed mb-6">
-                    {service.description}
+            {/* Animated gold left strip — paints downward */}
+            <div className="svc-strip absolute left-0 top-0 bottom-0 w-[3px] bg-primary" />
+
+            {/* Watermark "01" — bleeds out top-right edge */}
+            <span
+              className="absolute font-display font-bold leading-none text-secondary-foreground/[0.04] select-none pointer-events-none"
+              style={{ top: "-28px", right: "-8px", fontSize: "clamp(160px,24vw,280px)" } as CSSProperties}
+              aria-hidden="true"
+            >
+              01
+            </span>
+
+            {/* Building2 as large icon watermark bottom-right */}
+            <div
+              className="absolute bottom-5 right-9 text-secondary-foreground/[0.05] pointer-events-none"
+              aria-hidden="true"
+            >
+              <feat.icon size={200} strokeWidth={0.5} />
+            </div>
+
+            {/* Meta row: faint badge numeral + eyebrow label */}
+            <div className="relative z-10 flex items-center gap-5 mb-10">
+              <span
+                className="svc-fade font-display font-bold leading-none text-secondary-foreground/[0.18]"
+                style={{ fontSize: "52px", ...sd("0.2s") }}
+              >
+                01
+              </span>
+              <span
+                className="svc-fade font-heading text-[10px] font-semibold tracking-[0.18em] uppercase text-primary"
+                style={sd("0.28s")}
+              >
+                Servicio principal
+              </span>
+            </div>
+
+            {/* Two-col body: title left / desc+bullets right */}
+            <div className="relative z-10 grid md:grid-cols-2 gap-10 md:gap-14 items-end">
+              <div>
+                <h3
+                  className="svc-fade font-display font-bold leading-[1.15] text-secondary-foreground mb-6"
+                  style={{ fontSize: "clamp(30px,4.5vw,52px)", ...sd("0.32s") }}
+                >
+                  {feat.title}
+                </h3>
+                {/* Gold rule — animated width expand */}
+                <div
+                  className="svc-rule h-0.5 bg-primary"
+                  style={{ "--svc-rule-delay": "0.65s" } as CSSProperties}
+                />
+              </div>
+              <div>
+                <p
+                  className="svc-fade font-body text-[13px] leading-[1.75] text-secondary-foreground/55 mb-6"
+                  style={sd("0.45s")}
+                >
+                  {feat.description}
+                </p>
+                <ul className="flex flex-col gap-2.5">
+                  {feat.bullets.map((b, i) => (
+                    <li
+                      key={b}
+                      className="svc-bullet flex items-start gap-2.5"
+                      style={bd(`${0.55 + i * 0.08}s`)}
+                    >
+                      <span className="w-[5px] h-[5px] bg-primary flex-shrink-0 mt-[7px]" />
+                      <span className="font-body text-[12.5px] leading-[1.55] text-secondary-foreground/45">
+                        {b}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        {/* ── 02–04 SECONDARY ROWS (alternating numeral side) ─── */}
+        {secondary.map((svc, idx) => {
+          const reversed = idx === 1; // service 03 flips numeral to left
+          return (
+            <article
+              key={svc.number}
+              className="reveal border-t border-foreground/10 last:border-b"
+            >
+              <div
+                className={[
+                  "grid gap-8 md:gap-12 py-12 md:py-14 items-start",
+                  reversed ? "md:grid-cols-[140px_1fr]" : "md:grid-cols-[1fr_160px]",
+                ].join(" ")}
+              >
+                {/* Content */}
+                <div className={reversed ? "md:order-2" : ""}>
+                  {/* Icon + separator line */}
+                  <div className="flex items-center gap-3 mb-3.5">
+                    <svc.icon
+                      size={20}
+                      strokeWidth={1.5}
+                      className="svc-icon text-primary/65 flex-shrink-0"
+                    />
+                    <div className="h-px w-6 bg-foreground/10" />
+                  </div>
+
+                  <h3
+                    className="svc-fade font-display font-bold leading-[1.2] text-foreground mb-3"
+                    style={{ fontSize: "clamp(20px,3vw,30px)", ...sd("0.12s") }}
+                  >
+                    {svc.title}
+                  </h3>
+
+                  {/* Gold rule — animated width expand */}
+                  <div className="svc-rule h-0.5 bg-primary" />
+
+                  <p
+                    className="svc-fade font-body text-[13px] leading-[1.72] text-muted-foreground mt-4 mb-5"
+                    style={sd("0.28s")}
+                  >
+                    {svc.description}
                   </p>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
-                    {service.bullets.map((bullet) => (
-                      <li key={bullet} className="flex items-start gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-                        <span className="font-body text-sm text-foreground/70 leading-relaxed">
-                          {bullet}
+
+                  <ul className="grid sm:grid-cols-2 gap-y-2 gap-x-8">
+                    {svc.bullets.map((b, i) => (
+                      <li
+                        key={b}
+                        className="svc-bullet flex items-start gap-2.5"
+                        style={bd(`${0.38 + i * 0.07}s`)}
+                      >
+                        <span className="w-[5px] h-[5px] bg-primary flex-shrink-0 mt-[6px]" />
+                        <span className="font-body text-[13px] leading-[1.5] text-foreground/60">
+                          {b}
                         </span>
                       </li>
                     ))}
                   </ul>
                 </div>
+
+                {/* Large muted numeral — scale-fades in */}
+                <div
+                  className={[
+                    "svc-num flex pt-1",
+                    reversed ? "md:order-1 justify-start" : "justify-end",
+                  ].join(" ")}
+                  aria-hidden="true"
+                >
+                  <span
+                    className="font-display font-bold leading-none text-foreground/[0.045]"
+                    style={{ fontSize: "clamp(80px,12vw,130px)" } as CSSProperties}
+                  >
+                    {svc.number}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

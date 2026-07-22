@@ -131,7 +131,7 @@ const HeroSection = () => {
 
           <button
             type="submit"
-            className="mt-5 md:mt-6 w-full md:w-auto min-h-[48px] px-10 md:px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+            className="mt-5 md:mt-6 w-full md:w-auto min-h-[48px] px-10 md:px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors"
           >
             Buscar
           </button>

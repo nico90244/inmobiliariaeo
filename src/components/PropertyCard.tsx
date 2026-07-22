@@ -3,6 +3,7 @@ import { MapPin, Maximize2, Bed, Bath, Car } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { formatPrice } from "@/lib/utils";
+import { trackContact } from "@/lib/pixelEvents";
 
 const PropertyCard = ({ property }: { property: Propiedad }) => {
   const waLink = property.link_whatsapp ||
@@ -100,7 +101,8 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
           href={waLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+          onClick={() => trackContact({ content_id: property.id, content_name: property.nombre_inmueble })}
+          className="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors"
         >
           <WhatsAppIcon size={14} className="text-primary-foreground" />
           WhatsApp

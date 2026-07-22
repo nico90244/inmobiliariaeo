@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { trackViewContent, trackContact } from "@/lib/pixelEvents";
 import {
   Loader2, AlertCircle, ArrowLeft, Maximize2, Bed, Bath, Building2, Car,
   DollarSign, MapPin, Play, Video, Phone, Copy, X, ChevronLeft,
@@ -135,6 +136,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
   const { toast } = useToast();
 
   const handleWhatsApp = () => {
+    trackContact({ content_id: property.id, content_name: property.nombre_inmueble });
     window.open(`https://wa.me/573186531598?text=${encodeURIComponent(mensaje)}`, "_blank");
   };
 
@@ -164,7 +166,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
         className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none resize-none mb-4"
       />
 
-      <button onClick={handleWhatsApp} className="w-full py-3 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+      <button onClick={handleWhatsApp} className="w-full py-3 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors flex items-center justify-center gap-2">
         <WhatsAppIcon size={16} className="text-primary-foreground" /> Enviar por WhatsApp
       </button>
 
@@ -257,6 +259,17 @@ const PropertyDetail = () => {
       return data as Propiedad[];
     },
   });
+
+  // Reporta ViewContent al TikTok Pixel cuando la ficha termina de cargar
+  useEffect(() => {
+    if (!property) return;
+    trackViewContent({
+      content_id: property.id,
+      content_name: property.nombre_inmueble,
+      content_type: property.tipo_inmueble || "inmueble",
+      value: property.precio ?? undefined,
+    });
+  }, [property]);
 
   if (isLoading) {
     return (
@@ -421,7 +434,7 @@ const PropertyDetail = () => {
                     href={property.link_video}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-6 py-3 font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+                    className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-6 py-3 font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors"
                   >
                     {property.red_social_video === "instagram" && <><Video size={18} /> Ver Reel en Instagram</>}
                     {property.red_social_video === "tiktok" && <><Video size={18} /> Ver en TikTok</>}

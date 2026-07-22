@@ -477,7 +477,7 @@ const Admin = () => {
           <>
             <div className="flex items-center justify-between gap-3 mb-5 md:mb-8">
               <h1 className="font-heading text-lg md:text-2xl font-bold text-foreground">Propiedades</h1>
-              <button onClick={openNewForm} className="flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-2 md:py-2.5 bg-primary text-primary-foreground font-heading text-[11px] md:text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors whitespace-nowrap">
+              <button onClick={openNewForm} className="flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-2 md:py-2.5 bg-primary text-primary-foreground font-heading text-[11px] md:text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors whitespace-nowrap">
                 <Plus size={14} className="md:hidden" /><Plus size={16} className="hidden md:block" />
                 <span className="hidden sm:inline">Nueva propiedad</span><span className="sm:hidden">Nueva</span>
               </button>
@@ -1110,7 +1110,7 @@ const Admin = () => {
 
               {/* Buttons */}
               <div className="flex gap-3 pt-4">
-                <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                   {saving && <Loader2 size={16} className="animate-spin" />}
                   {saving ? "Guardando..." : "Guardar"}
                 </button>
@@ -1161,7 +1161,7 @@ const Admin = () => {
                   <div className="pt-3 border-t border-foreground/10">
                     <button
                       onClick={() => openFormFromCaptacion(selectedCaptacion)}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors"
                     >
                       <Plus size={14} /> Crear inmueble desde esta captación
                     </button>

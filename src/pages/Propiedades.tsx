@@ -125,7 +125,7 @@ const Propiedades = () => {
             </div>
 
             {isLoading && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="properties-grid">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="bg-background border border-foreground/5 overflow-hidden">
                     <div className="aspect-video bg-muted animate-pulse" />
@@ -166,7 +166,7 @@ const Propiedades = () => {
                 </p>
                 <button
                   onClick={() => { setTipoNegocio(""); setTipoInmueble(""); setBarrio(""); setCiudad(""); setPrecioMin(""); setPrecioMax(""); }}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+                  className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors"
                 >
                   <FilterX size={14} /> Limpiar filtros
                 </button>
@@ -178,7 +178,7 @@ const Propiedades = () => {
               const paged = data.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
               return (
                 <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="properties-grid">
                     {paged.map((property) => (
                       <PropertyCard key={property.id} property={property} />
                     ))}

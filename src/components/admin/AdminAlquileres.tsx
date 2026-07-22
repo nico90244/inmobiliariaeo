@@ -333,7 +333,7 @@ const AdminAlquileres = () => {
 
               <div className="flex gap-3 pt-2">
                 <button onClick={() => setPagoOpen(false)} className="flex-1 py-2.5 border border-foreground/20 font-heading text-sm font-semibold tracking-widest uppercase hover:bg-muted/20 transition-colors">Cancelar</button>
-                <button onClick={savePago} disabled={saving} className="flex-1 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                <button onClick={savePago} disabled={saving} className="flex-1 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                   {saving && <Loader2 size={16} className="animate-spin" />}
                   Guardar pago
                 </button>

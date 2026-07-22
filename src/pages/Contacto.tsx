@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Phone, MapPin, Mail } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { trackContact } from "@/lib/pixelEvents";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -33,6 +34,7 @@ const Contacto = () => {
     const text = `Hola, soy ${name}. Mi teléfono es ${phone}. ${message}`;
     const popup = window.open(`https://wa.me/573162225604?text=${encodeURIComponent(text)}`, "_blank");
     if (popup) {
+      trackContact({ content_name: name });
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 3000);
     } else {
@@ -71,7 +73,7 @@ const Contacto = () => {
                     <label htmlFor="cto-mensaje" className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Mensaje</label>
                     <textarea id="cto-mensaje" required value={message} onChange={(e) => setMessage(e.target.value)} rows={3} maxLength={1000} className="w-full bg-transparent border-b border-foreground/20 py-3 font-body text-foreground focus:border-primary focus:outline-none transition-colors resize-none" />
                   </div>
-                  <button type="submit" className="px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors">
+                  <button type="submit" className="px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors">
                     {submitted ? "¡Enviado!" : "Enviar"}
                   </button>
                 </form>
@@ -88,7 +90,7 @@ const Contacto = () => {
                   <WhatsAppIcon size={20} className="mt-1 flex-shrink-0 text-primary" />
                   <div>
                     <p className="font-heading text-sm font-semibold text-foreground">WhatsApp</p>
-                    <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" className="font-body text-muted-foreground hover:text-primary transition-colors">316 222 5604</a>
+                    <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" onClick={() => trackContact()} className="font-body text-muted-foreground hover:text-primary transition-colors">316 222 5604</a>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">

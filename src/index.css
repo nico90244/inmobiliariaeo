@@ -17,6 +17,7 @@
     --popover-foreground: 0 0% 12%;
 
     --primary: 40 47% 50%;
+    --primary-hover: 40 47% 41%;
     --primary-foreground: 43 33% 97%;
 
     --secondary: 0 0% 12%;
@@ -63,6 +64,7 @@
     --popover: 0 0% 15%;
     --popover-foreground: 43 33% 97%;
     --primary: 40 47% 50%;
+    --primary-hover: 40 47% 41%;
     --primary-foreground: 43 33% 97%;
     --secondary: 43 33% 97%;
     --secondary-foreground: 0 0% 12%;
@@ -223,8 +225,9 @@
 .bg-primary\/30 { background-color: hsl(40, 47%, 50%, 0.30); }
 .bg-primary\/40 { background-color: hsl(40, 47%, 50%, 0.40); }
 .hover\:bg-primary\/5:hover   { background-color: hsl(40, 47%, 50%, 0.05); }
-.hover\:bg-primary\/80:hover  { background-color: hsl(40, 47%, 44%, 1); }
-.hover\:bg-primary\/90:hover  { background-color: hsl(40, 47%, 45%, 1); }
+.hover\:bg-primary\/80:hover    { background-color: hsl(40, 47%, 38%); }
+.hover\:bg-primary\/90:hover    { background-color: hsl(40, 47%, 41%); }
+.hover\:bg-primary-hover:hover  { background-color: hsl(40, 47%, 41%); }
 .bg-secondary   { background-color: hsl(0, 0%, 12%); }
 .text-primary   { color: hsl(40, 47%, 50%); }
 .text-primary-foreground { color: hsl(43, 33%, 97%); }
@@ -379,3 +382,111 @@
     filter: brightness(0) invert(1);
   }
 } /* end @layer utilities */
+
+/* ─────────────────────────────────────────────────────────────
+   SERVICES SECTION — pro-max entrance animations
+   Child classes start in their "from" state and animate when
+   the parent .reveal receives .in-view from IntersectionObserver.
+   ───────────────────────────────────────────────────────────── */
+
+@keyframes svc-strip-in {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+@keyframes svc-num-in {
+  from { opacity: 0; transform: scale(0.86); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes svc-rule-in {
+  from { width: 0; }
+  to   { width: 2rem; }
+}
+
+@keyframes svc-icon-in {
+  from { opacity: 0; transform: translateX(-7px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Initial states ─ hidden before parent is in-view */
+.svc-strip {
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+.svc-num {
+  opacity: 0;
+  transform: scale(0.86);
+}
+.svc-rule {
+  width: 0;
+}
+.svc-icon {
+  opacity: 0;
+  transform: translateX(-7px);
+}
+.svc-fade {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) var(--sd, 0s),
+              transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) var(--sd, 0s);
+}
+.svc-bullet {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) var(--bd, 0.4s),
+              transform 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) var(--bd, 0.4s);
+}
+
+/* Activate when parent .reveal gets .in-view */
+.reveal.in-view .svc-strip {
+  animation: svc-strip-in 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s forwards;
+}
+.reveal.in-view .svc-num {
+  animation: svc-num-in 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) 0.05s forwards;
+}
+.reveal.in-view .svc-rule {
+  animation: svc-rule-in 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) var(--svc-rule-delay, 0.38s) forwards;
+}
+.reveal.in-view .svc-icon {
+  animation: svc-icon-in 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0s forwards;
+}
+.reveal.in-view .svc-fade   { opacity: 1; transform: translateY(0); }
+.reveal.in-view .svc-bullet { opacity: 1; transform: translateY(0); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .svc-strip  { animation: none !important; transform: scaleY(1); }
+  .svc-num    { animation: none !important; opacity: 1; transform: scale(1); }
+  .svc-rule   { animation: none !important; width: 2rem; }
+  .svc-icon   { animation: none !important; opacity: 1; transform: translateX(0); }
+  .svc-fade, .svc-bullet { opacity: 1; transform: none; transition: none; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PROPERTIES GRID — flexbox with centered orphans
+   Replaces grid-cols-3 in PropertiesSection and Propiedades.
+   justify-content: center centers the last row when count % 3 ≠ 0.
+   ───────────────────────────────────────────────────────────── */
+.properties-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.properties-grid > * {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .properties-grid > * {
+    width: calc(50% - 0.75rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .properties-grid > * {
+    width: calc(33.333% - 1rem);
+  }
+}

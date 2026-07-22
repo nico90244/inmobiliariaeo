@@ -272,7 +272,7 @@ const AdminFichaInmueble = ({ open, onClose, propiedadId, onChanged }: Props) =>
                     </div>
 
                     <div className="flex flex-wrap gap-3 pt-2">
-                      <button onClick={editarContrato} className="px-4 py-2 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors">
+                      <button onClick={editarContrato} className="px-4 py-2 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors">
                         Editar contrato
                       </button>
                       <button onClick={() => finalizarContrato(contratoActivo.id)} disabled={busy} className="px-4 py-2 border border-foreground/20 font-heading text-xs font-semibold tracking-widest uppercase hover:bg-muted/20 transition-colors disabled:opacity-50">
@@ -287,7 +287,7 @@ const AdminFichaInmueble = ({ open, onClose, propiedadId, onChanged }: Props) =>
                   <div className="text-center py-6">
                     <p className="font-body text-sm text-muted-foreground mb-3">No hay un contrato activo para este inmueble.</p>
                     {propiedad.tipo_negocio === "Alquiler" && (
-                      <button onClick={registrarNuevoArrendatario} className="flex items-center gap-1.5 mx-auto px-4 py-2 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors">
+                      <button onClick={registrarNuevoArrendatario} className="flex items-center gap-1.5 mx-auto px-4 py-2 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors">
                         <UserPlus size={13} /> Registrar arrendatario
                       </button>
                     )}

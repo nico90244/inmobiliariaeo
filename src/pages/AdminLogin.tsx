@@ -74,7 +74,7 @@ const AdminLogin = () => {
               <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Contraseña</label>
               <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-transparent border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none" />
             </div>
-            <button type="submit" disabled={loading} className="w-full py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+            <button type="submit" disabled={loading} className="w-full py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
               {loading && <Loader2 size={16} className="animate-spin" />}
               {loading ? (mode === "signup" ? "Registrando..." : "Ingresando...") : (mode === "signup" ? "Crear cuenta" : "Ingresar")}
             </button>

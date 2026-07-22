@@ -330,7 +330,7 @@ const AdminPropietarios = () => {
         </div>
         <button
           onClick={openNew}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors whitespace-nowrap"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors whitespace-nowrap"
         >
           <Plus size={14} /> Nuevo
         </button>
@@ -684,7 +684,7 @@ const AdminPropietarios = () => {
             <button
               onClick={savePropietario}
               disabled={saving}
-              className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-60"
+              className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-60"
             >
               {saving && <Loader2 size={13} className="animate-spin" />}
               {editingId ? "Guardar cambios" : "Crear propietario"}

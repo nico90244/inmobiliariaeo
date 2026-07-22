@@ -216,7 +216,7 @@ const AdminPolizas = () => {
                       )}
                       <button
                         onClick={() => { setRenovarContrato(c); setRenovarOpen(true); }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors"
                       >
                         <RefreshCw size={13} /> Marcar renovado
                       </button>
@@ -292,7 +292,7 @@ const AdminPolizas = () => {
               </div>
               <div className="flex gap-3 pt-2">
                 <button onClick={() => setPagoOpen(false)} className="flex-1 py-2.5 border border-foreground/20 font-heading text-sm font-semibold tracking-widest uppercase hover:bg-muted/20 transition-colors">Cancelar</button>
-                <button onClick={savePago} disabled={saving} className="flex-1 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                <button onClick={savePago} disabled={saving} className="flex-1 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                   {saving && <Loader2 size={16} className="animate-spin" />}
                   Guardar pago
                 </button>
@@ -316,7 +316,7 @@ const AdminPolizas = () => {
               </p>
               <div className="flex gap-3 pt-2">
                 <button onClick={() => setRenovarOpen(false)} className="flex-1 py-2.5 border border-foreground/20 font-heading text-sm font-semibold tracking-widest uppercase hover:bg-muted/20 transition-colors">Cancelar</button>
-                <button onClick={confirmarRenovacion} disabled={saving} className="flex-1 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                <button onClick={confirmarRenovacion} disabled={saving} className="flex-1 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                   {saving && <Loader2 size={16} className="animate-spin" />}
                   Confirmar renovación
                 </button>

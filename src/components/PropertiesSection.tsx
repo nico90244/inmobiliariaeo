@@ -1,4 +1,5 @@
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { usePropiedades } from "@/hooks/usePropiedades";
 import PropertyCard from "@/components/PropertyCard";
 
@@ -22,6 +23,25 @@ const PropertySkeleton = () => (
   </div>
 );
 
+const VerTodasCard = () => (
+  <Link
+    to="/propiedades"
+    className="group flex flex-col items-center justify-center min-h-[260px] h-full bg-background border border-foreground/10 hover:border-primary/30 hover:bg-primary/[0.02] transition-all duration-300 text-center p-8"
+  >
+    <div className="w-8 h-0.5 bg-primary mb-6 transition-all duration-300 group-hover:w-12" />
+    <p className="font-heading text-[10px] font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-2">
+      Portafolio completo
+    </p>
+    <p className="font-display text-xl md:text-2xl font-bold text-foreground mb-6 leading-snug">
+      Ver todas las propiedades
+    </p>
+    <div className="flex items-center gap-2 font-heading text-[10px] font-semibold tracking-[0.18em] uppercase text-primary">
+      Explorar catálogo
+      <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-1" />
+    </div>
+  </Link>
+);
+
 const PropertiesSection = () => {
   const { data, isLoading, error } = usePropiedades({ destacada: true });
   const properties = data ?? [];
@@ -40,7 +60,7 @@ const PropertiesSection = () => {
         </div>
 
         {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="properties-grid">
             {Array.from({ length: 6 }).map((_, i) => <PropertySkeleton key={i} />)}
           </div>
         )}
@@ -58,13 +78,20 @@ const PropertiesSection = () => {
           </p>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property, i) => (
-            <div key={property.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}>
-              <PropertyCard property={property} />
-            </div>
-          ))}
-        </div>
+        {!isLoading && !error && properties.length > 0 && (
+          <div className="properties-grid">
+            {properties.map((property, i) => (
+              <div
+                key={property.id}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}
+              >
+                <PropertyCard property={property} />
+              </div>
+            ))}
+            <VerTodasCard />
+          </div>
+        )}
       </div>
     </section>
   );

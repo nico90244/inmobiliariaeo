@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, Bot } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { trackContact } from "@/lib/pixelEvents";
 
 const WhatsAppButton = () => {
   const [chatOpen, setChatOpen] = useState(false);
@@ -12,7 +13,8 @@ const WhatsAppButton = () => {
         href="https://wa.me/573162225604"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300 flex items-center justify-center shadow-lg rounded-full"
+        onClick={() => trackContact()}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-primary text-primary-foreground hover:bg-primary-hover transition-colors duration-300 flex items-center justify-center shadow-lg rounded-full"
         aria-label="Contactar por WhatsApp"
       >
         <WhatsAppIcon size={24} className="text-primary-foreground" />
@@ -21,7 +23,7 @@ const WhatsAppButton = () => {
       {/* Eli chatbot button - bottom left */}
       <button
         onClick={() => setChatOpen(!chatOpen)}
-        className="fixed bottom-6 left-6 z-50 h-12 px-4 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300 flex items-center gap-2 shadow-lg rounded-full font-heading text-sm font-semibold"
+        className="fixed bottom-6 left-6 z-50 h-12 px-4 bg-primary text-primary-foreground hover:bg-primary-hover transition-colors duration-300 flex items-center gap-2 shadow-lg rounded-full font-heading text-sm font-semibold"
         aria-label="Chatea con Eli"
       >
         <Bot size={20} />

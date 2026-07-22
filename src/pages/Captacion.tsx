@@ -6,6 +6,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import SEO from "@/components/SEO";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { trackSubmitForm } from "@/lib/pixelEvents";
 
 const benefits = [
   "Publicidad en Metrocuadrado y Finca Raíz",
@@ -63,6 +64,11 @@ const Captacion = () => {
     }
 
     toast({ title: "¡Enviado con éxito!", description: "Nos pondremos en contacto contigo pronto." });
+
+    trackSubmitForm({
+      content_type: "captacion",
+      content_name: `${form.tipo_negocio} ${form.tipo_inmueble}`.trim(),
+    });
 
     // Open WhatsApp with formatted message
     const waText = `Nueva captación: ${form.nombre} - ${form.celular} - ${form.tipo_negocio} ${form.tipo_inmueble} - ${form.barrio}`;
@@ -179,7 +185,7 @@ const Captacion = () => {
                     <input type="checkbox" checked={form.acepta_politica} onChange={(e) => update("acepta_politica", e.target.checked)} className="mt-1 accent-[hsl(40,47%,50%)]" />
                     <span className="font-body text-xs text-muted-foreground">Acepto la política de tratamiento de datos personales</span>
                   </label>
-                  <button type="submit" disabled={loading} className="w-full py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                  <button type="submit" disabled={loading} className="w-full py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                     {loading && <Loader2 size={16} className="animate-spin" />}
                     {loading ? "Enviando..." : "Enviar"}
                   </button>

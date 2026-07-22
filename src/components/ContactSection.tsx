@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Phone, MapPin, Loader2, CheckCircle2 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { trackContact } from "@/lib/pixelEvents";
 
 const ContactSection = () => {
   const [name, setName] = useState("");
@@ -17,6 +18,7 @@ const ContactSection = () => {
       const popup = window.open(`https://wa.me/573162225604?text=${encodeURIComponent(text)}`, "_blank");
       setSubmitting(false);
       if (popup) {
+        trackContact({ content_name: name });
         setSubmitted(true);
         setTimeout(() => setSubmitted(false), 4000);
       } else {
@@ -89,7 +91,7 @@ const ContactSection = () => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-2 px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {submitting ? (
                   <><Loader2 size={16} className="animate-spin" /> Abriendo...</>
@@ -113,7 +115,7 @@ const ContactSection = () => {
               <WhatsAppIcon size={20} className="mt-1 flex-shrink-0 text-primary" />
               <div>
                 <p className="font-heading text-sm font-semibold text-foreground">WhatsApp</p>
-                <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" className="font-body text-muted-foreground hover:text-primary transition-colors">
+                <a href="https://wa.me/573162225604" target="_blank" rel="noopener noreferrer" onClick={() => trackContact()} className="font-body text-muted-foreground hover:text-primary transition-colors">
                   316 222 5604
                 </a>
               </div>

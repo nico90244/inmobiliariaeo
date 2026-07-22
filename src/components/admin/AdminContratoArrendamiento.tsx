@@ -486,7 +486,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex-1 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {saving && <Loader2 size={16} className="animate-spin" />}
               {saving ? "Guardando…" : existingId ? "Actualizar contrato" : "Guardar contrato"}

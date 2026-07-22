@@ -305,7 +305,7 @@ const AdminCitasDisponibilidad = () => {
         <h2 className="font-heading text-xl font-bold text-foreground">Disponibilidad de Citas</h2>
         <button
           onClick={openNew}
-          className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors"
+          className="flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors"
         >
           <Plus size={16} /> Nueva cita disponible
         </button>
@@ -664,7 +664,7 @@ const AdminCitasDisponibilidad = () => {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex-1 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {saving && <Loader2 size={16} className="animate-spin" />}
                 {saving ? "Guardando..." : editingSlot ? "Actualizar" : "Guardar"}
