@@ -35,7 +35,7 @@ const AdminCitasReservas = () => {
   // Reprogramar / Modificar dialog
   const [editTarget, setEditTarget] = useState<Reserva | null>(null);
   const [editMode, setEditMode] = useState<"reprogramar" | "modificar">("reprogramar");
-  const [editForm, setEditForm] = useState({ fecha: "", hora: "8:00", agente: AGENTES[0] as string, nombre: "", celular: "", correo: "" });
+  const [editForm, setEditForm] = useState({ fecha: "", hora: "8:00", agente: AGENTES[0] as string, nombre: "", celular: "", correo: "", propiedadId: "" });
   const [saving, setSaving] = useState(false);
 
   // Delete confirm
@@ -115,6 +115,7 @@ const AdminCitasReservas = () => {
       nombre: r.nombre_cliente,
       celular: r.celular_cliente,
       correo: r.correo_cliente || "",
+      propiedadId: r.propiedad_id || slot?.propiedad_id || "",
     });
   };
 
@@ -127,6 +128,7 @@ const AdminCitasReservas = () => {
         nombre_cliente: editForm.nombre,
         celular_cliente: editForm.celular,
         correo_cliente: editForm.correo || null,
+        ...(editMode === "modificar" ? { propiedad_id: editForm.propiedadId || null } : {}),
       }).eq("id", editTarget.id);
 
       // For reprogramar, also update slot date/time/agent
@@ -299,6 +301,23 @@ const AdminCitasReservas = () => {
                   </select>
                 </div>
               </>
+            )}
+            {editMode === "modificar" && (
+              <div>
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Inmueble</label>
+                <select
+                  value={editForm.propiedadId}
+                  onChange={e => setEditForm(f => ({ ...f, propiedadId: e.target.value }))}
+                  className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                >
+                  <option value="">— Cualquier inmueble —</option>
+                  {Object.values(props)
+                    .sort((a, b) => a.nombre_inmueble.localeCompare(b.nombre_inmueble))
+                    .map(p => (
+                      <option key={p.id} value={p.id}>{p.nombre_inmueble}</option>
+                    ))}
+                </select>
+              </div>
             )}
             <div>
               <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre</label>

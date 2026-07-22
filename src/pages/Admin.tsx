@@ -75,6 +75,8 @@ const Admin = () => {
 
   // Captacion detail
   const [selectedCaptacion, setSelectedCaptacion] = useState<Captacion | null>(null);
+  const [reservasSimples, setReservasSimples] = useState<{ id: string; label: string }[]>([]);
+  const [savingCitaLink, setSavingCitaLink] = useState(false);
 
   // Contrato arrendamiento
   const [contratoOpen, setContratoOpen] = useState(false);
@@ -94,7 +96,6 @@ const Admin = () => {
       tipo_inmueble: c.tipo_inmueble || "",
       barrio: c.barrio || "",
       precio: precioNum,
-      descripcion: c.observaciones || "",
       captacion_id: c.id,
     });
     setEditingId(null);
@@ -210,13 +211,35 @@ const Admin = () => {
       const { data } = await supabase.from("propiedades").select("*").order("fecha_creacion", { ascending: false });
       setPropiedades(data || []);
     } else if (section === "captaciones") {
-      const { data } = await supabase.from("captaciones").select("*").order("fecha_creacion", { ascending: false });
-      setCaptaciones(data || []);
+      const [{ data: capData }, { data: resData }, { data: slotData }] = await Promise.all([
+        supabase.from("captaciones").select("*").order("fecha_creacion", { ascending: false }),
+        supabase.from("citas_reservas").select("id, nombre_cliente, celular_cliente, slot_id").neq("estado", "Eliminada").order("fecha_creacion", { ascending: false }),
+        supabase.from("citas_disponibles").select("id, fecha, hora"),
+      ]);
+      setCaptaciones((capData || []) as Captacion[]);
+      const slotMap: Record<string, { fecha: string; hora: string }> = {};
+      ((slotData || []) as any[]).forEach((s: any) => { slotMap[s.id] = s; });
+      setReservasSimples(((resData || []) as any[]).map((r: any) => {
+        const slot = r.slot_id ? slotMap[r.slot_id] : null;
+        const dateLabel = slot
+          ? new Date(slot.fecha + "T12:00:00").toLocaleDateString("es-CO") + " " + slot.hora
+          : "Sin fecha";
+        return { id: r.id, label: `${dateLabel} · ${r.nombre_cliente} (${r.celular_cliente})` };
+      }));
     }
     setLoadingData(false);
   };
 
   const updateField = (field: string, value: any) => setForm((f) => ({ ...f, [field]: value }));
+
+  const saveCitaLink = async (captId: string, reservaId: string | null) => {
+    setSavingCitaLink(true);
+    await supabase.from("captaciones").update({ reserva_id: reservaId } as any).eq("id", captId);
+    setSelectedCaptacion((prev) => prev ? ({ ...prev, reserva_id: reservaId } as any) : null);
+    setCaptaciones((prev) => prev.map((c) => c.id === captId ? ({ ...c, reserva_id: reservaId } as any) : c));
+    setSavingCitaLink(false);
+    toast({ title: reservaId ? "Cita vinculada" : "Vínculo eliminado" });
+  };
 
   const parseCoverPos = (posStr: string | null) => {
     const str = posStr || "50% 50%";
@@ -1157,6 +1180,24 @@ const Admin = () => {
                     <p className="font-body text-foreground">{value || "-"}</p>
                   </div>
                 ))}
+                {/* Cita relacionada */}
+                <div className="pt-3 border-t border-foreground/10">
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
+                    Cita relacionada {savingCitaLink && <span className="text-primary">· guardando…</span>}
+                  </label>
+                  <select
+                    value={(selectedCaptacion as any).reserva_id || ""}
+                    onChange={(e) => saveCitaLink(selectedCaptacion.id, e.target.value || null)}
+                    disabled={savingCitaLink}
+                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                  >
+                    <option value="">— Sin cita vinculada —</option>
+                    {reservasSimples.map((r) => (
+                      <option key={r.id} value={r.id}>{r.label}</option>
+                    ))}
+                  </select>
+                </div>
+
                 {selectedCaptacion.estado !== "Convertida" && (
                   <div className="pt-3 border-t border-foreground/10">
                     <button
