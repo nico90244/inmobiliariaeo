@@ -5,6 +5,7 @@ import { Loader2, Upload, X, FileText, Building2 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
+import PropietarioCombobox, { type PropietarioSeleccionado } from "./PropietarioCombobox";
 
 type Propiedad = {
   id: string;
@@ -95,9 +96,17 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<"inquilino" | "codeudor" | null>(null);
 
+  // Propietario combobox state
+  const [propietarioId, setPropietarioId] = useState<string | null>(null);
+  const [modoCrearNuevo, setModoCrearNuevo] = useState(false);
+  const [nuevoNombreTexto, setNuevoNombreTexto] = useState("");
+
   // Load existing contract if editing; or preload propietario data for new contract
   useEffect(() => {
     if (!open) return;
+    setPropietarioId(null);
+    setModoCrearNuevo(false);
+    setNuevoNombreTexto("");
     if (existingId) {
       (supabase as any).from("contratos_arrendamiento").select("*").eq("id", existingId).single().then(({ data }: any) => {
         if (data) setForm({ ...emptyContrato(propiedad.id, canon), ...data });
@@ -105,6 +114,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
     } else {
       const base = emptyContrato(propiedad.id, canon);
       if (propiedad.propietario_id) {
+        setPropietarioId(propiedad.propietario_id);
         (supabase as any).from("propietarios").select("nombre, apellido, numero_documento, telefono").eq("id", propiedad.propietario_id).single().then(({ data }: any) => {
           if (data) {
             setForm({
@@ -208,6 +218,36 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         if (error) throw error;
         toast({ title: "Contrato guardado exitosamente" });
       }
+
+      // Sync propietario to propiedades and propietarios tables
+      if (propietarioId) {
+        if (!propiedad.propietario_id) {
+          await supabase.from("propiedades").update({ propietario_id: propietarioId } as any).eq("id", propiedad.id);
+        }
+        const bankUpdates: Record<string, string> = {};
+        if (safeTrim(form.propietario_banco)) bankUpdates.banco = safeTrim(form.propietario_banco);
+        if (form.propietario_tipo_cuenta) bankUpdates.tipo_cuenta = form.propietario_tipo_cuenta;
+        if (safeTrim(form.propietario_num_cuenta)) bankUpdates.numero_cuenta = safeTrim(form.propietario_num_cuenta);
+        if (Object.keys(bankUpdates).length > 0) {
+          await (supabase as any).from("propietarios").update(bankUpdates).eq("id", propietarioId);
+        }
+      } else if (modoCrearNuevo && nuevoNombreTexto.trim()) {
+        const partes = nuevoNombreTexto.trim().split(" ");
+        const { data: newP } = await (supabase as any).from("propietarios").insert({
+          nombre: partes[0],
+          apellido: partes.slice(1).join(" ") || null,
+          tipo_documento: "CC",
+          numero_documento: safeTrim(form.propietario_cedula) || null,
+          telefono: safeTrim(form.propietario_celular) || null,
+          banco: safeTrim(form.propietario_banco) || null,
+          tipo_cuenta: form.propietario_tipo_cuenta || null,
+          numero_cuenta: safeTrim(form.propietario_num_cuenta) || null,
+        }).select("id").single();
+        if (newP?.id) {
+          await supabase.from("propiedades").update({ propietario_id: newP.id } as any).eq("id", propiedad.id);
+        }
+      }
+
       onClose();
     } catch (err: any) {
       toast({ title: "Error al guardar contrato", description: err.message, variant: "destructive" });
@@ -340,24 +380,56 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4 pb-2 border-b border-foreground/10">
               <Building2 size={15} className="text-primary" /> Datos del propietario
             </h3>
-            {!existingId && !propiedad.propietario_id && (
-              <p className="font-body text-xs text-muted-foreground bg-muted/30 border border-foreground/10 px-3 py-2 mb-4">
-                Esta propiedad no tiene propietario vinculado. Ingresa los datos manualmente o vincula un propietario desde la sección Propietarios.
-              </p>
-            )}
-            {!existingId && propiedad.propietario_id && (
-              <p className="font-body text-xs text-[hsl(142,70%,45%)] bg-[hsl(142,70%,45%)]/5 border border-[hsl(142,70%,45%)]/20 px-3 py-2 mb-4">
-                Datos cargados automáticamente desde el propietario vinculado.
-              </p>
-            )}
+
+            {/* Combobox buscar / crear propietario */}
+            <div className="mb-4">
+              <label className={labelCls}>Buscar propietario existente</label>
+              <PropietarioCombobox
+                value={propietarioId}
+                onSelect={(p) => {
+                  if (!p) { setPropietarioId(null); setModoCrearNuevo(false); setNuevoNombreTexto(""); return; }
+                  setPropietarioId(p.id);
+                  setModoCrearNuevo(false);
+                  setNuevoNombreTexto("");
+                  set("propietario_nombre", [p.nombre, p.apellido].filter(Boolean).join(" "));
+                  set("propietario_cedula", p.numero_documento || "");
+                  if (!form.propietario_celular && p.telefono) set("propietario_celular", p.telefono);
+                }}
+                onCreateNuevo={(text) => {
+                  setModoCrearNuevo(true);
+                  setNuevoNombreTexto(text);
+                  setPropietarioId(null);
+                  set("propietario_nombre", text);
+                }}
+                onUsarBanco={({ banco, tipo_cuenta, numero_cuenta }) => {
+                  set("propietario_banco", banco);
+                  set("propietario_tipo_cuenta", tipo_cuenta);
+                  set("propietario_num_cuenta", numero_cuenta);
+                }}
+              />
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>Nombre completo</label>
-                <input type="text" value={form.propietario_nombre} onChange={(e) => set("propietario_nombre", e.target.value)} className={inputCls} />
+                <input
+                  type="text"
+                  value={form.propietario_nombre}
+                  readOnly={!!propietarioId}
+                  onChange={(e) => set("propietario_nombre", e.target.value)}
+                  className={`${inputCls}${propietarioId ? " opacity-60 cursor-not-allowed" : ""}`}
+                />
               </div>
               <div>
                 <label className={labelCls}>Cédula</label>
-                <input type="text" value={form.propietario_cedula} onFocus={(e) => e.target.select()} onChange={(e) => set("propietario_cedula", e.target.value)} className={inputCls} />
+                <input
+                  type="text"
+                  value={form.propietario_cedula}
+                  readOnly={!!propietarioId}
+                  onFocus={(e) => e.target.select()}
+                  onChange={(e) => set("propietario_cedula", e.target.value)}
+                  className={`${inputCls}${propietarioId ? " opacity-60 cursor-not-allowed" : ""}`}
+                />
               </div>
               <div>
                 <label className={labelCls}>Celular</label>

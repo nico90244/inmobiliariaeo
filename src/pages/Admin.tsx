@@ -354,6 +354,57 @@ const Admin = () => {
 
       toast({ title: editingId ? "Propiedad actualizada" : "Propiedad creada" });
       if (!editingId && captacionSource) {
+        // Auto-vincular propietario cuando la captación es para alquiler
+        if (["Alquiler", "Ambos"].includes(captacionSource.tipo_negocio || "")) {
+          let propietarioVinculadoId: string | null = null;
+
+          // Buscar por celular
+          if (captacionSource.celular) {
+            const tel = captacionSource.celular.replace(/\s/g, "");
+            const { data: byTel } = await (supabase as any)
+              .from("propietarios")
+              .select("id")
+              .ilike("telefono", `%${tel}%`)
+              .limit(1);
+            propietarioVinculadoId = byTel?.[0]?.id || null;
+          }
+
+          // Buscar por primer nombre exacto
+          if (!propietarioVinculadoId && captacionSource.nombre) {
+            const primerNombre = captacionSource.nombre.trim().split(" ")[0];
+            const { data: byNombre } = await (supabase as any)
+              .from("propietarios")
+              .select("id")
+              .ilike("nombre", primerNombre)
+              .limit(1);
+            propietarioVinculadoId = byNombre?.[0]?.id || null;
+          }
+
+          // Crear nuevo si no existe
+          if (!propietarioVinculadoId) {
+            const partes = (captacionSource.nombre || "").trim().split(" ");
+            const { data: newP } = await (supabase as any)
+              .from("propietarios")
+              .insert({
+                nombre: partes[0] || captacionSource.nombre || "",
+                apellido: partes.slice(1).join(" ") || null,
+                tipo_documento: "CC",
+                telefono: captacionSource.celular || null,
+                email: captacionSource.correo || null,
+              })
+              .select("id")
+              .single();
+            propietarioVinculadoId = newP?.id || null;
+          }
+
+          if (propietarioVinculadoId) {
+            await supabase
+              .from("propiedades")
+              .update({ propietario_id: propietarioVinculadoId } as any)
+              .eq("id", propId);
+          }
+        }
+
         await supabase.from("captaciones").update({ estado: "Convertida" }).eq("id", captacionSource.id);
         setCaptacionSource(null);
       }
