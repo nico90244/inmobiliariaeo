@@ -257,16 +257,11 @@ const EmergenciaPublicar = () => {
                     <label className={labelClass} htmlFor="nombre">Nombre completo</label>
                     <input id="nombre" required maxLength={100} value={form.nombre} onChange={(e) => update("nombre", e.target.value)} className={inputClass} />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className={labelClass} htmlFor="celular">Celular</label>
-                      <input id="celular" type="tel" required maxLength={15} value={form.celular} onChange={(e) => update("celular", e.target.value)} className={inputClass} />
-                    </div>
-                    <div>
-                      <label className={labelClass} htmlFor="correo">Correo (opcional)</label>
-                      <input id="correo" type="email" maxLength={255} value={form.correo} onChange={(e) => update("correo", e.target.value)} className={inputClass} />
-                    </div>
+                  <div>
+                    <label className={labelClass} htmlFor="celular">Celular</label>
+                    <input id="celular" type="tel" required maxLength={15} value={form.celular} onChange={(e) => update("celular", e.target.value)} className={inputClass} />
                   </div>
+
                   <div>
                     <span className={labelClass}>¿Cuál es tu perfil?</span>
                     <div className="grid grid-cols-3 gap-3">
