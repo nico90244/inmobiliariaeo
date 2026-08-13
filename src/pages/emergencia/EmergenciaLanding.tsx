@@ -63,45 +63,60 @@ const EmergenciaLanding = () => {
 
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {/* Oferente — tarjeta oscura */}
               <Link
                 to="/emergencia-terremoto/publicar"
-                className="reveal reveal-delay-1 group flex flex-col items-start p-8 md:p-10 rounded-2xl bg-background border border-foreground/10 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-primary/30"
+                className="reveal reveal-delay-1 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-secondary text-secondary-foreground border border-secondary shadow-lg transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20"
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 mb-6 transition-all duration-300 group-hover:bg-primary group-hover:scale-110">
-                  <Home size={20} className="text-primary transition-colors duration-300 group-hover:text-primary-foreground" />
+                <div className="pointer-events-none absolute -top-24 -right-16 w-64 h-64 rounded-full bg-primary/25 blur-[80px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-primary/15 to-transparent transition-transform duration-[1200ms] ease-out group-hover:translate-x-full" aria-hidden="true" />
+                <span className="relative font-heading text-[10px] font-bold tracking-[0.2em] uppercase text-primary mb-6">
+                  Ofrezco
+                </span>
+                <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center bg-primary text-primary-foreground mb-6 shadow-lg shadow-primary/30 transition-all duration-500 group-hover:scale-110 group-hover:rotate-[-6deg]">
+                  <Home size={22} />
                 </div>
-                <h2 className="font-heading text-lg font-bold text-foreground mb-2">
+                <h2 className="relative font-display text-xl md:text-2xl font-bold mb-3 leading-snug">
                   Tengo un inmueble para arrendar
                 </h2>
-                <p className="font-body text-sm text-muted-foreground mb-6 leading-relaxed">
+                <p className="relative font-body text-sm text-secondary-foreground/70 mb-8 leading-relaxed">
                   Propietarios, agentes e inmobiliarias pueden publicar en minutos. Cada
                   publicación pasa por revisión antes de mostrarse públicamente.
                 </p>
-                <span className="mt-auto inline-flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:gap-3 transition-all duration-300">
-                  Publicar inmueble <ArrowRight size={14} />
+                <span className="relative mt-auto inline-flex items-center gap-2 py-3 px-6 rounded-full bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase shadow-md shadow-primary/25 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/40 group-hover:gap-3">
+                  Publicar inmueble
+                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </Link>
 
+              {/* Buscador — tarjeta clara */}
               <Link
                 to="/emergencia-terremoto/buscar"
-                className="reveal reveal-delay-2 group flex flex-col items-start p-8 md:p-10 rounded-2xl bg-background border border-foreground/10 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-primary/30"
+                className="reveal reveal-delay-2 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-background border-2 border-primary/25 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary hover:shadow-2xl hover:shadow-primary/15"
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 mb-6 transition-all duration-300 group-hover:bg-primary group-hover:scale-110">
-                  <Search size={20} className="text-primary transition-colors duration-300 group-hover:text-primary-foreground" />
+                <div className="pointer-events-none absolute -bottom-24 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-[80px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-primary/10 to-transparent transition-transform duration-[1200ms] ease-out group-hover:translate-x-full" aria-hidden="true" />
+                <span className="relative font-heading text-[10px] font-bold tracking-[0.2em] uppercase text-primary mb-6">
+                  Busco
+                </span>
+                <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center bg-primary/10 border border-primary/25 mb-6 transition-all duration-500 group-hover:bg-primary group-hover:scale-110 group-hover:rotate-6">
+                  <Search size={22} className="text-primary transition-colors duration-500 group-hover:text-primary-foreground" />
                 </div>
-                <h2 className="font-heading text-lg font-bold text-foreground mb-2">
+                <h2 className="relative font-display text-xl md:text-2xl font-bold text-foreground mb-3 leading-snug">
                   Estoy buscando arriendo
                 </h2>
-                <p className="font-body text-sm text-muted-foreground mb-6 leading-relaxed">
+                <p className="relative font-body text-sm text-muted-foreground mb-8 leading-relaxed">
                   Desliza entre las opciones disponibles: te interesa o no. Cuando algo te
                   guste, te conectamos por WhatsApp para el siguiente paso.
                 </p>
-                <span className="mt-auto inline-flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:gap-3 transition-all duration-300">
-                  Empezar a buscar <ArrowRight size={14} />
+                <span className="relative mt-auto inline-flex items-center gap-2 py-3 px-6 rounded-full border border-primary/40 text-primary font-heading text-xs font-semibold tracking-widest uppercase transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:gap-3">
+                  Empezar a buscar
+                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </Link>
             </div>
+
 
             <div className="max-w-4xl mx-auto mt-6 grid grid-cols-1 sm:grid-cols-3 gap-5">
               {trustPoints.map((t, i) => (
