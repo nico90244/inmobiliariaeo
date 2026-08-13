@@ -69,7 +69,7 @@ const AdminEmergencia = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-heading text-lg font-bold text-foreground">Programa Terremoto Colombia</h2>
+        <h2 className="font-heading text-lg font-bold text-foreground">Iniciativa Terremoto Colombia</h2>
         <button onClick={load} className="flex items-center gap-1.5 text-xs font-heading text-muted-foreground hover:text-primary transition-colors">
           <RefreshCw size={14} /> Actualizar
         </button>

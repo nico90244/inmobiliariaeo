@@ -80,15 +80,15 @@ const EmergenciaBuscar = () => {
 
   const waMatchLink = match
     ? `https://wa.me/573162225604?text=${encodeURIComponent(
-        `Hola, vi en el programa de apoyo del terremoto un ${match.tipo_inmueble} en ${match.barrio}, ${match.ciudad} (canon ${match.canon ? new Intl.NumberFormat("es-CO").format(match.canon) : ""}). Me interesa, ¿me pueden dar más información?`
+        `Hola, vi en la iniciativa del terremoto un ${match.tipo_inmueble} en ${match.barrio}, ${match.ciudad} (canon ${match.canon ? new Intl.NumberFormat("es-CO").format(match.canon) : ""}). Me interesa, ¿me pueden dar más información?`
       )}`
     : "";
 
   return (
     <>
       <SEO
-        title="Busca Arriendo | Programa Terremoto Colombia | Inmobiliaria EO"
-        description="Desliza entre inmuebles disponibles para arriendo en el programa de apoyo del terremoto en Colombia y conecta por WhatsApp con lo que más te interesa."
+        title="Busca Arriendo | Iniciativa Terremoto Colombia | Inmobiliaria EO"
+        description="Desliza entre inmuebles disponibles para arriendo en esta iniciativa para el terremoto en Colombia y conecta por WhatsApp con lo que más te interesa."
         path="/emergencia-terremoto/buscar"
       />
       <Header />

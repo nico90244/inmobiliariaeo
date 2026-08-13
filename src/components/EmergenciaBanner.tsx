@@ -3,7 +3,7 @@ import { HeartHandshake, ArrowRight } from "lucide-react";
 const EmergenciaBanner = () => {
   return (
     <section
-      aria-label="Programa de apoyo terremoto Colombia"
+      aria-label="Iniciativa terremoto Colombia"
       className="relative overflow-hidden bg-background border-y border-foreground/10"
     >
       {/* Franja nítida con los colores de la bandera de Colombia */}
@@ -27,7 +27,7 @@ const EmergenciaBanner = () => {
           </div>
           <div>
             <p className="font-heading text-[11px] font-bold tracking-widest uppercase text-primary mb-1">
-              Programa de apoyo · Terremoto Colombia
+              Iniciativa · Terremoto Colombia
             </p>
             <p className="font-body text-sm text-foreground/80 max-w-md">
               Conectamos a personas que buscan arriendo con inmuebles disponibles — gratis, para propietarios y para quien busca.
@@ -40,7 +40,7 @@ const EmergenciaBanner = () => {
           rel="noopener noreferrer"
           className="group shrink-0 inline-flex items-center gap-2 py-3 px-6 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors whitespace-nowrap"
         >
-          Ver programa de apoyo
+          Ver iniciativa
           <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
         </a>
       </div>

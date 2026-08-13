@@ -30,8 +30,8 @@ const EmergenciaLanding = () => {
   return (
     <>
       <SEO
-        title="Afectados por el Terremoto en Colombia | Red de Apoyo para Arriendo | Inmobiliaria EO"
-        description="Conectamos a personas afectadas por el terremoto con propietarios, agentes e inmobiliarias que tienen inmuebles disponibles para arrendar en Cali y el Valle del Cauca."
+        title="Afectados por el Terremoto en Colombia | Conectamos Inmuebles en Arriendo | Inmobiliaria EO"
+        description="Iniciativa para conectar a personas afectadas por el terremoto con propietarios, agentes e inmobiliarias que tienen inmuebles disponibles para arrendar en Cali y el Valle del Cauca."
         path="/emergencia-terremoto"
       />
       <Header />
@@ -44,15 +44,15 @@ const EmergenciaLanding = () => {
           </div>
           <div className="py-16 md:py-24 container mx-auto px-6 lg:px-12 text-center max-w-2xl reveal">
             <span className="inline-flex items-center gap-2 font-heading text-[11px] font-bold tracking-widest uppercase px-3 py-1.5 border border-primary/40 text-primary mb-6">
-              Programa de apoyo · Terremoto Colombia
+              Iniciativa · Terremoto Colombia
             </span>
             <h1 className="font-display text-3xl md:text-5xl font-bold mb-5 leading-tight">
-              Red de apoyo para arriendo
+              Conectamos inmuebles con quienes los necesitan
             </h1>
             <p className="font-body text-base md:text-lg text-secondary-foreground/70 leading-relaxed">
-              Conectamos a personas afectadas por el terremoto que necesitan un lugar para
-              vivir con propietarios, agentes e inmobiliarias que tienen inmuebles disponibles
-              para arrendar en Cali y el Valle del Cauca.
+              Una iniciativa para conectar a personas afectadas por el terremoto que necesitan
+              un lugar para vivir con propietarios, agentes e inmobiliarias que tienen inmuebles
+              disponibles para arrendar en Cali y el Valle del Cauca.
             </p>
           </div>
         </section>

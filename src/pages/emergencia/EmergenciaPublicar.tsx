@@ -159,7 +159,7 @@ const EmergenciaPublicar = () => {
 
   if (linkGestion) {
     const waSelf = `https://wa.me/57${form.celular.replace(/\D/g, "")}?text=${encodeURIComponent(
-      `Este es el enlace para gestionar tu publicación en el programa de apoyo terremoto de Inmobiliaria EO: ${linkGestion}`
+      `Este es el enlace para gestionar tu publicación en la iniciativa terremoto de Inmobiliaria EO: ${linkGestion}`
     )}`;
     return (
       <>
@@ -196,7 +196,7 @@ const EmergenciaPublicar = () => {
                 Enviarme el enlace por WhatsApp
               </a>
               <Link to="/emergencia-terremoto" className="block font-body text-xs text-muted-foreground hover:text-primary transition-colors">
-                Volver al inicio del programa
+                Volver al inicio de la iniciativa
               </Link>
             </div>
           </section>
@@ -210,8 +210,8 @@ const EmergenciaPublicar = () => {
   return (
     <>
       <SEO
-        title="Publicar Inmueble en Arriendo | Programa Terremoto Colombia | Inmobiliaria EO"
-        description="Propietarios, agentes e inmobiliarias: publica tu inmueble disponible para arriendo en el programa de apoyo del terremoto en Colombia."
+        title="Publicar Inmueble en Arriendo | Iniciativa Terremoto Colombia | Inmobiliaria EO"
+        description="Propietarios, agentes e inmobiliarias: publica tu inmueble disponible para arriendo en esta iniciativa para el terremoto en Colombia."
         path="/emergencia-terremoto/publicar"
       />
       <Header />
@@ -425,8 +425,8 @@ const EmergenciaPublicar = () => {
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" required checked={form.acepta_politica} onChange={(e) => update("acepta_politica", e.target.checked)} className="mt-1 accent-[hsl(40,47%,50%)]" />
                     <span className="font-body text-xs text-muted-foreground">
-                      Autorizo a Inmobiliaria EO a tratar mis datos personales para contactarme sobre este
-                      programa de apoyo del terremoto. Mis datos de contacto no se mostrarán públicamente.
+                      Autorizo a Inmobiliaria EO a tratar mis datos personales para contactarme sobre esta
+                      iniciativa de arriendo por el terremoto. Mis datos de contacto no se mostrarán públicamente.
                     </span>
                   </label>
                 </div>
