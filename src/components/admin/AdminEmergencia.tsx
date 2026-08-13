@@ -11,11 +11,11 @@ const fmt = (n: number | null | undefined) =>
   n == null ? "—" : new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(n);
 
 const estadoBadge: Record<string, string> = {
-  Pendiente: "bg-yellow-500/15 text-yellow-700",
-  Disponible: "bg-green-500/15 text-green-700",
-  Alquilada: "bg-blue-500/15 text-blue-700",
-  Pausada: "bg-gray-500/15 text-gray-600",
-  Rechazada: "bg-red-500/15 text-red-700",
+  Pendiente: "bg-primary/10 text-primary",
+  Disponible: "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400",
+  Alquilada: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400",
+  Pausada: "bg-muted text-muted-foreground",
+  Rechazada: "bg-destructive/10 text-destructive",
 };
 
 const AdminEmergencia = () => {
@@ -115,7 +115,7 @@ const AdminEmergencia = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className={`px-2 py-0.5 font-heading text-[10px] font-bold uppercase tracking-wide ${estadoBadge[inm.estado] || ""}`}>{inm.estado}</span>
+                    <span className={`px-2 py-0.5 rounded-sm font-heading text-[10px] font-bold uppercase tracking-wide ${estadoBadge[inm.estado] || ""}`}>{inm.estado}</span>
                     <span className="font-heading text-sm font-semibold text-foreground">{inm.tipo_inmueble}</span>
                     <span className="font-body text-xs text-muted-foreground">· {inm.barrio}, {inm.ciudad}</span>
                   </div>

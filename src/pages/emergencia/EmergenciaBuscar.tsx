@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Heart } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -179,10 +179,10 @@ const EmergenciaBuscar = () => {
       <WhatsAppButton />
 
       {match && (
-        <div className="fixed inset-0 z-[100] bg-foreground/50 flex items-center justify-center p-6" role="dialog" aria-modal="true">
-          <div className="bg-background max-w-sm w-full p-7 text-center">
+        <div className="fixed inset-0 z-[100] bg-foreground/50 flex items-center justify-center p-6 animate-fade-in" role="dialog" aria-modal="true">
+          <div className="bg-background max-w-sm w-full p-7 text-center border-t-2 border-primary animate-scale-in">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">💚</span>
+              <Heart size={20} className="text-primary" fill="currentColor" />
             </div>
             <h2 className="font-heading text-lg font-bold text-foreground mb-2">¡Te interesó esta propiedad!</h2>
             <p className="font-body text-sm text-muted-foreground mb-6">

@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEO from "@/components/SEO";
-import { Progress } from "@/components/ui/progress";
 import { supabase, type TablesInsert } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { trackSubmitForm } from "@/lib/pixelEvents";
@@ -13,6 +12,7 @@ import { trackSubmitForm } from "@/lib/pixelEvents";
 const propertyTypes = ["Apartamento", "Casa", "Apartaestudio", "Local", "Habitación", "Oficina", "Bodega"];
 const TOTAL_STEPS = 5;
 const MAX_FOTOS = 6;
+const STEP_LABELS = ["Contacto", "Gestión", "El inmueble", "Condiciones económicas", "Fotos y confirmación"];
 
 type FormState = {
   nombre: string;
@@ -220,8 +220,17 @@ const EmergenciaPublicar = () => {
           <div className="container mx-auto px-6 max-w-xl">
             <div className="w-8 h-0.5 bg-primary mb-5" aria-hidden="true" />
             <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">Publica tu inmueble</h1>
-            <p className="font-body text-sm text-muted-foreground mb-6">Paso {step} de {TOTAL_STEPS}</p>
-            <Progress value={(step / TOTAL_STEPS) * 100} className="mb-8" />
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+                {STEP_LABELS[step - 1]}
+              </p>
+              <p className="font-body text-xs text-muted-foreground tabular-nums">{step}/{TOTAL_STEPS}</p>
+            </div>
+            <div className="flex gap-1 mb-8" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={TOTAL_STEPS}>
+              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+                <div key={i} className={`h-[3px] flex-1 transition-colors duration-300 ${i < step ? "bg-primary" : "bg-foreground/10"}`} />
+              ))}
+            </div>
 
             <form onSubmit={(e) => { e.preventDefault(); if (step === TOTAL_STEPS) handleSubmit(); else next(); }} className="space-y-5">
               {/* honeypot invisible */}

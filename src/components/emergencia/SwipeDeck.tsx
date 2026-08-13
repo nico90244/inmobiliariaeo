@@ -130,24 +130,26 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-6 mt-6">
+      <div className="flex items-stretch gap-3 mt-7 w-full max-w-sm">
         <button
           onClick={() => commit("pass")}
           aria-label="No me interesa"
-          className="w-16 h-16 rounded-full border-2 border-foreground/15 flex items-center justify-center hover:border-foreground/40 hover:bg-foreground/5 transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 py-4 border border-foreground/15 text-foreground/70 hover:border-foreground/30 hover:bg-foreground/5 transition-colors"
         >
-          <X size={26} className="text-foreground/70" />
+          <X size={18} />
+          <span className="font-heading text-xs font-semibold tracking-widest uppercase">No</span>
         </button>
         <button
           onClick={() => commit("like")}
           aria-label="Me interesa"
-          className="w-16 h-16 rounded-full bg-primary flex items-center justify-center hover:bg-primary-hover transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary text-primary-foreground hover:bg-primary-hover transition-colors"
         >
-          <Heart size={26} className="text-primary-foreground" />
+          <Heart size={18} />
+          <span className="font-heading text-xs font-semibold tracking-widest uppercase">Me interesa</span>
         </button>
       </div>
       <p className="font-body text-[11px] text-muted-foreground mt-4 text-center max-w-xs">
-        Desliza la tarjeta o usa los botones. {inmuebles.length - index - 1 > 0 ? `${inmuebles.length - index - 1} propiedades más` : ""}
+        Desliza la tarjeta o usa los botones{inmuebles.length - index - 1 > 0 ? ` — ${inmuebles.length - index - 1} propiedades más` : ""}
       </p>
     </div>
   );

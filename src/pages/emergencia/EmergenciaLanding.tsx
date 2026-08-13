@@ -1,11 +1,32 @@
 import { Link } from "react-router-dom";
-import { Home, Search, ShieldCheck, HeartHandshake, MessageCircle } from "lucide-react";
+import { Home, Search, ShieldCheck, MessageCircle, HeartHandshake, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEO from "@/components/SEO";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+
+const trustPoints = [
+  {
+    icon: ShieldCheck,
+    title: "Publicaciones revisadas",
+    detail: "Cada inmueble pasa por nuestro equipo antes de mostrarse públicamente, para reducir el riesgo de anuncios falsos.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Contacto por WhatsApp",
+    detail: "El primer contacto siempre pasa por nuestro WhatsApp — los datos del oferente no se muestran públicamente.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Gratuito para ambas partes",
+    detail: "Publicar y buscar no tiene costo. La administración con comisión del 10% es opcional, solo si el propietario la solicita.",
+  },
+];
 
 const EmergenciaLanding = () => {
+  useScrollReveal();
+
   return (
     <>
       <SEO
@@ -15,86 +36,76 @@ const EmergenciaLanding = () => {
       />
       <Header />
       <main className="pt-20">
-        <section className="py-14 md:py-20 bg-muted/20 border-b border-foreground/10">
-          <div className="container mx-auto px-6 lg:px-12 text-center max-w-3xl">
-            <span className="inline-block font-heading text-[11px] font-bold tracking-widest uppercase px-3 py-1 bg-primary text-primary-foreground mb-5">
+        <section className="py-16 md:py-24 bg-secondary text-secondary-foreground">
+          <div className="container mx-auto px-6 lg:px-12 text-center max-w-2xl reveal">
+            <span className="inline-flex items-center gap-2 font-heading text-[11px] font-bold tracking-widest uppercase px-3 py-1.5 border border-primary/40 text-primary mb-6">
               Programa de apoyo · Terremoto Colombia
             </span>
-            <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="font-display text-3xl md:text-5xl font-bold mb-5 leading-tight">
               Red de apoyo para arriendo
             </h1>
-            <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed">
-              Ayudamos a conectar a personas afectadas por el terremoto que necesitan un lugar
-              para vivir, con propietarios, agentes e inmobiliarias que tienen inmuebles
-              disponibles para arrendar. Sin costo por publicar ni por buscar.
+            <p className="font-body text-base md:text-lg text-secondary-foreground/70 leading-relaxed">
+              Conectamos a personas afectadas por el terremoto que necesitan un lugar para
+              vivir con propietarios, agentes e inmobiliarias que tienen inmuebles disponibles
+              para arrendar en Cali y el Valle del Cauca.
             </p>
           </div>
         </section>
 
-        <section className="py-14 md:py-20">
+        <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-foreground/10 max-w-4xl mx-auto reveal">
               <Link
                 to="/emergencia-terremoto/publicar"
-                className="group flex flex-col items-start p-8 bg-background border border-foreground/10 hover:border-primary/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all"
+                className="group flex flex-col items-start p-8 md:p-10 bg-background hover:bg-muted/20 transition-colors"
               >
-                <div className="w-12 h-12 flex items-center justify-center bg-primary/10 mb-5 group-hover:bg-primary/20 transition-colors">
-                  <Home size={22} className="text-primary" />
+                <div className="w-11 h-11 flex items-center justify-center border border-foreground/10 group-hover:border-primary/50 mb-6 transition-colors">
+                  <Home size={19} className="text-primary" />
                 </div>
-                <h2 className="font-heading text-xl font-bold text-foreground mb-2">
+                <h2 className="font-heading text-lg font-bold text-foreground mb-2">
                   Tengo un inmueble para arrendar
                 </h2>
-                <p className="font-body text-sm text-muted-foreground mb-5 leading-relaxed">
+                <p className="font-body text-sm text-muted-foreground mb-6 leading-relaxed">
                   Propietarios, agentes e inmobiliarias pueden publicar en minutos. Cada
                   publicación pasa por revisión antes de mostrarse públicamente.
                 </p>
-                <span className="font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:underline">
-                  Publicar inmueble →
+                <span className="mt-auto inline-flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:gap-3 transition-all">
+                  Publicar inmueble <ArrowRight size={14} />
                 </span>
               </Link>
 
               <Link
                 to="/emergencia-terremoto/buscar"
-                className="group flex flex-col items-start p-8 bg-background border border-foreground/10 hover:border-primary/40 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all"
+                className="group flex flex-col items-start p-8 md:p-10 bg-background hover:bg-muted/20 transition-colors"
               >
-                <div className="w-12 h-12 flex items-center justify-center bg-primary/10 mb-5 group-hover:bg-primary/20 transition-colors">
-                  <Search size={22} className="text-primary" />
+                <div className="w-11 h-11 flex items-center justify-center border border-foreground/10 group-hover:border-primary/50 mb-6 transition-colors">
+                  <Search size={19} className="text-primary" />
                 </div>
-                <h2 className="font-heading text-xl font-bold text-foreground mb-2">
+                <h2 className="font-heading text-lg font-bold text-foreground mb-2">
                   Estoy buscando arriendo
                 </h2>
-                <p className="font-body text-sm text-muted-foreground mb-5 leading-relaxed">
-                  Desliza entre las opciones disponibles como en una app de citas: te
-                  interesa o no. Cuando algo te guste, te conectamos por WhatsApp.
+                <p className="font-body text-sm text-muted-foreground mb-6 leading-relaxed">
+                  Desliza entre las opciones disponibles: te interesa o no. Cuando algo te
+                  guste, te conectamos por WhatsApp para el siguiente paso.
                 </p>
-                <span className="font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:underline">
-                  Empezar a buscar →
+                <span className="mt-auto inline-flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:gap-3 transition-all">
+                  Empezar a buscar <ArrowRight size={14} />
                 </span>
               </Link>
             </div>
 
-            <div className="max-w-4xl mx-auto mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="flex items-start gap-3">
-                <ShieldCheck size={20} className="text-primary shrink-0 mt-0.5" />
-                <p className="font-body text-xs text-muted-foreground leading-relaxed">
-                  Cada inmueble es revisado por nuestro equipo antes de publicarse, para
-                  reducir el riesgo de anuncios falsos.
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <MessageCircle size={20} className="text-primary shrink-0 mt-0.5" />
-                <p className="font-body text-xs text-muted-foreground leading-relaxed">
-                  El contacto se hace siempre a través de nuestro WhatsApp — tus datos de
-                  contacto no se muestran públicamente.
-                </p>
-              </div>
-              <div className="flex items-start gap-3">
-                <HeartHandshake size={20} className="text-primary shrink-0 mt-0.5" />
-                <p className="font-body text-xs text-muted-foreground leading-relaxed">
-                  Publicar y buscar es gratuito. Si quieres que administremos tu inmueble,
-                  aplica una comisión del 10%, solo si así lo eliges.
-                </p>
-              </div>
+            <div className="max-w-4xl mx-auto mt-px grid grid-cols-1 sm:grid-cols-3 gap-px bg-foreground/10 reveal reveal-delay-2">
+              {trustPoints.map((t) => (
+                <div key={t.title} className="bg-background p-6">
+                  <t.icon size={18} className="text-primary mb-3" />
+                  <h3 className="font-heading text-xs font-semibold text-foreground uppercase tracking-wide mb-2">
+                    {t.title}
+                  </h3>
+                  <p className="font-body text-xs text-muted-foreground leading-relaxed">
+                    {t.detail}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>

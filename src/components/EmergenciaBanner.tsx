@@ -2,12 +2,14 @@ import { HeartHandshake } from "lucide-react";
 
 const EmergenciaBanner = () => {
   return (
-    <section aria-label="Programa de apoyo terremoto Colombia" className="bg-[#1A1A1A] border-b border-primary/20">
+    <section aria-label="Programa de apoyo terremoto Colombia" className="bg-secondary text-secondary-foreground border-b border-primary/20">
       <div className="container mx-auto px-6 lg:px-12 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3 text-center sm:text-left">
-          <HeartHandshake size={22} className="text-primary shrink-0" aria-hidden="true" />
-          <p className="font-body text-sm text-white/90">
-            <strong className="font-heading font-semibold">Afectados por el terremoto en Colombia:</strong>{" "}
+          <div className="w-9 h-9 shrink-0 flex items-center justify-center border border-primary/30" aria-hidden="true">
+            <HeartHandshake size={17} className="text-primary" />
+          </div>
+          <p className="font-body text-sm text-secondary-foreground/80">
+            <strong className="font-heading font-semibold text-secondary-foreground">Afectados por el terremoto en Colombia:</strong>{" "}
             conectamos personas que buscan arriendo con inmuebles disponibles, gratis.
           </p>
         </div>
