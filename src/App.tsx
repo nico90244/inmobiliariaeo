@@ -17,6 +17,10 @@ import Admin from "./pages/Admin";
 import PropertyFicha from "./pages/PropertyFicha";
 import NotFound from "./pages/NotFound";
 import Sitemap from "./pages/Sitemap";
+import EmergenciaLanding from "./pages/emergencia/EmergenciaLanding";
+import EmergenciaPublicar from "./pages/emergencia/EmergenciaPublicar";
+import EmergenciaBuscar from "./pages/emergencia/EmergenciaBuscar";
+import EmergenciaMiPublicacion from "./pages/emergencia/EmergenciaMiPublicacion";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,6 +52,10 @@ const App = () => (
               <Route path="/contacto" element={<Contacto />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/emergencia-terremoto" element={<EmergenciaLanding />} />
+              <Route path="/emergencia-terremoto/publicar" element={<EmergenciaPublicar />} />
+              <Route path="/emergencia-terremoto/buscar" element={<EmergenciaBuscar />} />
+              <Route path="/emergencia-terremoto/mi-publicacion/:token" element={<EmergenciaMiPublicacion />} />
               <Route path="/mapa-del-sitio" element={<Sitemap />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
