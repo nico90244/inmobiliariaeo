@@ -36,13 +36,14 @@ const EmergenciaLanding = () => {
       />
       <Header />
       <main className="pt-20">
-        <section className="bg-secondary text-secondary-foreground">
-          <div className="flex h-1.5 w-full" aria-hidden="true">
+        <section className="relative overflow-hidden bg-secondary text-secondary-foreground">
+          <div className="relative z-10 flex h-1.5 w-full" aria-hidden="true">
             <div className="flex-[2] bg-[#FCD116]" />
             <div className="flex-1 bg-[#003893]" />
             <div className="flex-1 bg-[#CE1126]" />
           </div>
-          <div className="py-16 md:py-24 container mx-auto px-6 lg:px-12 text-center max-w-2xl reveal">
+          <EmergenciaHeroMedia />
+          <div className="relative z-10 py-16 md:py-24 container mx-auto px-6 lg:px-12 text-center max-w-2xl reveal">
             <span className="inline-flex items-center gap-2 font-heading text-[11px] font-bold tracking-widest uppercase px-4 py-1.5 rounded-full border border-primary/40 text-primary mb-6">
               Iniciativa · Terremoto Colombia
             </span>
@@ -56,6 +57,7 @@ const EmergenciaLanding = () => {
             </p>
           </div>
         </section>
+
 
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
