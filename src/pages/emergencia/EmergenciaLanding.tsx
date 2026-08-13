@@ -4,7 +4,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEO from "@/components/SEO";
+import EmergenciaHeroMedia from "@/components/emergencia/EmergenciaHeroMedia";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+
 
 const trustPoints = [
   {
