@@ -246,6 +246,181 @@ export type Database = {
           },
         ]
       }
+      emergencia_buscadores: {
+        Row: {
+          acepta_politica: boolean
+          celular: string
+          ciudad: string | null
+          fecha_creacion: string
+          id: string
+          nombre: string
+          presupuesto: number | null
+          tipo_inmueble: string | null
+        }
+        Insert: {
+          acepta_politica?: boolean
+          celular: string
+          ciudad?: string | null
+          fecha_creacion?: string
+          id?: string
+          nombre: string
+          presupuesto?: number | null
+          tipo_inmueble?: string | null
+        }
+        Update: {
+          acepta_politica?: boolean
+          celular?: string
+          ciudad?: string | null
+          fecha_creacion?: string
+          id?: string
+          nombre?: string
+          presupuesto?: number | null
+          tipo_inmueble?: string | null
+        }
+        Relationships: []
+      }
+      emergencia_inmuebles: {
+        Row: {
+          acepta_politica: boolean
+          amoblado: boolean
+          area_m2: number | null
+          banos: number
+          barrio: string | null
+          canon: number
+          celular: string
+          ciudad: string
+          correo: string | null
+          descripcion: string | null
+          desea_administracion: boolean
+          direccion: string | null
+          estado: string
+          fecha_creacion: string
+          foto_portada: string | null
+          fotos: string[]
+          habitaciones: number
+          id: string
+          incluye_administracion: boolean
+          motivo_rechazo: string | null
+          nombre: string
+          parqueadero: string | null
+          perfil: string
+          piso: string | null
+          tipo_gestion: string | null
+          tipo_inmueble: string
+          token_gestion: string
+          valor_administracion: number | null
+        }
+        Insert: {
+          acepta_politica?: boolean
+          amoblado?: boolean
+          area_m2?: number | null
+          banos?: number
+          barrio?: string | null
+          canon: number
+          celular: string
+          ciudad: string
+          correo?: string | null
+          descripcion?: string | null
+          desea_administracion?: boolean
+          direccion?: string | null
+          estado?: string
+          fecha_creacion?: string
+          foto_portada?: string | null
+          fotos?: string[]
+          habitaciones?: number
+          id?: string
+          incluye_administracion?: boolean
+          motivo_rechazo?: string | null
+          nombre: string
+          parqueadero?: string | null
+          perfil: string
+          piso?: string | null
+          tipo_gestion?: string | null
+          tipo_inmueble: string
+          token_gestion?: string
+          valor_administracion?: number | null
+        }
+        Update: {
+          acepta_politica?: boolean
+          amoblado?: boolean
+          area_m2?: number | null
+          banos?: number
+          barrio?: string | null
+          canon?: number
+          celular?: string
+          ciudad?: string
+          correo?: string | null
+          descripcion?: string | null
+          desea_administracion?: boolean
+          direccion?: string | null
+          estado?: string
+          fecha_creacion?: string
+          foto_portada?: string | null
+          fotos?: string[]
+          habitaciones?: number
+          id?: string
+          incluye_administracion?: boolean
+          motivo_rechazo?: string | null
+          nombre?: string
+          parqueadero?: string | null
+          perfil?: string
+          piso?: string | null
+          tipo_gestion?: string | null
+          tipo_inmueble?: string
+          token_gestion?: string
+          valor_administracion?: number | null
+        }
+        Relationships: []
+      }
+      emergencia_swipes: {
+        Row: {
+          accion: string
+          buscador_id: string | null
+          fecha_creacion: string
+          id: string
+          inmueble_id: string
+          session_id: string
+        }
+        Insert: {
+          accion: string
+          buscador_id?: string | null
+          fecha_creacion?: string
+          id?: string
+          inmueble_id: string
+          session_id: string
+        }
+        Update: {
+          accion?: string
+          buscador_id?: string | null
+          fecha_creacion?: string
+          id?: string
+          inmueble_id?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emergencia_swipes_buscador_id_fkey"
+            columns: ["buscador_id"]
+            isOneToOne: false
+            referencedRelation: "emergencia_buscadores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emergencia_swipes_inmueble_id_fkey"
+            columns: ["inmueble_id"]
+            isOneToOne: false
+            referencedRelation: "emergencia_inmuebles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emergencia_swipes_inmueble_id_fkey"
+            columns: ["inmueble_id"]
+            isOneToOne: false
+            referencedRelation: "emergencia_inmuebles_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pagos_alquiler: {
         Row: {
           anio: number
@@ -451,180 +626,6 @@ export type Database = {
         }
         Relationships: []
       }
-      emergencia_inmuebles: {
-        Row: {
-          acepta_politica: boolean
-          amoblado: boolean
-          area_m2: number | null
-          banos: number
-          barrio: string | null
-          canon: number
-          celular: string
-          ciudad: string
-          comision_administracion: number
-          correo: string | null
-          desea_administracion: boolean
-          descripcion: string | null
-          direccion: string | null
-          estado: string
-          fecha_actualizacion: string
-          fecha_creacion: string
-          foto_portada: string | null
-          fotos: string[] | null
-          habitaciones: number
-          id: string
-          incluye_administracion: boolean
-          motivo_rechazo: string | null
-          nombre: string
-          perfil: string
-          piso: string | null
-          parqueadero: string
-          tipo_gestion: string | null
-          tipo_inmueble: string
-          token_gestion: string
-          valor_administracion: number | null
-        }
-        Insert: {
-          acepta_politica?: boolean
-          amoblado?: boolean
-          area_m2?: number | null
-          banos?: number
-          barrio?: string | null
-          canon: number
-          celular: string
-          ciudad?: string
-          comision_administracion?: number
-          correo?: string | null
-          desea_administracion?: boolean
-          descripcion?: string | null
-          direccion?: string | null
-          estado?: string
-          fecha_actualizacion?: string
-          fecha_creacion?: string
-          foto_portada?: string | null
-          fotos?: string[] | null
-          habitaciones?: number
-          id?: string
-          incluye_administracion?: boolean
-          motivo_rechazo?: string | null
-          nombre: string
-          perfil: string
-          piso?: string | null
-          parqueadero?: string
-          tipo_gestion?: string | null
-          tipo_inmueble: string
-          token_gestion?: string
-          valor_administracion?: number | null
-        }
-        Update: {
-          acepta_politica?: boolean
-          amoblado?: boolean
-          area_m2?: number | null
-          banos?: number
-          barrio?: string | null
-          canon?: number
-          celular?: string
-          ciudad?: string
-          comision_administracion?: number
-          correo?: string | null
-          desea_administracion?: boolean
-          descripcion?: string | null
-          direccion?: string | null
-          estado?: string
-          fecha_actualizacion?: string
-          fecha_creacion?: string
-          foto_portada?: string | null
-          fotos?: string[] | null
-          habitaciones?: number
-          id?: string
-          incluye_administracion?: boolean
-          motivo_rechazo?: string | null
-          nombre?: string
-          perfil?: string
-          piso?: string | null
-          parqueadero?: string
-          tipo_gestion?: string | null
-          tipo_inmueble?: string
-          token_gestion?: string
-          valor_administracion?: number | null
-        }
-        Relationships: []
-      }
-      emergencia_buscadores: {
-        Row: {
-          acepta_politica: boolean
-          celular: string
-          ciudad: string
-          fecha_creacion: string
-          id: string
-          nombre: string
-          presupuesto: number | null
-          tipo_inmueble: string | null
-        }
-        Insert: {
-          acepta_politica?: boolean
-          celular: string
-          ciudad?: string
-          fecha_creacion?: string
-          id?: string
-          nombre: string
-          presupuesto?: number | null
-          tipo_inmueble?: string | null
-        }
-        Update: {
-          acepta_politica?: boolean
-          celular?: string
-          ciudad?: string
-          fecha_creacion?: string
-          id?: string
-          nombre?: string
-          presupuesto?: number | null
-          tipo_inmueble?: string | null
-        }
-        Relationships: []
-      }
-      emergencia_swipes: {
-        Row: {
-          accion: string
-          buscador_id: string | null
-          fecha_creacion: string
-          id: string
-          inmueble_id: string
-          session_id: string
-        }
-        Insert: {
-          accion: string
-          buscador_id?: string | null
-          fecha_creacion?: string
-          id?: string
-          inmueble_id: string
-          session_id: string
-        }
-        Update: {
-          accion?: string
-          buscador_id?: string | null
-          fecha_creacion?: string
-          id?: string
-          inmueble_id?: string
-          session_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "emergencia_swipes_buscador_id_fkey"
-            columns: ["buscador_id"]
-            isOneToOne: false
-            referencedRelation: "emergencia_buscadores"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "emergencia_swipes_inmueble_id_fkey"
-            columns: ["inmueble_id"]
-            isOneToOne: false
-            referencedRelation: "emergencia_inmuebles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
     }
     Views: {
       emergencia_inmuebles_publicas: {
@@ -642,15 +643,57 @@ export type Database = {
           habitaciones: number | null
           id: string | null
           incluye_administracion: boolean | null
-          piso: string | null
           parqueadero: string | null
+          piso: string | null
           tipo_inmueble: string | null
           valor_administracion: number | null
+        }
+        Insert: {
+          amoblado?: boolean | null
+          area_m2?: number | null
+          banos?: number | null
+          barrio?: string | null
+          canon?: number | null
+          ciudad?: string | null
+          descripcion?: string | null
+          fecha_creacion?: string | null
+          foto_portada?: string | null
+          fotos?: string[] | null
+          habitaciones?: number | null
+          id?: string | null
+          incluye_administracion?: boolean | null
+          parqueadero?: string | null
+          piso?: string | null
+          tipo_inmueble?: string | null
+          valor_administracion?: number | null
+        }
+        Update: {
+          amoblado?: boolean | null
+          area_m2?: number | null
+          banos?: number | null
+          barrio?: string | null
+          canon?: number | null
+          ciudad?: string | null
+          descripcion?: string | null
+          fecha_creacion?: string | null
+          foto_portada?: string | null
+          fotos?: string[] | null
+          habitaciones?: number | null
+          id?: string | null
+          incluye_administracion?: boolean | null
+          parqueadero?: string | null
+          piso?: string | null
+          tipo_inmueble?: string | null
+          valor_administracion?: number | null
         }
         Relationships: []
       }
     }
     Functions: {
+      emergencia_actualizar_estado: {
+        Args: { p_nuevo_estado: string; p_token: string }
+        Returns: undefined
+      }
       emergencia_obtener_por_token: {
         Args: { p_token: string }
         Returns: {
@@ -663,13 +706,6 @@ export type Database = {
           id: string
           motivo_rechazo: string
           tipo_inmueble: string
-        }[]
-      }
-      emergencia_actualizar_estado: {
-        Args: { p_nuevo_estado: string; p_token: string }
-        Returns: {
-          estado: string
-          id: string
         }[]
       }
     }
