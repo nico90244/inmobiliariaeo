@@ -39,8 +39,8 @@ const EmergenciaHeroMedia = () => {
               src={s.url}
               alt=""
               loading="lazy"
-              className={`w-full h-full object-cover opacity-[0.18] transition-transform duration-[6000ms] ease-out ${
-                i === active ? "scale-110" : "scale-100"
+              className={`w-full h-full object-cover opacity-[0.22] transition-transform duration-[9000ms] ease-linear ${
+                i === active ? "scale-125" : "scale-100"
               }`}
             />
           ) : (
@@ -50,9 +50,12 @@ const EmergenciaHeroMedia = () => {
               loop
               playsInline
               autoPlay
-              className="w-full h-full object-cover opacity-[0.18]"
+              className={`w-full h-full object-cover opacity-[0.22] transition-transform duration-[9000ms] ease-linear ${
+                i === active ? "scale-125" : "scale-100"
+              }`}
             />
           )}
+
         </div>
       ))}
       {/* Velo para mantener legible el texto */}
