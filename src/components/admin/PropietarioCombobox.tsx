@@ -74,10 +74,10 @@ const PropietarioCombobox = ({ value, onSelect, onCreateNuevo, onUsarBanco }: Pr
 
       if (items.length > 0) {
         const ids = items.map((i) => i.id);
-        const { data: propsData } = await supabase
+        const { data: propsData } = await (supabase as any)
           .from("propiedades")
-          .select("propietario_id" as any)
-          .in("propietario_id" as any, ids);
+          .select("propietario_id")
+          .in("propietario_id", ids);
         const counts: Record<string, number> = {};
         (propsData || []).forEach((p: any) => {
           counts[p.propietario_id] = (counts[p.propietario_id] || 0) + 1;
