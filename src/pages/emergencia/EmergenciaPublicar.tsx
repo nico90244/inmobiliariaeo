@@ -104,8 +104,14 @@ const EmergenciaPublicar = () => {
     const path = `${folder}/foto-${i}-${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("emergencia-fotos").upload(path, file);
     if (error) throw error;
-    return supabase.storage.from("emergencia-fotos").getPublicUrl(path).data.publicUrl;
+    // El bucket es privado: firmamos una URL de larga duración (10 años)
+    const { data, error: signError } = await supabase.storage
+      .from("emergencia-fotos")
+      .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+    if (signError || !data) throw signError ?? new Error("No se pudo firmar la URL");
+    return data.signedUrl;
   };
+
 
   const handleSubmit = async () => {
     if (form.sitio_web) return; // honeypot: bot detectado, no hacemos nada
