@@ -445,11 +445,14 @@ const EmergenciaPublicar = () => {
               </div>
 
               <div className="flex items-center gap-3 pt-2">
-                {step > 1 && (
-                  <button type="button" onClick={back} className="flex items-center gap-1 py-3 px-4 rounded-full border border-foreground/10 font-heading text-xs font-semibold tracking-widest uppercase transition-all duration-200 hover:bg-foreground/5 hover:-translate-y-0.5 active:scale-95 active:translate-y-0">
-                    <ChevronLeft size={14} /> Atrás
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={back}
+                  disabled={step === 1}
+                  className="flex items-center gap-1 py-3 px-4 rounded-full border border-foreground/10 font-heading text-xs font-semibold tracking-widest uppercase transition-all duration-200 hover:bg-foreground/5 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  <ChevronLeft size={14} /> Atrás
+                </button>
                 <button
                   type="submit"
                   disabled={!stepValid() || saving}
@@ -459,6 +462,14 @@ const EmergenciaPublicar = () => {
                   {step === TOTAL_STEPS ? (saving ? "Publicando..." : "Publicar inmueble") : (<>Siguiente <ChevronRight size={14} /></>)}
                 </button>
               </div>
+
+              <Link
+                to="/emergencia-terremoto"
+                className="block text-center font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground hover:text-destructive transition-colors pt-1"
+              >
+                Cancelar
+              </Link>
+
             </form>
           </div>
         </section>
