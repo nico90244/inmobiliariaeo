@@ -8,7 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
   TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList, Wallet, ShieldCheck,
-  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu, User, ChevronDown,
+  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu, User, ChevronDown, HeartHandshake,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
@@ -17,6 +17,7 @@ import AdminReportes from "@/components/admin/AdminReportes";
 import AdminAlquileres from "@/components/admin/AdminAlquileres";
 import AdminPolizas from "@/components/admin/AdminPolizas";
 import AdminPropietarios from "@/components/admin/AdminPropietarios";
+import AdminEmergencia from "@/components/admin/AdminEmergencia";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -42,7 +43,7 @@ const Admin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas" | "alquileres" | "propietarios" | "polizas" | "reportes">("propiedades");
+  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas" | "alquileres" | "propietarios" | "polizas" | "reportes" | "emergencia">("propiedades");
   const [alquileresExpanded, setAlquileresExpanded] = useState(false);
   const [pendingReservas, setPendingReservas] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -490,6 +491,9 @@ const Admin = () => {
           <button onClick={() => { setSection("captaciones"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "captaciones" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <FileText size={18} /> Captaciones
           </button>
+          <button onClick={() => { setSection("emergencia"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "emergencia" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <HeartHandshake size={18} /> Emergencia Terremoto
+          </button>
           <div className="pt-2 pb-1 px-4">
             <span className="font-heading text-[10px] font-semibold tracking-widest text-secondary-foreground/40 uppercase">Citas</span>
           </div>
@@ -898,6 +902,7 @@ const Admin = () => {
           </>
         )}
 
+        {section === "emergencia" && <AdminEmergencia />}
         {section === "citas-disponibilidad" && <AdminCitasDisponibilidad />}
         {section === "citas-reservas" && <AdminCitasReservas />}
         {section === "alquileres" && <AdminAlquileres />}
