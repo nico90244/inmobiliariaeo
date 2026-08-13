@@ -101,6 +101,7 @@ const AdminCitasReservas = () => {
       nombre: r.nombre_cliente,
       celular: r.celular_cliente,
       correo: r.correo_cliente || "",
+      propiedadId: (r as any).propiedad_id || "",
     });
   };
 

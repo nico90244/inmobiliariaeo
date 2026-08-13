@@ -46,11 +46,11 @@ const PropietarioCombobox = ({ value, onSelect, onCreateNuevo, onUsarBanco }: Pr
         .eq("id", value)
         .single();
       if (!data) return;
-      const { count } = await supabase
+      const { count } = await (supabase as any)
         .from("propiedades")
         .select("*", { count: "exact", head: true })
-        .eq("propietario_id" as any, value);
-      setSelected({ ...data, inmuebles_count: count ?? 0 });
+        .eq("propietario_id", value);
+      setSelected({ ...(data as any), inmuebles_count: count ?? 0 });
     })();
   }, [value]);
 
@@ -70,14 +70,14 @@ const PropietarioCombobox = ({ value, onSelect, onCreateNuevo, onUsarBanco }: Pr
         .or(`nombre.ilike.%${q}%,apellido.ilike.%${q}%,numero_documento.ilike.%${q}%`)
         .limit(6);
 
-      const items: PropietarioSeleccionado[] = data || [];
+      const items: PropietarioSeleccionado[] = (data as any) || [];
 
       if (items.length > 0) {
         const ids = items.map((i) => i.id);
-        const { data: propsData } = await supabase
+        const { data: propsData } = await (supabase as any)
           .from("propiedades")
           .select("propietario_id")
-          .in("propietario_id" as any, ids);
+          .in("propietario_id", ids);
         const counts: Record<string, number> = {};
         (propsData || []).forEach((p: any) => {
           counts[p.propietario_id] = (counts[p.propietario_id] || 0) + 1;

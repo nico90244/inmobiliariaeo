@@ -107,10 +107,14 @@ const AdminCitasDisponibilidad = () => {
     return map;
   }, [slots]);
 
-  const reservedSlotIds = useMemo(
-    () => new Set(reservas.map((r) => r.slot_id)),
-    [reservas]
-  );
+  const reservasPorSlot = useMemo(() => {
+    const map: Record<string, number> = {};
+    reservas.forEach((r: any) => {
+      if (!r.slot_id || r.estado === "Cancelada") return;
+      map[r.slot_id] = (map[r.slot_id] || 0) + 1;
+    });
+    return map;
+  }, [reservas]);
 
   const daySlots = selectedDay ? (slotsByDay[selectedDay] || []) : [];
 
@@ -144,8 +148,8 @@ const AdminCitasDisponibilidad = () => {
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Visita ${name}`)}&dates=${startTime}/${endTime}&details=${encodeURIComponent("Cita agendada Inmobiliaria EO")}&location=${encodeURIComponent(location)}`;
   };
 
-  const isReserved = (slot: Slot) =>
-    slot.estado === "Reservado" || reservedSlotIds.has(slot.id);
+  const countReservas = (slot: Slot) => reservasPorSlot[slot.id] || 0;
+  const isReserved = (slot: Slot) => countReservas(slot) > 0;
 
   /* ─── Open forms ─── */
   const handleCloseForm = () => {
@@ -436,7 +440,7 @@ const AdminCitasDisponibilidad = () => {
                                 </span>
                                 {reserved && (
                                   <span className="font-heading text-[10px] tracking-widest text-[hsl(142,70%,45%)] uppercase">
-                                    · Con cliente
+                                    · {countReservas(slot)} cita{countReservas(slot) > 1 ? "s" : ""}
                                   </span>
                                 )}
                               </div>
@@ -469,7 +473,7 @@ const AdminCitasDisponibilidad = () => {
                               )}
 
                               {/* Edit — only if not reserved */}
-                              {!reserved && slot.estado !== "Cancelado" && (
+                              {slot.estado !== "Cancelado" && (
                                 <button
                                   onClick={() => openEdit(slot)}
                                   className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"

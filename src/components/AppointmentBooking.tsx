@@ -98,8 +98,8 @@ const AppointmentBooking = ({ property }: { property: Propiedad }) => {
       });
       if (insertErr) throw insertErr;
 
-      // Update slot status
-      await supabase.from("citas_disponibles").update({ estado: "Reservado" }).eq("id", selectedSlot.id);
+      // El horario permanece disponible: se admiten varias citas en el mismo slot
+
 
       // Build WhatsApp message
       const fechaFormatted = selectedSlot.fecha.split("-").reverse().join("/");

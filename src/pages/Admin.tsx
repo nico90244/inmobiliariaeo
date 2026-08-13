@@ -97,7 +97,7 @@ const Admin = () => {
       barrio: c.barrio || "",
       precio: precioNum,
       captacion_id: c.id,
-    });
+    } as any);
     setEditingId(null);
     setCoverPreview(null);
     setCoverFile(null);
