@@ -70,13 +70,13 @@ const PropietarioCombobox = ({ value, onSelect, onCreateNuevo, onUsarBanco }: Pr
         .or(`nombre.ilike.%${q}%,apellido.ilike.%${q}%,numero_documento.ilike.%${q}%`)
         .limit(6);
 
-      const items: PropietarioSeleccionado[] = data || [];
+      const items: PropietarioSeleccionado[] = (data as any) || [];
 
       if (items.length > 0) {
         const ids = items.map((i) => i.id);
         const { data: propsData } = await supabase
           .from("propiedades")
-          .select("propietario_id")
+          .select("propietario_id" as any)
           .in("propietario_id" as any, ids);
         const counts: Record<string, number> = {};
         (propsData || []).forEach((p: any) => {
