@@ -46,11 +46,11 @@ const PropietarioCombobox = ({ value, onSelect, onCreateNuevo, onUsarBanco }: Pr
         .eq("id", value)
         .single();
       if (!data) return;
-      const { count } = await supabase
+      const { count } = await (supabase as any)
         .from("propiedades")
         .select("*", { count: "exact", head: true })
-        .eq("propietario_id" as any, value);
-      setSelected({ ...data, inmuebles_count: count ?? 0 });
+        .eq("propietario_id", value);
+      setSelected({ ...(data as any), inmuebles_count: count ?? 0 });
     })();
   }, [value]);
 
