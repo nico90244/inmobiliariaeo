@@ -93,14 +93,13 @@ const EmergenciaLanding = () => {
               {/* Buscador — tarjeta clara */}
               <Link
                 to="/emergencia-terremoto/buscar"
-                className="reveal reveal-delay-2 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-background border-2 border-primary/25 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary hover:shadow-2xl hover:shadow-primary/15"
+                className="reveal reveal-delay-2 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-muted/30 border border-foreground/10 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary/60 hover:bg-muted/50 hover:shadow-xl hover:shadow-primary/10"
               >
-                <div className="pointer-events-none absolute -bottom-24 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-[80px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
-                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-primary/10 to-transparent transition-transform duration-[1200ms] ease-out group-hover:translate-x-full" aria-hidden="true" />
+                <div className="pointer-events-none absolute -bottom-24 -left-16 w-64 h-64 rounded-full bg-primary/10 blur-[90px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
                 <span className="relative font-heading text-[10px] font-bold tracking-[0.2em] uppercase text-primary mb-6">
                   Busco
                 </span>
-                <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center bg-primary/10 border border-primary/25 mb-6 transition-all duration-500 group-hover:bg-primary group-hover:scale-110 group-hover:rotate-6">
+                <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center bg-primary/12 border border-primary/30 mb-6 transition-all duration-500 group-hover:bg-primary group-hover:border-primary group-hover:scale-110 group-hover:rotate-6">
                   <Search size={22} className="text-primary transition-colors duration-500 group-hover:text-primary-foreground" />
                 </div>
                 <h2 className="relative font-display text-xl md:text-2xl font-bold text-foreground mb-3 leading-snug">
@@ -110,11 +109,12 @@ const EmergenciaLanding = () => {
                   Desliza entre las opciones disponibles: te interesa o no. Cuando algo te
                   guste, te conectamos por WhatsApp para el siguiente paso.
                 </p>
-                <span className="relative mt-auto inline-flex items-center gap-2 py-3 px-6 rounded-full border border-primary/40 text-primary font-heading text-xs font-semibold tracking-widest uppercase transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:gap-3">
+                <span className="relative mt-auto inline-flex items-center gap-2 py-3 px-6 rounded-full bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase shadow-sm transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:gap-3">
                   Empezar a buscar
                   <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
               </Link>
+
             </div>
 
 
