@@ -43,7 +43,7 @@ const EmergenciaLanding = () => {
             <div className="flex-1 bg-[#CE1126]" />
           </div>
           <div className="py-16 md:py-24 container mx-auto px-6 lg:px-12 text-center max-w-2xl reveal">
-            <span className="inline-flex items-center gap-2 font-heading text-[11px] font-bold tracking-widest uppercase px-3 py-1.5 border border-primary/40 text-primary mb-6">
+            <span className="inline-flex items-center gap-2 font-heading text-[11px] font-bold tracking-widest uppercase px-4 py-1.5 rounded-full border border-primary/40 text-primary mb-6">
               Iniciativa · Terremoto Colombia
             </span>
             <h1 className="font-display text-3xl md:text-5xl font-bold mb-5 leading-tight">
@@ -59,13 +59,13 @@ const EmergenciaLanding = () => {
 
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-6 lg:px-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-foreground/10 max-w-4xl mx-auto reveal">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl mx-auto">
               <Link
                 to="/emergencia-terremoto/publicar"
-                className="group flex flex-col items-start p-8 md:p-10 bg-background hover:bg-muted/20 transition-colors"
+                className="reveal reveal-delay-1 group flex flex-col items-start p-8 md:p-10 rounded-2xl bg-background border border-foreground/10 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-primary/30"
               >
-                <div className="w-11 h-11 flex items-center justify-center border border-foreground/10 group-hover:border-primary/50 mb-6 transition-colors">
-                  <Home size={19} className="text-primary" />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 mb-6 transition-all duration-300 group-hover:bg-primary group-hover:scale-110">
+                  <Home size={20} className="text-primary transition-colors duration-300 group-hover:text-primary-foreground" />
                 </div>
                 <h2 className="font-heading text-lg font-bold text-foreground mb-2">
                   Tengo un inmueble para arrendar
@@ -74,17 +74,17 @@ const EmergenciaLanding = () => {
                   Propietarios, agentes e inmobiliarias pueden publicar en minutos. Cada
                   publicación pasa por revisión antes de mostrarse públicamente.
                 </p>
-                <span className="mt-auto inline-flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:gap-3 transition-all">
+                <span className="mt-auto inline-flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:gap-3 transition-all duration-300">
                   Publicar inmueble <ArrowRight size={14} />
                 </span>
               </Link>
 
               <Link
                 to="/emergencia-terremoto/buscar"
-                className="group flex flex-col items-start p-8 md:p-10 bg-background hover:bg-muted/20 transition-colors"
+                className="reveal reveal-delay-2 group flex flex-col items-start p-8 md:p-10 rounded-2xl bg-background border border-foreground/10 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-primary/30"
               >
-                <div className="w-11 h-11 flex items-center justify-center border border-foreground/10 group-hover:border-primary/50 mb-6 transition-colors">
-                  <Search size={19} className="text-primary" />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 mb-6 transition-all duration-300 group-hover:bg-primary group-hover:scale-110">
+                  <Search size={20} className="text-primary transition-colors duration-300 group-hover:text-primary-foreground" />
                 </div>
                 <h2 className="font-heading text-lg font-bold text-foreground mb-2">
                   Estoy buscando arriendo
@@ -93,16 +93,21 @@ const EmergenciaLanding = () => {
                   Desliza entre las opciones disponibles: te interesa o no. Cuando algo te
                   guste, te conectamos por WhatsApp para el siguiente paso.
                 </p>
-                <span className="mt-auto inline-flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:gap-3 transition-all">
+                <span className="mt-auto inline-flex items-center gap-2 font-heading text-xs font-semibold tracking-widest uppercase text-primary group-hover:gap-3 transition-all duration-300">
                   Empezar a buscar <ArrowRight size={14} />
                 </span>
               </Link>
             </div>
 
-            <div className="max-w-4xl mx-auto mt-px grid grid-cols-1 sm:grid-cols-3 gap-px bg-foreground/10 reveal reveal-delay-2">
-              {trustPoints.map((t) => (
-                <div key={t.title} className="bg-background p-6">
-                  <t.icon size={18} className="text-primary mb-3" />
+            <div className="max-w-4xl mx-auto mt-6 grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {trustPoints.map((t, i) => (
+                <div
+                  key={t.title}
+                  className={`reveal reveal-delay-${i + 3} rounded-2xl bg-muted/20 border border-foreground/5 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted/30`}
+                >
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-primary/10 mb-3">
+                    <t.icon size={16} className="text-primary" />
+                  </div>
                   <h3 className="font-heading text-xs font-semibold text-foreground uppercase tracking-wide mb-2">
                     {t.title}
                   </h3>

@@ -132,8 +132,8 @@ const Index = () => {
       />
       <Header />
       <main>
-        <HeroSection />
         <EmergenciaBanner />
+        <HeroSection />
         <PropertiesSection />
         <ServicesSection />
         <WhyUsSection />

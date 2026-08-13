@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { trackSubmitForm, trackContact } from "@/lib/pixelEvents";
 
 const propertyTypes = ["Apartamento", "Casa", "Apartaestudio", "Local", "Habitación", "Oficina", "Bodega"];
-const inputClass = "w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none";
+const inputClass = "w-full bg-background border border-foreground/10 rounded-lg py-2.5 px-3 font-body text-sm text-foreground transition-all duration-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15";
 const labelClass = "font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1";
 
 const EmergenciaBuscar = () => {
@@ -134,8 +134,8 @@ const EmergenciaBuscar = () => {
             )}
 
             {!leadSent && !leadDismissed && (
-              <div className="relative max-w-md mx-auto mt-14 bg-muted/20 border border-foreground/10 p-6">
-                <button onClick={() => setLeadDismissed(true)} className="absolute top-3 right-3 text-muted-foreground hover:text-foreground" aria-label="Cerrar">
+              <div className="reveal relative max-w-md mx-auto mt-14 rounded-2xl bg-muted/20 border border-foreground/10 p-6 shadow-sm">
+                <button onClick={() => setLeadDismissed(true)} className="absolute top-3 right-3 rounded-full p-1 text-muted-foreground transition-all duration-200 hover:text-foreground hover:bg-foreground/5 hover:rotate-90" aria-label="Cerrar">
                   <X size={16} />
                 </button>
                 <h2 className="font-heading text-base font-semibold text-foreground mb-1">¿Quieres que te avisemos?</h2>
@@ -166,7 +166,7 @@ const EmergenciaBuscar = () => {
                       </select>
                     </div>
                   </div>
-                  <button type="submit" disabled={leadSaving} className="w-full py-2.5 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50">
+                  <button type="submit" disabled={leadSaving} className="w-full py-2.5 rounded-full bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase shadow-sm transition-all duration-200 hover:bg-primary-hover hover:shadow-md hover:-translate-y-0.5 active:scale-95 active:translate-y-0 disabled:opacity-50">
                     {leadSaving ? "Enviando..." : "Guardar mis datos"}
                   </button>
                 </form>
@@ -179,10 +179,10 @@ const EmergenciaBuscar = () => {
       <WhatsAppButton />
 
       {match && (
-        <div className="fixed inset-0 z-[100] bg-foreground/50 flex items-center justify-center p-6 animate-fade-in" role="dialog" aria-modal="true">
-          <div className="bg-background max-w-sm w-full p-7 text-center border-t-2 border-primary animate-scale-in">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <Heart size={20} className="text-primary" fill="currentColor" />
+        <div className="fixed inset-0 z-[100] bg-foreground/50 backdrop-blur-sm flex items-center justify-center p-6 animate-fade-in" role="dialog" aria-modal="true">
+          <div className="rounded-3xl bg-background max-w-sm w-full p-7 text-center border-t-4 border-primary shadow-2xl animate-scale-in">
+            <div className="animate-scale-in w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Heart size={22} className="text-primary" fill="currentColor" />
             </div>
             <h2 className="font-heading text-lg font-bold text-foreground mb-2">¡Te interesó esta propiedad!</h2>
             <p className="font-body text-sm text-muted-foreground mb-6">
@@ -193,7 +193,7 @@ const EmergenciaBuscar = () => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMatch(null)}
-              className="block w-full py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors mb-2"
+              className="block w-full py-3 rounded-full bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase shadow-md shadow-primary/20 transition-all duration-200 hover:bg-primary-hover hover:shadow-lg hover:-translate-y-0.5 active:scale-95 active:translate-y-0 mb-2"
             >
               Escribir por WhatsApp
             </a>

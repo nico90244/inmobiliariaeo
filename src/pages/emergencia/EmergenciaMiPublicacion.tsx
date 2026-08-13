@@ -85,15 +85,15 @@ const EmergenciaMiPublicacion = () => {
             )}
 
             {!loading && publicacion && (
-              <div>
+              <div className="animate-fade-in-up">
                 <div className="w-8 h-0.5 bg-primary mb-5" aria-hidden="true" />
                 <h1 className="font-display text-2xl font-bold text-foreground mb-1">Tu publicación</h1>
                 <p className="font-body text-sm text-muted-foreground mb-6">
                   {publicacion.tipo_inmueble} en {publicacion.barrio ? `${publicacion.barrio}, ` : ""}{publicacion.ciudad}
                 </p>
 
-                <div className="bg-muted/20 border border-foreground/10 p-5 mb-6 flex items-center gap-4">
-                  <div className="w-16 h-16 shrink-0 bg-background overflow-hidden">
+                <div className="rounded-2xl bg-muted/20 border border-foreground/10 p-5 mb-6 flex items-center gap-4 shadow-sm">
+                  <div className="w-16 h-16 shrink-0 rounded-xl bg-background overflow-hidden">
                     <img src={publicacion.foto_portada || "/placeholder.svg"} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div>
@@ -115,21 +115,21 @@ const EmergenciaMiPublicacion = () => {
                       <button
                         disabled={saving || publicacion.estado === "Disponible"}
                         onClick={() => cambiarEstado("Disponible")}
-                        className="flex items-center gap-3 py-3 px-4 border border-foreground/10 font-body text-sm text-left hover:border-primary/40 disabled:opacity-40 transition-colors"
+                        className="flex items-center gap-3 py-3 px-4 rounded-xl border border-foreground/10 font-body text-sm text-left transition-all duration-200 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none"
                       >
                         <Home size={18} className="text-primary" /> Sigue disponible
                       </button>
                       <button
                         disabled={saving || publicacion.estado === "Alquilada"}
                         onClick={() => cambiarEstado("Alquilada")}
-                        className="flex items-center gap-3 py-3 px-4 border border-foreground/10 font-body text-sm text-left hover:border-primary/40 disabled:opacity-40 transition-colors"
+                        className="flex items-center gap-3 py-3 px-4 rounded-xl border border-foreground/10 font-body text-sm text-left transition-all duration-200 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none"
                       >
                         <CheckCircle2 size={18} className="text-primary" /> Ya se alquiló — quitar de la lista
                       </button>
                       <button
                         disabled={saving || publicacion.estado === "Pausada"}
                         onClick={() => cambiarEstado("Pausada")}
-                        className="flex items-center gap-3 py-3 px-4 border border-foreground/10 font-body text-sm text-left hover:border-primary/40 disabled:opacity-40 transition-colors"
+                        className="flex items-center gap-3 py-3 px-4 rounded-xl border border-foreground/10 font-body text-sm text-left transition-all duration-200 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none"
                       >
                         <PauseCircle size={18} className="text-primary" /> Pausar temporalmente
                       </button>

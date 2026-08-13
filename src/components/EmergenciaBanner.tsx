@@ -4,7 +4,7 @@ const EmergenciaBanner = () => {
   return (
     <section
       aria-label="Iniciativa terremoto Colombia"
-      className="relative overflow-hidden bg-background border-y border-foreground/10"
+      className="relative overflow-hidden bg-background border-y border-foreground/10 pt-24"
     >
       {/* Franja nítida con los colores de la bandera de Colombia */}
       <div className="flex h-1.5 w-full" aria-hidden="true">
@@ -20,10 +20,16 @@ const EmergenciaBanner = () => {
         <div className="absolute -bottom-28 right-0 w-96 h-96 rounded-full bg-[#CE1126] opacity-[0.12] blur-[100px]" />
       </div>
 
-      <div className="relative container mx-auto px-6 lg:px-12 py-7 md:py-8 flex flex-col sm:flex-row items-center justify-between gap-5">
+      <div className="reveal relative container mx-auto px-6 lg:px-12 py-7 md:py-8 flex flex-col sm:flex-row items-center justify-between gap-5">
         <div className="flex items-center gap-4 text-center sm:text-left">
-          <div className="w-11 h-11 shrink-0 flex items-center justify-center border border-foreground/10 bg-background" aria-hidden="true">
-            <HeartHandshake size={19} className="text-primary" />
+          <div className="relative shrink-0">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center border border-foreground/10 bg-background">
+              <HeartHandshake size={19} className="text-primary" />
+            </div>
+            <span className="absolute -top-1 -right-1 flex h-3 w-3" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-primary" />
+            </span>
           </div>
           <div>
             <p className="font-heading text-[11px] font-bold tracking-widest uppercase text-primary mb-1">
@@ -38,10 +44,10 @@ const EmergenciaBanner = () => {
           href="/emergencia-terremoto"
           target="_blank"
           rel="noopener noreferrer"
-          className="group shrink-0 inline-flex items-center gap-2 py-3 px-6 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors whitespace-nowrap"
+          className="group shrink-0 inline-flex items-center gap-2 py-3 px-6 rounded-full bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase shadow-md shadow-primary/20 transition-all duration-300 ease-out hover:bg-primary-hover hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 hover:scale-[1.03] active:scale-95 active:translate-y-0 whitespace-nowrap"
         >
           Ver iniciativa
-          <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
         </a>
       </div>
     </section>

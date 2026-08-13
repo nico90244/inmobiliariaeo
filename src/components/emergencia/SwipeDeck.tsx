@@ -9,10 +9,12 @@ type Props = {
 };
 
 const SWIPE_THRESHOLD = 100;
+const EXIT_DURATION = 260;
 
 const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
   const [index, setIndex] = useState(0);
   const [drag, setDrag] = useState({ x: 0, active: false });
+  const [exiting, setExiting] = useState<"like" | "pass" | null>(null);
   const startX = useRef(0);
   const pointerId = useRef<number | null>(null);
 
@@ -20,13 +22,18 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
   const next = inmuebles[index + 1];
 
   const commit = (accion: "like" | "pass") => {
-    if (!current) return;
-    onSwipe(current, accion);
+    if (!current || exiting) return;
     setDrag({ x: 0, active: false });
-    setIndex((i) => i + 1);
+    setExiting(accion);
+    onSwipe(current, accion);
+    window.setTimeout(() => {
+      setIndex((i) => i + 1);
+      setExiting(null);
+    }, EXIT_DURATION);
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
+    if (exiting) return;
     pointerId.current = e.pointerId;
     startX.current = e.clientX;
     setDrag({ x: 0, active: true });
@@ -47,7 +54,7 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
 
   if (!current) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="animate-fade-in-up flex flex-col items-center justify-center py-20 text-center">
         <p className="font-heading text-lg font-semibold text-foreground mb-2">Eso es todo por ahora</p>
         <p className="font-body text-sm text-muted-foreground max-w-xs">
           Ya viste todas las propiedades disponibles con estos filtros. Vuelve pronto, publicamos
@@ -57,21 +64,40 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
     );
   }
 
+  const exitTransform =
+    exiting === "like"
+      ? "translateX(140%) rotate(18deg)"
+      : exiting === "pass"
+      ? "translateX(-140%) rotate(-18deg)"
+      : `translateX(${drag.x}px) rotate(${drag.x / 18}deg)`;
+
   const rotation = drag.x / 18;
-  const likeOpacity = Math.min(Math.max(drag.x / SWIPE_THRESHOLD, 0), 1);
-  const passOpacity = Math.min(Math.max(-drag.x / SWIPE_THRESHOLD, 0), 1);
+  const likeOpacity = exiting === "like" ? 1 : Math.min(Math.max(drag.x / SWIPE_THRESHOLD, 0), 1);
+  const passOpacity = exiting === "pass" ? 1 : Math.min(Math.max(-drag.x / SWIPE_THRESHOLD, 0), 1);
 
   return (
     <div className="flex flex-col items-center">
       <div className="relative w-full max-w-sm h-[520px]">
         {next && (
-          <div className="absolute inset-0 bg-background border border-foreground/10 scale-[0.96] translate-y-2 opacity-70" />
+          <div
+            className="absolute inset-0 rounded-2xl bg-background border border-foreground/10 transition-all duration-300 ease-out"
+            style={{
+              transform: exiting ? "scale(1) translateY(0)" : "scale(0.96) translateY(8px)",
+              opacity: exiting ? 1 : 0.7,
+            }}
+          />
         )}
         <div
-          className="absolute inset-0 bg-background border border-foreground/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] overflow-hidden touch-none select-none cursor-grab active:cursor-grabbing"
+          key={current.id}
+          className={`absolute inset-0 rounded-2xl bg-background border border-foreground/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] overflow-hidden touch-none select-none ${exiting ? "" : "animate-scale-in cursor-grab active:cursor-grabbing"}`}
           style={{
-            transform: `translateX(${drag.x}px) rotate(${rotation}deg)`,
-            transition: drag.active ? "none" : "transform 0.25s ease-out",
+            transform: exitTransform,
+            opacity: exiting ? 0 : 1,
+            transition: drag.active
+              ? "none"
+              : exiting
+              ? `transform ${EXIT_DURATION}ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity ${EXIT_DURATION}ms ease-out`
+              : "transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1)",
           }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -86,13 +112,13 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
               draggable={false}
             />
             <span
-              className="absolute top-3 left-3 font-heading text-xs font-bold tracking-widest uppercase px-3 py-1 bg-primary text-primary-foreground pointer-events-none transition-opacity"
+              className="absolute top-3 left-3 font-heading text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-full bg-primary text-primary-foreground pointer-events-none transition-opacity shadow-md"
               style={{ opacity: likeOpacity }}
             >
               Me interesa
             </span>
             <span
-              className="absolute top-3 right-3 font-heading text-xs font-bold tracking-widest uppercase px-3 py-1 bg-foreground/80 text-background pointer-events-none transition-opacity"
+              className="absolute top-3 right-3 font-heading text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-full bg-foreground/80 text-background pointer-events-none transition-opacity shadow-md"
               style={{ opacity: passOpacity }}
             >
               No es para mí
@@ -130,11 +156,11 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
         </div>
       </div>
 
-      <div className="flex items-stretch gap-3 mt-7 w-full max-w-sm">
+      <div className="flex items-stretch gap-4 mt-7 w-full max-w-sm">
         <button
           onClick={() => commit("pass")}
           aria-label="No me interesa"
-          className="flex-1 flex items-center justify-center gap-2 py-4 border border-foreground/15 text-foreground/70 hover:border-foreground/30 hover:bg-foreground/5 transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 py-4 rounded-full border border-foreground/15 text-foreground/70 transition-all duration-200 ease-out hover:border-foreground/30 hover:bg-foreground/5 hover:-translate-y-0.5 hover:shadow-md active:scale-95 active:translate-y-0"
         >
           <X size={18} />
           <span className="font-heading text-xs font-semibold tracking-widest uppercase">No</span>
@@ -142,7 +168,7 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
         <button
           onClick={() => commit("like")}
           aria-label="Me interesa"
-          className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary text-primary-foreground hover:bg-primary-hover transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 py-4 rounded-full bg-primary text-primary-foreground shadow-md shadow-primary/20 transition-all duration-200 ease-out hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/30 active:scale-95 active:translate-y-0"
         >
           <Heart size={18} />
           <span className="font-heading text-xs font-semibold tracking-widest uppercase">Me interesa</span>

@@ -47,7 +47,7 @@ const emptyForm: FormState = {
   descripcion: "", acepta_politica: false, sitio_web: "",
 };
 
-const inputClass = "w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground focus:border-primary focus:outline-none";
+const inputClass = "w-full bg-background border border-foreground/10 rounded-lg py-2.5 px-3 font-body text-sm text-foreground transition-all duration-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15";
 const labelClass = "font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1";
 
 const EmergenciaPublicar = () => {
@@ -168,20 +168,20 @@ const EmergenciaPublicar = () => {
         <main className="pt-20">
           <section className="py-20">
             <div className="container mx-auto px-6 max-w-lg text-center">
-              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+              <div className="animate-scale-in w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
                 <Check size={26} className="text-primary" />
               </div>
-              <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-3">¡Publicación enviada!</h1>
-              <p className="font-body text-sm text-muted-foreground mb-8 leading-relaxed">
+              <h1 className="animate-fade-in-up font-display text-2xl md:text-3xl font-bold text-foreground mb-3">¡Publicación enviada!</h1>
+              <p className="animate-fade-in-up font-body text-sm text-muted-foreground mb-8 leading-relaxed">
                 Nuestro equipo revisará tu inmueble antes de mostrarlo públicamente. Guarda este
                 enlace: es el único que te permite marcar tu inmueble como <strong>alquilado</strong> o
                 pausar la publicación tú mismo, sin necesidad de crear una cuenta.
               </p>
-              <div className="bg-muted/20 border border-foreground/10 p-4 mb-6 flex items-center gap-2">
+              <div className="animate-fade-in-up rounded-xl bg-muted/20 border border-foreground/10 p-4 mb-6 flex items-center gap-2">
                 <input readOnly value={linkGestion} className="flex-1 bg-transparent font-body text-xs text-foreground truncate" />
                 <button
                   onClick={() => { navigator.clipboard.writeText(linkGestion); toast({ title: "Enlace copiado" }); }}
-                  className="shrink-0 p-2 hover:bg-foreground/5 transition-colors"
+                  className="shrink-0 p-2 rounded-full hover:bg-foreground/5 transition-all duration-200 hover:scale-110 active:scale-95"
                   aria-label="Copiar enlace"
                 >
                   <Copy size={16} className="text-foreground" />
@@ -191,7 +191,7 @@ const EmergenciaPublicar = () => {
                 href={waSelf}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-full py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors mb-3"
+                className="animate-fade-in-up inline-block w-full py-3 rounded-full bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase shadow-md shadow-primary/20 transition-all duration-300 hover:bg-primary-hover hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-95 mb-3"
               >
                 Enviarme el enlace por WhatsApp
               </a>
@@ -226,9 +226,9 @@ const EmergenciaPublicar = () => {
               </p>
               <p className="font-body text-xs text-muted-foreground tabular-nums">{step}/{TOTAL_STEPS}</p>
             </div>
-            <div className="flex gap-1 mb-8" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={TOTAL_STEPS}>
+            <div className="flex gap-1.5 mb-8" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={TOTAL_STEPS}>
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-                <div key={i} className={`h-[3px] flex-1 transition-colors duration-300 ${i < step ? "bg-primary" : "bg-foreground/10"}`} />
+                <div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ease-out ${i < step ? "bg-primary" : "bg-foreground/10"}`} />
               ))}
             </div>
 
@@ -244,6 +244,7 @@ const EmergenciaPublicar = () => {
                 aria-hidden="true"
               />
 
+              <div key={step} className="animate-fade-in-up">
               {step === 1 && (
                 <div className="space-y-5">
                   <div>
@@ -268,7 +269,7 @@ const EmergenciaPublicar = () => {
                           type="button"
                           key={p}
                           onClick={() => update("perfil", p)}
-                          className={`py-3 px-2 border font-body text-sm transition-colors ${form.perfil === p ? "border-primary bg-primary/10 text-primary" : "border-foreground/10 text-foreground hover:border-primary/40"}`}
+                          className={`py-3 px-2 rounded-lg border font-body text-sm transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${form.perfil === p ? "border-primary bg-primary/10 text-primary shadow-sm" : "border-foreground/10 text-foreground hover:border-primary/40"}`}
                         >
                           {p}
                         </button>
@@ -289,7 +290,7 @@ const EmergenciaPublicar = () => {
                             type="button"
                             key={t}
                             onClick={() => update("tipo_gestion", t)}
-                            className={`py-3 px-2 border font-body text-sm transition-colors ${form.tipo_gestion === t ? "border-primary bg-primary/10 text-primary" : "border-foreground/10 text-foreground hover:border-primary/40"}`}
+                            className={`py-3 px-2 rounded-lg border font-body text-sm transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${form.tipo_gestion === t ? "border-primary bg-primary/10 text-primary shadow-sm" : "border-foreground/10 text-foreground hover:border-primary/40"}`}
                           >
                             {t}
                           </button>
@@ -297,7 +298,7 @@ const EmergenciaPublicar = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-muted/20 border border-foreground/10 p-5">
+                    <div className="rounded-xl bg-muted/20 border border-foreground/10 p-5">
                       <label className="flex items-start gap-3 cursor-pointer">
                         <input type="checkbox" checked={form.desea_administracion} onChange={(e) => update("desea_administracion", e.target.checked)} className="mt-1 accent-[hsl(40,47%,50%)]" />
                         <span className="font-body text-sm text-foreground">
@@ -405,15 +406,15 @@ const EmergenciaPublicar = () => {
                     <span className={labelClass}>Fotos (hasta {MAX_FOTOS})</span>
                     <div className="grid grid-cols-3 gap-3 mb-3">
                       {fotoPreviews.map((src, i) => (
-                        <div key={i} className="relative aspect-square">
+                        <div key={i} className="animate-scale-in relative aspect-square rounded-xl overflow-hidden">
                           <img src={src} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
-                          <button type="button" onClick={() => removeFoto(i)} className="absolute top-1 right-1 bg-background/90 p-1" aria-label="Eliminar foto">
+                          <button type="button" onClick={() => removeFoto(i)} className="absolute top-1.5 right-1.5 rounded-full bg-background/90 p-1.5 shadow-sm transition-all duration-200 hover:scale-110 hover:bg-background" aria-label="Eliminar foto">
                             <X size={12} />
                           </button>
                         </div>
                       ))}
                       {fotoFiles.length < MAX_FOTOS && (
-                        <label className="aspect-square border-2 border-dashed border-foreground/15 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-primary/40 transition-colors">
+                        <label className="aspect-square rounded-xl border-2 border-dashed border-foreground/15 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all duration-200 hover:border-primary/40 hover:bg-primary/5">
                           <ImagePlus size={18} className="text-muted-foreground" />
                           <span className="font-body text-[10px] text-muted-foreground">Agregar</span>
                           <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="hidden" onChange={(e) => onFotosSelected(e.target.files)} />
@@ -431,17 +432,18 @@ const EmergenciaPublicar = () => {
                   </label>
                 </div>
               )}
+              </div>
 
               <div className="flex items-center gap-3 pt-2">
                 {step > 1 && (
-                  <button type="button" onClick={back} className="flex items-center gap-1 py-3 px-4 border border-foreground/10 font-heading text-xs font-semibold tracking-widest uppercase hover:bg-foreground/5 transition-colors">
+                  <button type="button" onClick={back} className="flex items-center gap-1 py-3 px-4 rounded-full border border-foreground/10 font-heading text-xs font-semibold tracking-widest uppercase transition-all duration-200 hover:bg-foreground/5 hover:-translate-y-0.5 active:scale-95 active:translate-y-0">
                     <ChevronLeft size={14} /> Atrás
                   </button>
                 )}
                 <button
                   type="submit"
                   disabled={!stepValid() || saving}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase shadow-md shadow-primary/20 transition-all duration-300 ease-out hover:bg-primary-hover hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none"
                 >
                   {saving && <Loader2 size={16} className="animate-spin" />}
                   {step === TOTAL_STEPS ? (saving ? "Publicando..." : "Publicar inmueble") : (<>Siguiente <ChevronRight size={14} /></>)}
