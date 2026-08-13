@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { trackSubmitForm } from "@/lib/pixelEvents";
 
 const propertyTypes = ["Apartamento", "Casa", "Apartaestudio", "Local", "Habitación", "Oficina", "Bodega"];
+const CIUDADES = ["Cali", "Jamundí", "Yumbo", "Palmira", "Otra"];
 const TOTAL_STEPS = 5;
 const MAX_FOTOS = 6;
 const STEP_LABELS = ["Contacto", "Gestión", "El inmueble", "Condiciones económicas", "Fotos y confirmación"];
@@ -17,12 +18,12 @@ const STEP_LABELS = ["Contacto", "Gestión", "El inmueble", "Condiciones económ
 type FormState = {
   nombre: string;
   celular: string;
-  correo: string;
   perfil: "" | "Propietario" | "Agente" | "Inmobiliaria";
   tipo_gestion: "" | "Corretaje" | "Administración";
   desea_administracion: boolean;
   tipo_inmueble: string;
   ciudad: string;
+  ciudad_otra: string;
   barrio: string;
   direccion: string;
   area_m2: string;
@@ -41,8 +42,8 @@ type FormState = {
 };
 
 const emptyForm: FormState = {
-  nombre: "", celular: "", correo: "", perfil: "", tipo_gestion: "", desea_administracion: false,
-  tipo_inmueble: "", ciudad: "Cali", barrio: "", direccion: "", area_m2: "", habitaciones: "0", banos: "0",
+  nombre: "", celular: "", perfil: "", tipo_gestion: "", desea_administracion: false,
+  tipo_inmueble: "", ciudad: "Cali", ciudad_otra: "", barrio: "", direccion: "", area_m2: "", habitaciones: "0", banos: "0",
   piso: "", parqueadero: "No", amoblado: false, canon: "", incluye_administracion: false, valor_administracion: "",
   descripcion: "", acepta_politica: false, sitio_web: "",
 };
@@ -86,7 +87,7 @@ const EmergenciaPublicar = () => {
         if (form.perfil === "Agente" || form.perfil === "Inmobiliaria") return !!form.tipo_gestion;
         return true; // Propietario: la administración es opcional
       case 3:
-        return !!(form.tipo_inmueble && form.ciudad.trim() && form.barrio.trim());
+        return !!(form.tipo_inmueble && form.barrio.trim() && (form.ciudad === "Otra" ? form.ciudad_otra.trim() : !!form.ciudad));
       case 4:
         return !!form.canon && Number(form.canon) > 0 && (form.incluye_administracion || !!form.valor_administracion);
       case 5:
@@ -128,12 +129,12 @@ const EmergenciaPublicar = () => {
       const { error } = await supabase.from("emergencia_inmuebles").insert({
         nombre: form.nombre.trim(),
         celular: form.celular.trim(),
-        correo: form.correo.trim() || null,
+        correo: null,
         perfil: form.perfil as string,
         tipo_gestion: form.tipo_gestion || null,
         desea_administracion: form.perfil === "Propietario" ? form.desea_administracion : false,
         tipo_inmueble: form.tipo_inmueble,
-        ciudad: form.ciudad.trim(),
+        ciudad: (form.ciudad === "Otra" ? form.ciudad_otra : form.ciudad).trim(),
         barrio: form.barrio.trim(),
         direccion: form.direccion.trim() || null,
         area_m2: form.area_m2 ? Number(form.area_m2) : null,
@@ -329,9 +330,17 @@ const EmergenciaPublicar = () => {
                     </div>
                     <div>
                       <label className={labelClass} htmlFor="ciudad">Ciudad</label>
-                      <input id="ciudad" required value={form.ciudad} onChange={(e) => update("ciudad", e.target.value)} className={inputClass} />
+                      <select id="ciudad" required value={form.ciudad} onChange={(e) => update("ciudad", e.target.value)} className={inputClass}>
+                        {CIUDADES.map((c) => <option key={c} value={c}>{c}</option>)}
+                      </select>
                     </div>
                   </div>
+                  {form.ciudad === "Otra" && (
+                    <div className="animate-fade-in-up">
+                      <label className={labelClass} htmlFor="ciudad_otra">¿Cuál ciudad?</label>
+                      <input id="ciudad_otra" required value={form.ciudad_otra} onChange={(e) => update("ciudad_otra", e.target.value)} className={inputClass} />
+                    </div>
+                  )}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className={labelClass} htmlFor="barrio">Barrio / Sector</label>
