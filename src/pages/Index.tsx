@@ -131,7 +131,7 @@ const Index = () => {
         jsonLd={orgJsonLd}
       />
       <Header />
-      <main>
+      <main className="pt-20">
         <EmergenciaBanner />
         <HeroSection />
         <PropertiesSection />

@@ -4,7 +4,7 @@ const EmergenciaBanner = () => {
   return (
     <section
       aria-label="Iniciativa terremoto Colombia"
-      className="relative overflow-hidden bg-background border-y border-foreground/10 pt-24"
+      className="sticky top-20 z-40 overflow-hidden bg-background/95 backdrop-blur-md border-b border-foreground/10 shadow-sm"
     >
       {/* Franja nítida con los colores de la bandera de Colombia */}
       <div className="flex h-1.5 w-full" aria-hidden="true">
@@ -20,7 +20,7 @@ const EmergenciaBanner = () => {
         <div className="absolute -bottom-28 right-0 w-96 h-96 rounded-full bg-[#CE1126] opacity-[0.12] blur-[100px]" />
       </div>
 
-      <div className="reveal relative container mx-auto px-6 lg:px-12 py-7 md:py-8 flex flex-col sm:flex-row items-center justify-between gap-5">
+      <div className="relative container mx-auto px-6 lg:px-12 py-4 md:py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4 text-center sm:text-left">
           <div className="relative shrink-0">
             <div className="w-11 h-11 rounded-xl flex items-center justify-center border border-foreground/10 bg-background">
