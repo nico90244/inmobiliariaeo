@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!assets|api|favicon.ico|robots.txt|sitemap.xml|hero-bg.jpg).*)", "destination": "/index.html" }
+    { "source": "/((?!assets|api|favicon.ico|robots.txt|sitemap.xml|hero-bg.jpg|emergencia-hero.mp4).*)", "destination": "/index.html" }
   ],
   "headers": [
     {

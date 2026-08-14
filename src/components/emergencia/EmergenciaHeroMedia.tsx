@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import img1 from "@/assets/emergencia/sismo-1.jpg.asset.json";
-import img2 from "@/assets/emergencia/sismo-2.jpg.asset.json";
-import video from "@/assets/emergencia/sismo-video.mp4.asset.json";
 
 type Slide = { type: "image" | "video"; url: string };
 
-const slides: Slide[] = [
-  { type: "image", url: img1.url },
-  { type: "video", url: video.url },
-  { type: "image", url: img2.url },
-];
+// NOTA: las fotos sismo-1.jpg / sismo-2.jpg subidas desde Lovable apuntaban
+// a /__l5e/assets-v1/... — una ruta interna de la vista previa de Lovable
+// que no existe en este despliegue de Vercel. Ahí, cualquier ruta desconocida
+// cae en el rewrite de SPA de vercel.json y devuelve el HTML de la app en vez
+// de la imagen, por eso se veía un ícono roto (el "?") en el celular.
+// Mientras llegan las fotos como archivo real, el fondo usa solo el video
+// (que sí está servido desde /public, funciona en producción). Para sumar
+// las fotos: colócalas en /public (ej. /emergencia-sismo-1.jpg) y agrégalas
+// de nuevo al arreglo `slides` de abajo.
+const slides: Slide[] = [{ type: "video", url: "/emergencia-hero.mp4" }];
 
 const DURATION = 5000;
 
@@ -21,6 +23,7 @@ const EmergenciaHeroMedia = () => {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
+    if (slides.length < 2) return;
     const id = setInterval(() => setActive((i) => (i + 1) % slides.length), DURATION);
     return () => clearInterval(id);
   }, []);
@@ -55,7 +58,6 @@ const EmergenciaHeroMedia = () => {
               }`}
             />
           )}
-
         </div>
       ))}
       {/* Velo para mantener legible el texto */}
