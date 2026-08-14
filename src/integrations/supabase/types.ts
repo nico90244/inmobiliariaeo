@@ -254,6 +254,7 @@ export type Database = {
           fecha_creacion: string
           id: string
           nombre: string
+          origen: string | null
           presupuesto: number | null
           tipo_inmueble: string | null
         }
@@ -264,6 +265,7 @@ export type Database = {
           fecha_creacion?: string
           id?: string
           nombre: string
+          origen?: string | null
           presupuesto?: number | null
           tipo_inmueble?: string | null
         }
@@ -274,6 +276,7 @@ export type Database = {
           fecha_creacion?: string
           id?: string
           nombre?: string
+          origen?: string | null
           presupuesto?: number | null
           tipo_inmueble?: string | null
         }
@@ -281,6 +284,7 @@ export type Database = {
       }
       emergencia_inmuebles: {
         Row: {
+          acepta_mascotas: boolean
           acepta_politica: boolean
           amoblado: boolean
           area_m2: number | null
@@ -289,28 +293,36 @@ export type Database = {
           canon: number
           celular: string
           ciudad: string
+          condiciones_comision: string | null
           correo: string | null
           descripcion: string | null
           desea_administracion: boolean
           direccion: string | null
+          disponible_desde: string | null
+          es_inmobiliaria_eo: boolean
           estado: string
           fecha_creacion: string
           foto_portada: string | null
           fotos: string[]
           habitaciones: number
           id: string
+          imagen_preview_fuente: string | null
+          imagen_preview_url: string | null
           incluye_administracion: boolean
+          link_portal_externo: string | null
           motivo_rechazo: string | null
           nombre: string
           parqueadero: string | null
           perfil: string
           piso: string | null
+          sin_comision: boolean
           tipo_gestion: string | null
           tipo_inmueble: string
           token_gestion: string
           valor_administracion: number | null
         }
         Insert: {
+          acepta_mascotas?: boolean
           acepta_politica?: boolean
           amoblado?: boolean
           area_m2?: number | null
@@ -319,28 +331,36 @@ export type Database = {
           canon: number
           celular: string
           ciudad: string
+          condiciones_comision?: string | null
           correo?: string | null
           descripcion?: string | null
           desea_administracion?: boolean
           direccion?: string | null
+          disponible_desde?: string | null
+          es_inmobiliaria_eo?: boolean
           estado?: string
           fecha_creacion?: string
           foto_portada?: string | null
           fotos?: string[]
           habitaciones?: number
           id?: string
+          imagen_preview_fuente?: string | null
+          imagen_preview_url?: string | null
           incluye_administracion?: boolean
+          link_portal_externo?: string | null
           motivo_rechazo?: string | null
           nombre: string
           parqueadero?: string | null
           perfil: string
           piso?: string | null
+          sin_comision?: boolean
           tipo_gestion?: string | null
           tipo_inmueble: string
           token_gestion?: string
           valor_administracion?: number | null
         }
         Update: {
+          acepta_mascotas?: boolean
           acepta_politica?: boolean
           amoblado?: boolean
           area_m2?: number | null
@@ -349,22 +369,29 @@ export type Database = {
           canon?: number
           celular?: string
           ciudad?: string
+          condiciones_comision?: string | null
           correo?: string | null
           descripcion?: string | null
           desea_administracion?: boolean
           direccion?: string | null
+          disponible_desde?: string | null
+          es_inmobiliaria_eo?: boolean
           estado?: string
           fecha_creacion?: string
           foto_portada?: string | null
           fotos?: string[]
           habitaciones?: number
           id?: string
+          imagen_preview_fuente?: string | null
+          imagen_preview_url?: string | null
           incluye_administracion?: boolean
+          link_portal_externo?: string | null
           motivo_rechazo?: string | null
           nombre?: string
           parqueadero?: string | null
           perfil?: string
           piso?: string | null
+          sin_comision?: boolean
           tipo_gestion?: string | null
           tipo_inmueble?: string
           token_gestion?: string
@@ -630,6 +657,7 @@ export type Database = {
     Views: {
       emergencia_inmuebles_publicas: {
         Row: {
+          acepta_mascotas: boolean | null
           amoblado: boolean | null
           area_m2: number | null
           banos: number | null
@@ -637,18 +665,25 @@ export type Database = {
           canon: number | null
           ciudad: string | null
           descripcion: string | null
+          disponible_desde: string | null
+          es_inmobiliaria_eo: boolean | null
           fecha_creacion: string | null
           foto_portada: string | null
           fotos: string[] | null
           habitaciones: number | null
           id: string | null
+          imagen_preview_fuente: string | null
+          imagen_preview_url: string | null
           incluye_administracion: boolean | null
+          link_portal_externo: string | null
           parqueadero: string | null
           piso: string | null
+          sin_comision: boolean | null
           tipo_inmueble: string | null
           valor_administracion: number | null
         }
         Insert: {
+          acepta_mascotas?: boolean | null
           amoblado?: boolean | null
           area_m2?: number | null
           banos?: number | null
@@ -656,18 +691,25 @@ export type Database = {
           canon?: number | null
           ciudad?: string | null
           descripcion?: string | null
+          disponible_desde?: string | null
+          es_inmobiliaria_eo?: boolean | null
           fecha_creacion?: string | null
           foto_portada?: string | null
           fotos?: string[] | null
           habitaciones?: number | null
           id?: string | null
+          imagen_preview_fuente?: string | null
+          imagen_preview_url?: string | null
           incluye_administracion?: boolean | null
+          link_portal_externo?: string | null
           parqueadero?: string | null
           piso?: string | null
+          sin_comision?: boolean | null
           tipo_inmueble?: string | null
           valor_administracion?: number | null
         }
         Update: {
+          acepta_mascotas?: boolean | null
           amoblado?: boolean | null
           area_m2?: number | null
           banos?: number | null
@@ -675,14 +717,20 @@ export type Database = {
           canon?: number | null
           ciudad?: string | null
           descripcion?: string | null
+          disponible_desde?: string | null
+          es_inmobiliaria_eo?: boolean | null
           fecha_creacion?: string | null
           foto_portada?: string | null
           fotos?: string[] | null
           habitaciones?: number | null
           id?: string | null
+          imagen_preview_fuente?: string | null
+          imagen_preview_url?: string | null
           incluye_administracion?: boolean | null
+          link_portal_externo?: string | null
           parqueadero?: string | null
           piso?: string | null
+          sin_comision?: boolean | null
           tipo_inmueble?: string | null
           valor_administracion?: number | null
         }
@@ -706,6 +754,14 @@ export type Database = {
           id: string
           motivo_rechazo: string
           tipo_inmueble: string
+        }[]
+      }
+      obtener_contacto_inmueble: {
+        Args: { p_inmueble_id: string; p_session_id: string }
+        Returns: {
+          celular: string
+          es_inmobiliaria_eo: boolean
+          nombre: string
         }[]
       }
     }
