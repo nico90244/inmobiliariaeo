@@ -93,7 +93,7 @@ const EmergenciaLanding = () => {
               {/* Buscador — tarjeta clara */}
               <Link
                 to="/emergencia-terremoto/buscar"
-                className="reveal reveal-delay-2 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-muted/30 border border-foreground/10 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary/60 hover:bg-muted/50 hover:shadow-xl hover:shadow-primary/10"
+                className="reveal reveal-delay-2 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-muted/30 border border-primary/25 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary hover:bg-muted/40 hover:shadow-[0_0_0_1px_hsl(var(--primary)/0.5),0_0_18px_hsl(var(--primary)/0.35),0_0_40px_hsl(var(--primary)/0.18)]"
               >
                 <div className="pointer-events-none absolute -bottom-24 -left-16 w-64 h-64 rounded-full bg-primary/10 blur-[90px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
                 <span className="relative font-heading text-[10px] font-bold tracking-[0.2em] uppercase text-primary mb-6">
