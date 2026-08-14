@@ -1,88 +1,52 @@
 import { useState } from "react";
-import { Loader2, X, Heart } from "lucide-react";
+import { Loader2, AlertTriangle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEO from "@/components/SEO";
 import SwipeDeck from "@/components/emergencia/SwipeDeck";
+import ContactoWhatsAppModal from "@/components/emergencia/ContactoWhatsAppModal";
+import BuscarLeadForm, { type BuscarLeadData } from "@/components/emergencia/BuscarLeadForm";
 import { useEmergenciaInmuebles, type EmergenciaInmueblePublico } from "@/hooks/useEmergenciaInmuebles";
 import { supabase, type TablesInsert } from "@/lib/supabase";
 import { getSwipeSessionId } from "@/lib/emergenciaSession";
-import { useToast } from "@/hooks/use-toast";
-import { trackSubmitForm, trackContact } from "@/lib/pixelEvents";
-
-const propertyTypes = ["Apartamento", "Casa", "Apartaestudio", "Local", "Habitación", "Oficina", "Bodega"];
-const inputClass = "w-full bg-background border border-foreground/10 rounded-lg py-2.5 px-3 font-body text-sm text-foreground transition-all duration-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15";
-const labelClass = "font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1";
+import { trackContact } from "@/lib/pixelEvents";
 
 const EmergenciaBuscar = () => {
-  const { toast } = useToast();
-  const [ciudad, setCiudad] = useState("Cali");
-  const [tipoInmueble, setTipoInmueble] = useState("");
-  const [presupuestoMax, setPresupuestoMax] = useState("");
+  const [lead, setLead] = useState<BuscarLeadData | null>(null);
   const [match, setMatch] = useState<EmergenciaInmueblePublico | null>(null);
 
-  const [buscadorId, setBuscadorId] = useState<string | null>(null);
-  const [leadForm, setLeadForm] = useState({ nombre: "", celular: "", presupuesto: "", ciudad: "Cali", tipo_inmueble: "" });
-  const [leadSaving, setLeadSaving] = useState(false);
-  const [leadSent, setLeadSent] = useState(false);
-  const [leadDismissed, setLeadDismissed] = useState(false);
-
-  const { data, isLoading } = useEmergenciaInmuebles({
-    ciudad: ciudad || undefined,
-    tipoInmueble: tipoInmueble || undefined,
-    presupuestoMax: presupuestoMax ? Number(presupuestoMax) : undefined,
-  });
+  const { data, isLoading, isError } = useEmergenciaInmuebles(
+    lead
+      ? {
+          ciudad: lead.ciudad || undefined,
+          tipoInmueble: lead.tipoInmueble || undefined,
+          presupuestoMax: lead.presupuesto ?? undefined,
+        }
+      : undefined,
+  );
 
   const handleSwipe = async (inmueble: EmergenciaInmueblePublico, accion: "like" | "pass") => {
     if (!inmueble.id) return;
-    await supabase.from("emergencia_swipes").insert({
+
+    const { error } = await supabase.from("emergencia_swipes").insert({
       session_id: getSwipeSessionId(),
       inmueble_id: inmueble.id,
       accion,
-      buscador_id: buscadorId,
+      buscador_id: lead?.buscadorId ?? null,
     } satisfies TablesInsert<"emergencia_swipes">);
+
+    // 23505 = ya existe un swipe de esta sesión para este inmueble (UNIQUE) — no es
+    // un error real, solo significa que no hay que insertar de nuevo.
+    if (error && error.code !== "23505") {
+      return;
+    }
 
     if (accion === "like") {
       trackContact({ content_id: inmueble.id, content_name: inmueble.tipo_inmueble ?? undefined });
       setMatch(inmueble);
     }
   };
-
-  const handleLeadSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!leadForm.nombre.trim() || !leadForm.celular.trim()) return;
-    setLeadSaving(true);
-    // No hacemos .select() tras el insert: la tabla base no es legible por
-    // el rol anónimo (solo el staff autenticado), así que generamos el id
-    // en el navegador para poder enlazarlo a los swipes de esta sesión.
-    const id = crypto.randomUUID();
-    const { error } = await supabase.from("emergencia_buscadores").insert({
-      id,
-      nombre: leadForm.nombre.trim(),
-      celular: leadForm.celular.trim(),
-      presupuesto: leadForm.presupuesto ? Number(leadForm.presupuesto) : null,
-      ciudad: leadForm.ciudad.trim() || "Cali",
-      tipo_inmueble: leadForm.tipo_inmueble || null,
-      acepta_politica: true,
-    } satisfies TablesInsert<"emergencia_buscadores">);
-    setLeadSaving(false);
-
-    if (error) {
-      toast({ title: "No se pudo guardar", description: "Intenta de nuevo.", variant: "destructive" });
-      return;
-    }
-    setBuscadorId(id);
-    setLeadSent(true);
-    trackSubmitForm({ content_type: "emergencia_buscador" });
-    toast({ title: "¡Listo!", description: "Te avisaremos si hay novedades." });
-  };
-
-  const waMatchLink = match
-    ? `https://wa.me/573162225604?text=${encodeURIComponent(
-        `Hola, vi en la iniciativa del terremoto un ${match.tipo_inmueble} en ${match.barrio}, ${match.ciudad} (canon ${match.canon ? new Intl.NumberFormat("es-CO").format(match.canon) : ""}). Me interesa, ¿me pueden dar más información?`
-      )}`
-    : "";
 
   return (
     <>
@@ -100,77 +64,32 @@ const EmergenciaBuscar = () => {
               Encuentra dónde vivir
             </h1>
             <p className="font-body text-sm text-muted-foreground mb-8 text-center max-w-lg mx-auto">
-              Desliza a la derecha (o toca el corazón) si te interesa una propiedad. Te
-              conectaremos por WhatsApp con Inmobiliaria EO para dar el siguiente paso.
+              {lead
+                ? "Desliza a la derecha (o toca el corazón) si te interesa una propiedad."
+                : "Cuéntanos qué buscas y te mostramos las propiedades disponibles para arrendar."}
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto mb-10">
-              <input
-                aria-label="Ciudad"
-                placeholder="Ciudad"
-                value={ciudad}
-                onChange={(e) => setCiudad(e.target.value)}
-                className={inputClass}
-              />
-              <select aria-label="Tipo de inmueble" value={tipoInmueble} onChange={(e) => setTipoInmueble(e.target.value)} className={inputClass}>
-                <option value="">Cualquier tipo</option>
-                {propertyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-              <input
-                aria-label="Presupuesto máximo"
-                type="number"
-                min={0}
-                placeholder="Presupuesto máx."
-                value={presupuestoMax}
-                onChange={(e) => setPresupuestoMax(e.target.value)}
-                className={inputClass}
-              />
-            </div>
+            {!lead && <BuscarLeadForm onSubmit={setLead} />}
 
-            {isLoading ? (
+            {lead && isLoading && (
               <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={28} /></div>
-            ) : (
-              <SwipeDeck inmuebles={data ?? []} onSwipe={handleSwipe} />
             )}
 
-            {!leadSent && !leadDismissed && (
-              <div className="reveal relative max-w-md mx-auto mt-14 rounded-2xl bg-muted/20 border border-foreground/10 p-6 shadow-sm">
-                <button onClick={() => setLeadDismissed(true)} className="absolute top-3 right-3 rounded-full p-1 text-muted-foreground transition-all duration-200 hover:text-foreground hover:bg-foreground/5 hover:rotate-90" aria-label="Cerrar">
-                  <X size={16} />
-                </button>
-                <h2 className="font-heading text-base font-semibold text-foreground mb-1">¿Quieres que te avisemos?</h2>
-                <p className="font-body text-xs text-muted-foreground mb-4">
-                  Déjanos tus datos (opcional) y te contactamos si aparece algo que encaje contigo.
+            {lead && isError && (
+              <div className="max-w-sm mx-auto flex items-start gap-3 bg-destructive/5 border border-destructive/20 rounded-xl p-4">
+                <AlertTriangle size={18} className="text-destructive shrink-0 mt-0.5" />
+                <p className="font-body text-sm text-destructive">
+                  No pudimos cargar las propiedades disponibles. Verifica tu conexión e intenta de nuevo.
                 </p>
-                <form onSubmit={handleLeadSubmit} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className={labelClass} htmlFor="lead-nombre">Nombre</label>
-                      <input id="lead-nombre" required value={leadForm.nombre} onChange={(e) => setLeadForm((f) => ({ ...f, nombre: e.target.value }))} className={inputClass} />
-                    </div>
-                    <div>
-                      <label className={labelClass} htmlFor="lead-celular">Celular</label>
-                      <input id="lead-celular" type="tel" required value={leadForm.celular} onChange={(e) => setLeadForm((f) => ({ ...f, celular: e.target.value }))} className={inputClass} />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className={labelClass} htmlFor="lead-presupuesto">Presupuesto</label>
-                      <input id="lead-presupuesto" type="number" min={0} value={leadForm.presupuesto} onChange={(e) => setLeadForm((f) => ({ ...f, presupuesto: e.target.value }))} className={inputClass} />
-                    </div>
-                    <div>
-                      <label className={labelClass} htmlFor="lead-tipo">Tipo</label>
-                      <select id="lead-tipo" value={leadForm.tipo_inmueble} onChange={(e) => setLeadForm((f) => ({ ...f, tipo_inmueble: e.target.value }))} className={inputClass}>
-                        <option value="">Cualquiera</option>
-                        {propertyTypes.map((t) => <option key={t} value={t}>{t}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                  <button type="submit" disabled={leadSaving} className="w-full py-2.5 rounded-full bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase shadow-sm transition-all duration-200 hover:bg-primary-hover hover:shadow-md hover:-translate-y-0.5 active:scale-95 active:translate-y-0 disabled:opacity-50">
-                    {leadSaving ? "Enviando..." : "Guardar mis datos"}
-                  </button>
-                </form>
               </div>
+            )}
+
+            {lead && !isLoading && !isError && (
+              <SwipeDeck
+                inmuebles={data ?? []}
+                onSwipe={handleSwipe}
+                onAjustarBusqueda={() => setLead(null)}
+              />
             )}
           </div>
         </section>
@@ -178,30 +97,12 @@ const EmergenciaBuscar = () => {
       <Footer />
       <WhatsAppButton />
 
-      {match && (
-        <div className="fixed inset-0 z-[100] bg-foreground/50 backdrop-blur-sm flex items-center justify-center p-6 animate-fade-in" role="dialog" aria-modal="true">
-          <div className="rounded-3xl bg-background max-w-sm w-full p-7 text-center border-t-4 border-primary shadow-2xl animate-scale-in">
-            <div className="animate-scale-in w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <Heart size={22} className="text-primary" fill="currentColor" />
-            </div>
-            <h2 className="font-heading text-lg font-bold text-foreground mb-2">¡Te interesó esta propiedad!</h2>
-            <p className="font-body text-sm text-muted-foreground mb-6">
-              Escríbenos por WhatsApp y te ayudamos a dar el siguiente paso con este inmueble.
-            </p>
-            <a
-              href={waMatchLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMatch(null)}
-              className="block w-full py-3 rounded-full bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase shadow-md shadow-primary/20 transition-all duration-200 hover:bg-primary-hover hover:shadow-lg hover:-translate-y-0.5 active:scale-95 active:translate-y-0 mb-2"
-            >
-              Escribir por WhatsApp
-            </a>
-            <button onClick={() => setMatch(null)} className="font-body text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Seguir viendo propiedades
-            </button>
-          </div>
-        </div>
+      {match && lead && (
+        <ContactoWhatsAppModal
+          inmueble={match}
+          nombreBuscador={lead.nombre}
+          onClose={() => setMatch(null)}
+        />
       )}
     </>
   );

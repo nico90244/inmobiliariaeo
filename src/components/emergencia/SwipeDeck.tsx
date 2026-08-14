@@ -1,17 +1,18 @@
 import { useRef, useState } from "react";
-import { X, Heart, MapPin, Maximize2, Bed, Bath, Car } from "lucide-react";
+import { X, Heart, MapPin, Maximize2, Bed, Bath, Car, BadgeCheck, Users, PawPrint, Sofa } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
-import type { EmergenciaInmueblePublico } from "@/hooks/useEmergenciaInmuebles";
+import { costoTotalMensual, type EmergenciaInmueblePublico } from "@/hooks/useEmergenciaInmuebles";
 
 type Props = {
   inmuebles: EmergenciaInmueblePublico[];
   onSwipe: (inmueble: EmergenciaInmueblePublico, accion: "like" | "pass") => void;
+  onAjustarBusqueda?: () => void;
 };
 
 const SWIPE_THRESHOLD = 100;
 const EXIT_DURATION = 260;
 
-const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
+const SwipeDeck = ({ inmuebles, onSwipe, onAjustarBusqueda }: Props) => {
   const [index, setIndex] = useState(0);
   const [drag, setDrag] = useState({ x: 0, active: false });
   const [exiting, setExiting] = useState<"like" | "pass" | null>(null);
@@ -56,10 +57,18 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
     return (
       <div className="animate-fade-in-up flex flex-col items-center justify-center py-20 text-center">
         <p className="font-heading text-lg font-semibold text-foreground mb-2">Eso es todo por ahora</p>
-        <p className="font-body text-sm text-muted-foreground max-w-xs">
-          Ya viste todas las propiedades disponibles con estos filtros. Vuelve pronto, publicamos
-          inmuebles nuevos todos los días.
+        <p className="font-body text-sm text-muted-foreground max-w-xs mb-5">
+          Ya viste todas las propiedades disponibles con estos filtros. Prueba ajustar tu presupuesto
+          o el tipo de inmueble — publicamos novedades todos los días.
         </p>
+        {onAjustarBusqueda && (
+          <button
+            onClick={onAjustarBusqueda}
+            className="px-6 py-2.5 rounded-full border border-primary/40 text-primary font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary/5 transition-colors"
+          >
+            Ajustar mi búsqueda
+          </button>
+        )}
       </div>
     );
   }
@@ -125,6 +134,23 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
             </span>
           </div>
           <div className="p-5">
+            <div className="flex flex-wrap items-center gap-1.5 mb-2">
+              {current.es_inmobiliaria_eo ? (
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary font-heading text-[9px] font-bold uppercase tracking-wide">
+                  <BadgeCheck size={11} /> Verificado por Inmobiliaria EO
+                </span>
+              ) : (
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted/40 text-muted-foreground font-heading text-[9px] font-bold uppercase tracking-wide">
+                  <Users size={11} /> Publicado por la comunidad
+                </span>
+              )}
+              {current.sin_comision && (
+                <span className="px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400 font-heading text-[9px] font-bold uppercase tracking-wide">
+                  Sin comisión
+                </span>
+              )}
+            </div>
+
             <p className="font-heading text-[10px] font-semibold tracking-[0.15em] text-muted-foreground uppercase mb-1">
               {current.tipo_inmueble}
             </p>
@@ -132,10 +158,26 @@ const SwipeDeck = ({ inmuebles, onSwipe }: Props) => {
               <MapPin size={14} className="shrink-0" />
               <span className="font-body text-xs">{current.barrio}, {current.ciudad}</span>
             </div>
-            <p className="font-body text-xl font-bold text-primary mb-3 tabular-nums">
+            <p className="font-body text-xl font-bold text-primary tabular-nums">
               {formatPrice(current.canon)}<span className="text-xs text-muted-foreground font-normal">/mes</span>
             </p>
-            <div className="flex items-center gap-4 text-muted-foreground mb-3">
+            {!current.incluye_administracion && !!current.valor_administracion && (
+              <p className="font-body text-[11px] text-muted-foreground mb-2">
+                + {formatPrice(current.valor_administracion)} administración · total {formatPrice(costoTotalMensual(current))}/mes
+              </p>
+            )}
+            {current.disponible_desde && (
+              <p className="font-body text-[11px] text-muted-foreground mb-2">
+                Disponible desde {new Date(current.disponible_desde + "T12:00:00").toLocaleDateString("es-CO", { day: "numeric", month: "short" })}
+              </p>
+            )}
+            <div className="flex flex-wrap items-center gap-3 text-muted-foreground mb-3 mt-1">
+              {current.acepta_mascotas && (
+                <div className="flex items-center gap-1"><PawPrint size={14} /><span className="font-body text-xs">Mascotas</span></div>
+              )}
+              {current.amoblado && (
+                <div className="flex items-center gap-1"><Sofa size={14} /><span className="font-body text-xs">Amoblado</span></div>
+              )}
               {current.area_m2 && (
                 <div className="flex items-center gap-1"><Maximize2 size={14} /><span className="font-body text-xs">{current.area_m2} m²</span></div>
               )}
