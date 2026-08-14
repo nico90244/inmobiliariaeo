@@ -3,28 +3,36 @@ import { Heart, Loader2, AlertTriangle } from "lucide-react";
 import { supabase, type TablesInsert } from "@/lib/supabase";
 import { getSwipeSessionId } from "@/lib/emergenciaSession";
 import ExencionResponsabilidad from "@/components/terremoto/ExencionResponsabilidad";
-import type { EmergenciaInmueblePublico } from "@/hooks/useEmergenciaInmuebles";
+import type { TarjetaSwipe } from "@/hooks/useSwipeInventario";
 
 type Contacto = { nombre: string; celular: string; es_inmobiliaria_eo: boolean };
 
 type Props = {
-  inmueble: EmergenciaInmueblePublico;
+  tarjeta: TarjetaSwipe;
   nombreBuscador: string;
   onClose: () => void;
 };
 
-const ContactoWhatsAppModal = ({ inmueble, nombreBuscador, onClose }: Props) => {
+const ContactoWhatsAppModal = ({ tarjeta, nombreBuscador, onClose }: Props) => {
+  // El candado de "obtener_contacto_inmueble" (solo revela contacto tras un like)
+  // aplica ÚNICAMENTE a publicaciones de terceros de la Iniciativa Terremoto
+  // (emergencia_inmuebles): son datos que llenó un desconocido en un formulario
+  // público. El inventario propio de EO (propiedades) ya es público en el resto
+  // del sitio sin ese candado, así que aquí se usa directo su link_whatsapp.
+  const esInventarioPropio = tarjeta.fuente === "propiedades";
+
   const [contacto, setContacto] = useState<Contacto | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!esInventarioPropio);
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (esInventarioPropio) return;
     let cancelled = false;
     (async () => {
       setLoading(true);
       setError(false);
       const { data, error: rpcError } = await supabase.rpc("obtener_contacto_inmueble", {
-        p_inmueble_id: inmueble.id as string,
+        p_inmueble_id: tarjeta.id,
         p_session_id: getSwipeSessionId(),
       });
       if (cancelled) return;
@@ -36,23 +44,27 @@ const ContactoWhatsAppModal = ({ inmueble, nombreBuscador, onClose }: Props) => 
       setContacto(data[0] as Contacto);
     })();
     return () => { cancelled = true; };
-  }, [inmueble.id]);
+  }, [esInventarioPropio, tarjeta.id]);
 
   const handleContactarClick = async () => {
-    if (!inmueble.id) return;
     onClose();
+    if (esInventarioPropio) return; // no hay swipe que registrar para inventario propio
     await supabase.from("emergencia_swipes").insert({
       session_id: getSwipeSessionId(),
-      inmueble_id: inmueble.id,
+      inmueble_id: tarjeta.id,
       accion: "contacto_whatsapp",
     } satisfies TablesInsert<"emergencia_swipes">);
   };
 
-  const waLink = contacto
+  const waLink = esInventarioPropio
+    ? tarjeta.link_whatsapp ?? "#"
+    : contacto
     ? `https://wa.me/57${contacto.celular.replace(/\D/g, "")}?text=${encodeURIComponent(
-        `Hola, vi tu publicación de ${inmueble.tipo_inmueble} en ${inmueble.barrio} a través de Inmobiliaria EO (Iniciativa Terremoto Colombia) y me interesa. Mi nombre es ${nombreBuscador}.`
+        `Hola, vi tu publicación de ${tarjeta.tipo_inmueble} en ${tarjeta.barrio} a través de Inmobiliaria EO (Iniciativa Terremoto Colombia) y me interesa. Mi nombre es ${nombreBuscador}.`
       )}`
     : "#";
+
+  const esInmobiliariaEO = esInventarioPropio ? true : !!contacto?.es_inmobiliaria_eo;
 
   return (
     <div className="fixed inset-0 z-[100] bg-foreground/50 backdrop-blur-sm flex items-center justify-center p-6 animate-fade-in" role="dialog" aria-modal="true">
@@ -89,12 +101,12 @@ const ContactoWhatsAppModal = ({ inmueble, nombreBuscador, onClose }: Props) => 
           </>
         )}
 
-        {!loading && !error && contacto && (
+        {!loading && !error && (
           <>
             <p className="font-body text-sm text-muted-foreground mb-5">
               Escríbenos por WhatsApp y te ayudamos a dar el siguiente paso con este inmueble.
             </p>
-            {!contacto.es_inmobiliaria_eo && (
+            {!esInmobiliariaEO && (
               <div className="mb-5 text-left rounded-xl bg-muted/20 border border-foreground/10 p-3">
                 <ExencionResponsabilidad />
               </div>

@@ -7,16 +7,16 @@ import SEO from "@/components/SEO";
 import SwipeDeck from "@/components/emergencia/SwipeDeck";
 import ContactoWhatsAppModal from "@/components/emergencia/ContactoWhatsAppModal";
 import BuscarLeadForm, { type BuscarLeadData } from "@/components/emergencia/BuscarLeadForm";
-import { useEmergenciaInmuebles, type EmergenciaInmueblePublico } from "@/hooks/useEmergenciaInmuebles";
+import { useSwipeInventario, type TarjetaSwipe } from "@/hooks/useSwipeInventario";
 import { supabase, type TablesInsert } from "@/lib/supabase";
 import { getSwipeSessionId } from "@/lib/emergenciaSession";
 import { trackContact } from "@/lib/pixelEvents";
 
 const EmergenciaBuscar = () => {
   const [lead, setLead] = useState<BuscarLeadData | null>(null);
-  const [match, setMatch] = useState<EmergenciaInmueblePublico | null>(null);
+  const [match, setMatch] = useState<TarjetaSwipe | null>(null);
 
-  const { data, isLoading, isError } = useEmergenciaInmuebles(
+  const { data, isLoading, isError } = useSwipeInventario(
     lead
       ? {
           ciudad: lead.ciudad || undefined,
@@ -26,25 +26,29 @@ const EmergenciaBuscar = () => {
       : undefined,
   );
 
-  const handleSwipe = async (inmueble: EmergenciaInmueblePublico, accion: "like" | "pass") => {
-    if (!inmueble.id) return;
+  const handleSwipe = async (tarjeta: TarjetaSwipe, accion: "like" | "pass") => {
+    // Solo las publicaciones de la Iniciativa Terremoto (terceros vía "Ofrezco")
+    // registran swipes: emergencia_swipes tiene una FK a emergencia_inmuebles, así
+    // que no hay dónde guardar un swipe sobre el inventario propio (propiedades) —
+    // y tampoco hace falta, porque a esas no se les aplica el candado de "like".
+    if (tarjeta.fuente === "emergencia") {
+      const { error } = await supabase.from("emergencia_swipes").insert({
+        session_id: getSwipeSessionId(),
+        inmueble_id: tarjeta.id,
+        accion,
+        buscador_id: lead?.buscadorId ?? null,
+      } satisfies TablesInsert<"emergencia_swipes">);
 
-    const { error } = await supabase.from("emergencia_swipes").insert({
-      session_id: getSwipeSessionId(),
-      inmueble_id: inmueble.id,
-      accion,
-      buscador_id: lead?.buscadorId ?? null,
-    } satisfies TablesInsert<"emergencia_swipes">);
-
-    // 23505 = ya existe un swipe de esta sesión para este inmueble (UNIQUE) — no es
-    // un error real, solo significa que no hay que insertar de nuevo.
-    if (error && error.code !== "23505") {
-      return;
+      // 23505 = ya existe un swipe de esta sesión para este inmueble (UNIQUE) — no es
+      // un error real, solo significa que no hay que insertar de nuevo.
+      if (error && error.code !== "23505") {
+        return;
+      }
     }
 
     if (accion === "like") {
-      trackContact({ content_id: inmueble.id, content_name: inmueble.tipo_inmueble ?? undefined });
-      setMatch(inmueble);
+      trackContact({ content_id: tarjeta.id, content_name: tarjeta.tipo_inmueble ?? undefined });
+      setMatch(tarjeta);
     }
   };
 
@@ -86,7 +90,7 @@ const EmergenciaBuscar = () => {
 
             {lead && !isLoading && !isError && (
               <SwipeDeck
-                inmuebles={data ?? []}
+                tarjetas={data ?? []}
                 onSwipe={handleSwipe}
                 onAjustarBusqueda={() => setLead(null)}
               />
@@ -99,7 +103,7 @@ const EmergenciaBuscar = () => {
 
       {match && lead && (
         <ContactoWhatsAppModal
-          inmueble={match}
+          tarjeta={match}
           nombreBuscador={lead.nombre}
           onClose={() => setMatch(null)}
         />

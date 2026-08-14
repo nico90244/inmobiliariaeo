@@ -1,26 +1,26 @@
 import { useRef, useState } from "react";
-import { X, Heart, MapPin, Maximize2, Bed, Bath, Car, BadgeCheck, Users, PawPrint, Sofa } from "lucide-react";
+import { X, Heart, MapPin, Maximize2, Bed, Bath, Car, BadgeCheck, Users, PawPrint, Sofa, Building2 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
-import { costoTotalMensual, type EmergenciaInmueblePublico } from "@/hooks/useEmergenciaInmuebles";
+import type { TarjetaSwipe } from "@/hooks/useSwipeInventario";
 
 type Props = {
-  inmuebles: EmergenciaInmueblePublico[];
-  onSwipe: (inmueble: EmergenciaInmueblePublico, accion: "like" | "pass") => void;
+  tarjetas: TarjetaSwipe[];
+  onSwipe: (tarjeta: TarjetaSwipe, accion: "like" | "pass") => void;
   onAjustarBusqueda?: () => void;
 };
 
 const SWIPE_THRESHOLD = 100;
 const EXIT_DURATION = 260;
 
-const SwipeDeck = ({ inmuebles, onSwipe, onAjustarBusqueda }: Props) => {
+const SwipeDeck = ({ tarjetas, onSwipe, onAjustarBusqueda }: Props) => {
   const [index, setIndex] = useState(0);
   const [drag, setDrag] = useState({ x: 0, active: false });
   const [exiting, setExiting] = useState<"like" | "pass" | null>(null);
   const startX = useRef(0);
   const pointerId = useRef<number | null>(null);
 
-  const current = inmuebles[index];
-  const next = inmuebles[index + 1];
+  const current = tarjetas[index];
+  const next = tarjetas[index + 1];
 
   const commit = (accion: "like" | "pass") => {
     if (!current || exiting) return;
@@ -80,7 +80,6 @@ const SwipeDeck = ({ inmuebles, onSwipe, onAjustarBusqueda }: Props) => {
       ? "translateX(-140%) rotate(-18deg)"
       : `translateX(${drag.x}px) rotate(${drag.x / 18}deg)`;
 
-  const rotation = drag.x / 18;
   const likeOpacity = exiting === "like" ? 1 : Math.min(Math.max(drag.x / SWIPE_THRESHOLD, 0), 1);
   const passOpacity = exiting === "pass" ? 1 : Math.min(Math.max(-drag.x / SWIPE_THRESHOLD, 0), 1);
 
@@ -97,7 +96,7 @@ const SwipeDeck = ({ inmuebles, onSwipe, onAjustarBusqueda }: Props) => {
           />
         )}
         <div
-          key={current.id}
+          key={`${current.fuente}-${current.id}`}
           className={`absolute inset-0 rounded-2xl bg-background border border-foreground/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] overflow-hidden touch-none select-none ${exiting ? "" : "animate-scale-in cursor-grab active:cursor-grabbing"}`}
           style={{
             transform: exitTransform,
@@ -135,7 +134,11 @@ const SwipeDeck = ({ inmuebles, onSwipe, onAjustarBusqueda }: Props) => {
           </div>
           <div className="p-5">
             <div className="flex flex-wrap items-center gap-1.5 mb-2">
-              {current.es_inmobiliaria_eo ? (
+              {current.fuente === "propiedades" ? (
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary font-heading text-[9px] font-bold uppercase tracking-wide">
+                  <Building2 size={11} /> Inventario Inmobiliaria EO
+                </span>
+              ) : current.es_inmobiliaria_eo ? (
                 <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary font-heading text-[9px] font-bold uppercase tracking-wide">
                   <BadgeCheck size={11} /> Verificado por Inmobiliaria EO
                 </span>
@@ -161,9 +164,9 @@ const SwipeDeck = ({ inmuebles, onSwipe, onAjustarBusqueda }: Props) => {
             <p className="font-body text-xl font-bold text-primary tabular-nums">
               {formatPrice(current.canon)}<span className="text-xs text-muted-foreground font-normal">/mes</span>
             </p>
-            {!current.incluye_administracion && !!current.valor_administracion && (
+            {!!current.administracionAparte && (
               <p className="font-body text-[11px] text-muted-foreground mb-2">
-                + {formatPrice(current.valor_administracion)} administración · total {formatPrice(costoTotalMensual(current))}/mes
+                + {formatPrice(current.administracionAparte)} administración · total {formatPrice(current.costoTotal)}/mes
               </p>
             )}
             {current.disponible_desde && (
@@ -217,7 +220,7 @@ const SwipeDeck = ({ inmuebles, onSwipe, onAjustarBusqueda }: Props) => {
         </button>
       </div>
       <p className="font-body text-[11px] text-muted-foreground mt-4 text-center max-w-xs">
-        Desliza la tarjeta o usa los botones{inmuebles.length - index - 1 > 0 ? ` — ${inmuebles.length - index - 1} propiedades más` : ""}
+        Desliza la tarjeta o usa los botones{tarjetas.length - index - 1 > 0 ? ` — ${tarjetas.length - index - 1} propiedades más` : ""}
       </p>
     </div>
   );
