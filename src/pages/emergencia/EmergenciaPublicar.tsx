@@ -9,12 +9,13 @@ import { Switch } from "@/components/ui/switch";
 import { supabase, type TablesInsert } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { trackSubmitForm } from "@/lib/pixelEvents";
+import VistaPreviaExterna from "@/components/emergencia/VistaPreviaExterna";
 
 const propertyTypes = ["Apartamento", "Casa", "Apartaestudio", "Local", "Habitación", "Oficina", "Bodega"];
 const CIUDADES = ["Cali", "Jamundí", "Yumbo", "Palmira", "Otra"];
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 const MAX_FOTOS = 6;
-const STEP_LABELS = ["Contacto", "Gestión", "El inmueble", "Condiciones económicas", "Fotos y confirmación"];
+const STEP_LABELS = ["Contacto", "Gestión", "El inmueble", "Condiciones económicas", "Vista previa", "Fotos y confirmación"];
 
 type FormState = {
   nombre: string;
@@ -39,6 +40,9 @@ type FormState = {
   incluye_administracion: boolean;
   valor_administracion: string;
   descripcion: string;
+  link_portal_externo: string;
+  imagen_preview_url: string | null;
+  imagen_preview_fuente: "manual" | "automatica" | null;
   acepta_politica: boolean;
   // honeypot anti-spam: campo invisible que un humano nunca llena
   sitio_web: string;
@@ -48,7 +52,8 @@ const emptyForm: FormState = {
   nombre: "", celular: "", perfil: "", tipo_gestion: "", sin_comision: false, condiciones_comision: "", desea_administracion: false,
   tipo_inmueble: "", ciudad: "Cali", ciudad_otra: "", barrio: "", direccion: "", area_m2: "", habitaciones: "0", banos: "0",
   piso: "", parqueadero: "No", amoblado: false, canon: "", incluye_administracion: false, valor_administracion: "",
-  descripcion: "", acepta_politica: false, sitio_web: "",
+  descripcion: "", link_portal_externo: "", imagen_preview_url: null, imagen_preview_fuente: null,
+  acepta_politica: false, sitio_web: "",
 };
 
 const inputClass = "w-full bg-background border border-foreground/10 rounded-lg py-2.5 px-3 font-body text-sm text-foreground transition-all duration-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15";
@@ -94,6 +99,8 @@ const EmergenciaPublicar = () => {
       case 4:
         return !!form.canon && Number(form.canon) > 0 && (form.incluye_administracion || !!form.valor_administracion);
       case 5:
+        return true; // Vista previa: 100% opcional, nunca bloquea
+      case 6:
         return form.acepta_politica;
       default:
         return true;
@@ -152,7 +159,10 @@ const EmergenciaPublicar = () => {
         incluye_administracion: form.incluye_administracion,
         valor_administracion: form.incluye_administracion ? null : Number(form.valor_administracion || 0),
         descripcion: form.descripcion.trim() || null,
-        foto_portada: fotos[0] || null,
+        link_portal_externo: form.link_portal_externo.trim() || null,
+        imagen_preview_url: form.imagen_preview_url,
+        imagen_preview_fuente: form.imagen_preview_fuente,
+        foto_portada: fotos[0] || form.imagen_preview_url || null,
         fotos,
         acepta_politica: true,
         token_gestion: token,
@@ -446,6 +456,19 @@ const EmergenciaPublicar = () => {
               )}
 
               {step === 5 && (
+                <VistaPreviaExterna
+                  linkPortalExterno={form.link_portal_externo}
+                  onLinkChange={(v) => update("link_portal_externo", v)}
+                  imagenPreviewUrl={form.imagen_preview_url}
+                  imagenPreviewFuente={form.imagen_preview_fuente}
+                  onImagenChange={(url, fuente) => {
+                    update("imagen_preview_url", url);
+                    update("imagen_preview_fuente", fuente);
+                  }}
+                />
+              )}
+
+              {step === 6 && (
                 <div className="space-y-5">
                   <div>
                     <span className={labelClass}>Fotos (hasta {MAX_FOTOS})</span>
