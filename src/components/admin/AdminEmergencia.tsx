@@ -1,11 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase, type TablesUpdate } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import type { Tables } from "@/integrations/supabase/types";
-import { Loader2, CheckCircle2, XCircle, PauseCircle, Home, Users, RefreshCw, BadgeCheck } from "lucide-react";
+import {
+  Loader2, CheckCircle2, XCircle, PauseCircle, Home, Users, RefreshCw, BadgeCheck,
+  Eye, ExternalLink, PawPrint, CalendarDays, ImageOff, AlertTriangle,
+} from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type Inmueble = Tables<"emergencia_inmuebles">;
 type Buscador = Tables<"emergencia_buscadores">;
+
+const VEINTICUATRO_HORAS_MS = 24 * 60 * 60 * 1000;
 
 const fmt = (n: number | null | undefined) =>
   n == null ? "—" : new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", minimumFractionDigits: 0 }).format(n);
@@ -26,6 +32,15 @@ const AdminEmergencia = () => {
   const [buscadores, setBuscadores] = useState<Buscador[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [detalle, setDetalle] = useState<Inmueble | null>(null);
+
+  // "Ahora" se refresca solo (no depende de que lleguen datos nuevos) para que el
+  // contador de pendientes con +24h se mantenga correcto con el simple paso del tiempo.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(interval);
+  }, []);
 
   const load = async () => {
     setLoading(true);
@@ -76,6 +91,11 @@ const AdminEmergencia = () => {
 
   const visibles = inmuebles.filter((i) => (filtroEstado === "Todos" ? true : i.estado === filtroEstado));
 
+  const pendientesVencidos = useMemo(
+    () => inmuebles.filter((i) => i.estado === "Pendiente" && now - new Date(i.fecha_creacion).getTime() > VEINTICUATRO_HORAS_MS).length,
+    [inmuebles, now],
+  );
+
   if (loading) {
     return <div className="flex justify-center py-16"><Loader2 className="animate-spin text-primary" size={28} /></div>;
   }
@@ -95,6 +115,11 @@ const AdminEmergencia = () => {
           className={`flex items-center gap-2 px-4 py-2.5 font-heading text-sm font-medium border-b-2 -mb-px transition-colors ${tab === "inmuebles" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
         >
           <Home size={16} /> Publicaciones ({inmuebles.filter((i) => i.estado === "Pendiente").length} pendientes)
+          {pendientesVencidos > 0 && (
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-destructive text-destructive-foreground font-heading text-[10px] font-bold" title="Pendientes con más de 24 horas sin revisión">
+              <AlertTriangle size={11} /> {pendientesVencidos} +24h
+            </span>
+          )}
         </button>
         <button
           onClick={() => setTab("buscadores")}
@@ -145,7 +170,13 @@ const AdminEmergencia = () => {
                   </p>
                   <p className="font-body text-sm font-bold text-primary tabular-nums mt-1">{fmt(inm.canon)}/mes</p>
                 </div>
-                <div className="flex gap-2 shrink-0">
+                <div className="flex gap-2 shrink-0 flex-wrap">
+                  <button
+                    onClick={() => setDetalle(inm)}
+                    className="flex items-center gap-1 px-3 py-2 border border-foreground/10 text-muted-foreground font-heading text-xs font-semibold hover:bg-foreground/5 transition-colors"
+                  >
+                    <Eye size={14} /> Ver detalle
+                  </button>
                   <button
                     disabled={savingId === inm.id}
                     onClick={() => toggleInmobiliariaEO(inm)}
@@ -217,6 +248,74 @@ const AdminEmergencia = () => {
           ))}
         </div>
       )}
+
+      <Dialog open={!!detalle} onOpenChange={(o) => !o && setDetalle(null)}>
+        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+          {detalle && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-heading text-lg">
+                  {detalle.tipo_inmueble} · {detalle.barrio}, {detalle.ciudad}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-2">
+                <div>
+                  <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase mb-1.5">
+                    Vista previa
+                  </p>
+                  {detalle.imagen_preview_url ? (
+                    <div className="relative rounded-xl overflow-hidden border border-foreground/10">
+                      <img src={detalle.imagen_preview_url} alt="Vista previa del inmueble" className="w-full h-48 object-cover" />
+                      <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-background/90 font-heading text-[9px] font-bold uppercase tracking-wide text-foreground">
+                        {detalle.imagen_preview_fuente === "automatica" ? "Encontrada automáticamente" : detalle.imagen_preview_fuente === "manual" ? "Subida manualmente" : "Sin fuente"}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 rounded-xl bg-muted/20 border border-foreground/10 p-4 text-muted-foreground">
+                      <ImageOff size={16} />
+                      <p className="font-body text-xs">No se generó ninguna vista previa para esta publicación.</p>
+                    </div>
+                  )}
+                </div>
+
+                {detalle.link_portal_externo && (
+                  <div>
+                    <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase mb-1">
+                      Link en otro portal
+                    </p>
+                    <a
+                      href={detalle.link_portal_externo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 font-body text-sm text-primary hover:underline break-all"
+                    >
+                      <ExternalLink size={13} className="shrink-0" /> {detalle.link_portal_externo}
+                    </a>
+                  </div>
+                )}
+
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-1.5">
+                    <CalendarDays size={14} className="text-muted-foreground" />
+                    <span className="font-body text-xs text-foreground">
+                      Disponible desde{" "}
+                      {detalle.disponible_desde
+                        ? new Date(detalle.disponible_desde + "T12:00:00").toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" })
+                        : "sin especificar"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <PawPrint size={14} className={detalle.acepta_mascotas ? "text-primary" : "text-muted-foreground"} />
+                    <span className="font-body text-xs text-foreground">
+                      {detalle.acepta_mascotas ? "Acepta mascotas" : "No acepta mascotas"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
