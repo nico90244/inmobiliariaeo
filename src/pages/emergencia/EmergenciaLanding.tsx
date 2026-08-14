@@ -67,7 +67,7 @@ const EmergenciaLanding = () => {
               {/* Oferente — tarjeta oscura */}
               <Link
                 to="/emergencia-terremoto/publicar"
-                className="reveal reveal-delay-1 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-secondary text-secondary-foreground border border-secondary shadow-lg transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20"
+                className="reveal reveal-delay-1 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-secondary text-secondary-foreground border border-primary/25 shadow-lg transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary hover:shadow-[0_0_0_1px_hsl(var(--primary)/0.5),0_0_20px_hsl(var(--primary)/0.4),0_0_48px_hsl(var(--primary)/0.2)]"
               >
                 <div className="pointer-events-none absolute -top-24 -right-16 w-64 h-64 rounded-full bg-primary/25 blur-[80px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
                 <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-primary/15 to-transparent transition-transform duration-[1200ms] ease-out group-hover:translate-x-full" aria-hidden="true" />
@@ -105,11 +105,11 @@ const EmergenciaLanding = () => {
                 <h2 className="relative font-display text-xl md:text-2xl font-bold text-foreground mb-3 leading-snug">
                   Estoy buscando arriendo
                 </h2>
-                <p className="relative font-body text-sm text-muted-foreground mb-8 leading-relaxed">
+                <p className="relative font-body text-sm text-foreground/70 mb-8 leading-relaxed transition-colors duration-500 group-hover:text-foreground/90">
                   Desliza entre las opciones disponibles: te interesa o no. Cuando algo te
                   guste, te conectamos por WhatsApp para el siguiente paso.
                 </p>
-                <span className="relative mt-auto inline-flex items-center gap-2 py-3 px-6 rounded-full bg-secondary text-secondary-foreground font-heading text-xs font-semibold tracking-widest uppercase shadow-sm transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:gap-3">
+                <span className="relative z-10 mt-auto inline-flex items-center gap-2 py-3 px-6 rounded-full bg-secondary text-secondary-foreground font-heading text-xs font-bold tracking-widest uppercase shadow-sm transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:gap-3 group-hover:shadow-[0_0_16px_hsl(var(--primary)/0.45)]">
                   Empezar a buscar
                   <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
