@@ -292,7 +292,7 @@ const AdminAlquileres = () => {
 
               <div>
                 <h4 className="font-heading text-xs font-semibold tracking-widest text-primary uppercase mb-2">Pago del Inquilino</h4>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Valor canon" type="number" value={pagoForm.valor_canon ?? ""} onChange={v => setPagoForm(f => ({ ...f, valor_canon: v === "" ? null : Number(v) }))} />
                   <Field label="Valor administración" type="number" value={pagoForm.valor_administracion ?? ""} onChange={v => setPagoForm(f => ({ ...f, valor_administracion: v === "" ? null : Number(v) }))} />
                   <Field label="Valor recibido" type="number" value={pagoForm.valor_recibido ?? ""} onChange={v => setPagoForm(f => ({ ...f, valor_recibido: v === "" ? null : Number(v) }))} />
@@ -311,7 +311,7 @@ const AdminAlquileres = () => {
 
               <div>
                 <h4 className="font-heading text-xs font-semibold tracking-widest text-primary uppercase mb-2">Pago al Propietario</h4>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Field label="Valor al propietario" type="number" value={pagoForm.valor_propietario ?? ""} onChange={v => setPagoForm(f => ({ ...f, valor_propietario: v === "" ? null : Number(v) }))} />
                   <Field label="Fecha pago" type="date" value={pagoForm.fecha_pago_propietario ?? ""} onChange={v => setPagoForm(f => ({ ...f, fecha_pago_propietario: v }))} />
                 </div>

@@ -270,7 +270,7 @@ const AdminPolizas = () => {
                 <p><strong>Inmueble:</strong> {props[selectedContrato.propiedad_id]?.nombre_inmueble}</p>
                 <p><strong>Compañía:</strong> {nombreCompania(selectedContrato)}</p>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor</label>
                   <input type="number" value={pagoForm.valor ?? ""} onFocus={(e) => e.target.select()} onChange={e => setPagoForm(f => ({ ...f, valor: e.target.value === "" ? null : Number(e.target.value) }))}

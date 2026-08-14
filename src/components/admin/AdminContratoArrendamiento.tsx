@@ -87,9 +87,10 @@ interface Props {
   onClose: () => void;
   propiedad: Propiedad;
   existingId?: string | null;
+  prefill?: { nombre: string; celular: string } | null;
 }
 
-const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Props) => {
+const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId, prefill }: Props) => {
   const { toast } = useToast();
   const canon = propiedad.precio ?? 0;
   const [form, setForm] = useState<Contrato>(emptyContrato(propiedad.id, canon));
@@ -112,7 +113,11 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         if (data) setForm({ ...emptyContrato(propiedad.id, canon), ...data });
       });
     } else {
-      const base = emptyContrato(propiedad.id, canon);
+      const base: Contrato = {
+        ...emptyContrato(propiedad.id, canon),
+        inquilino_nombre: prefill?.nombre || "",
+        inquilino_celular: prefill?.celular || "",
+      };
       if (propiedad.propietario_id) {
         setPropietarioId(propiedad.propietario_id);
         (supabase as any).from("propietarios").select("nombre, apellido, numero_documento, telefono").eq("id", propiedad.propietario_id).single().then(({ data }: any) => {
@@ -131,7 +136,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
         setForm(base);
       }
     }
-  }, [open, existingId, propiedad.id, propiedad.propietario_id, canon]);
+  }, [open, existingId, propiedad.id, propiedad.propietario_id, canon, prefill]);
 
   const set = (field: keyof Contrato, value: any) => setForm((f) => ({ ...f, [field]: value }));
 
@@ -282,6 +287,11 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
           <p className="font-body text-sm text-muted-foreground">
             {propiedad.nombre_inmueble} · Canon: <strong>{formatCOP(canon)}</strong>
           </p>
+          {!existingId && prefill && (
+            <p className="font-body text-xs text-primary bg-primary/5 border border-primary/20 px-3 py-2 mt-2">
+              Datos precargados de la cita agendada de <strong>{prefill.nombre}</strong>. Puedes modificarlos si es necesario.
+            </p>
+          )}
         </DialogHeader>
 
         <div className="space-y-6 mt-2">
@@ -291,7 +301,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4 pb-2 border-b border-foreground/10">
               <FileText size={15} className="text-primary" /> Datos del inquilino
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>Nombre completo *</label>
                 <input type="text" value={form.inquilino_nombre} onChange={(e) => set("inquilino_nombre", e.target.value)} className={inputCls} />
@@ -311,7 +321,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
             </div>
 
             {/* Documentos inquilino */}
-            <div className="grid grid-cols-2 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               <div>
                 <label className={labelCls}>Documentos del inquilino</label>
                 <label className="flex items-center gap-2 px-3 py-2 border border-foreground/10 cursor-pointer hover:bg-muted/30 transition-colors font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground w-fit mt-1">
@@ -346,7 +356,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4 pb-2 border-b border-foreground/10">
               <FileText size={15} className="text-primary" /> Condiciones del contrato
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>Valor del canon</label>
                 <input
@@ -409,7 +419,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>Nombre completo</label>
                 <input
@@ -464,8 +474,8 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
 
             {/* Valor propietario */}
             <div className="mt-4 bg-primary/5 border border-primary/20 p-4">
-              <div className="flex items-end justify-between gap-4">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div className="flex-1 min-w-0">
                   <label className={labelCls}>Valor a pagar al propietario</label>
                   <input
                     type="number"
@@ -475,7 +485,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
                     className={inputCls}
                   />
                 </div>
-                <div className="text-right shrink-0">
+                <div className="text-right sm:shrink-0">
                   <p className="font-heading text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">Cálculo automático</p>
                   <p className="font-body text-sm text-muted-foreground">
                     {formatCOP(form.valor_canon as number)} − 10%
@@ -494,7 +504,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
             <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4 pb-2 border-b border-foreground/10">
               <FileText size={15} className="text-primary" /> Seguro / Póliza
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>Inmueble asegurado</label>
                 <select
@@ -520,7 +530,7 @@ const AdminContratoArrendamiento = ({ open, onClose, propiedad, existingId }: Pr
             </div>
 
             {form.poliza_asegurado && (
-              <div className="grid grid-cols-2 gap-4 mt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                 {form.poliza_compania === "Otra" && (
                   <div>
                     <label className={labelCls}>¿Cuál?</label>

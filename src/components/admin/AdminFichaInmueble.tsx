@@ -230,7 +230,7 @@ const AdminFichaInmueble = ({ open, onClose, propiedadId, onChanged }: Props) =>
                 </h3>
                 {contratoActivo ? (
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm font-body">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-body">
                       <div>
                         <p className="font-heading text-xs font-semibold text-primary uppercase mb-1">Inquilino</p>
                         <p>{contratoActivo.inquilino_nombre}</p>
@@ -260,7 +260,7 @@ const AdminFichaInmueble = ({ open, onClose, propiedadId, onChanged }: Props) =>
                       </div>
                     )}
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <p className={labelCls}>Documentos inquilino</p>
                         <DocLinks docs={contratoActivo.docs_inquilino || []} />
@@ -306,7 +306,7 @@ const AdminFichaInmueble = ({ open, onClose, propiedadId, onChanged }: Props) =>
                       <div key={c.id} className="border border-foreground/10 p-3 text-xs font-body">
                         <p className="font-heading text-sm font-semibold text-foreground">{c.inquilino_nombre}</p>
                         <p className="text-muted-foreground">{fmtDate(c.fecha_inicio)} — {fmtDate(c.fecha_fin)} · Canon: {fmt(c.valor_canon)}</p>
-                        <div className="grid grid-cols-2 gap-3 mt-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                           <DocLinks docs={c.docs_inquilino || []} />
                           <DocLinks docs={c.docs_codeudor || []} />
                         </div>

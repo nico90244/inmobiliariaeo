@@ -475,7 +475,7 @@ const AdminReportes = () => {
           {porEstado.length === 0 ? (
             <p className="font-body text-sm text-muted-foreground py-10 text-center">Sin datos</p>
           ) : (
-            <div className="grid grid-cols-2 gap-4 items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
               <DonutChart data={porEstado} centerLabel={propiedades.length} centerSub="total" height={180} />
               <div className="space-y-1">
                 <ChartLegend items={porEstado.map(e => ({ name: e.name, color: e.color, value: e.value }))} />

@@ -468,7 +468,7 @@ const AdminPropietarios = () => {
                 </DialogTitle>
               </DialogHeader>
 
-              <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mt-4 text-sm">
                 {selected.tipo_documento && selected.numero_documento && (
                   <InfoRow icon={FileText} label="Documento" value={`${selected.tipo_documento} ${selected.numero_documento}`} />
                 )}
@@ -569,7 +569,7 @@ const AdminPropietarios = () => {
           <div className="space-y-5 mt-4">
             {/* Datos personales */}
             <Section label="Datos personales">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Nombre *">
                   <input type="text" value={form.nombre} onChange={e => setForm(f => ({ ...f, nombre: e.target.value }))} className={inp} maxLength={80} />
                 </Field>
@@ -577,7 +577,7 @@ const AdminPropietarios = () => {
                   <input type="text" value={form.apellido} onChange={e => setForm(f => ({ ...f, apellido: e.target.value }))} className={inp} maxLength={80} />
                 </Field>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Tipo documento">
                   <select value={form.tipo_documento} onChange={e => setForm(f => ({ ...f, tipo_documento: e.target.value }))} className={inp}>
                     {TIPOS_DOC.map(t => <option key={t} value={t}>{t}</option>)}
@@ -587,7 +587,7 @@ const AdminPropietarios = () => {
                   <input type="text" value={form.numero_documento} onChange={e => setForm(f => ({ ...f, numero_documento: e.target.value }))} className={inp} maxLength={20} />
                 </Field>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Teléfono">
                   <input type="tel" value={form.telefono} onChange={e => setForm(f => ({ ...f, telefono: e.target.value }))} className={inp} maxLength={20} />
                 </Field>
@@ -595,7 +595,7 @@ const AdminPropietarios = () => {
                   <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className={inp} maxLength={120} />
                 </Field>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Ciudad">
                   <input type="text" value={form.ciudad} onChange={e => setForm(f => ({ ...f, ciudad: e.target.value }))} className={inp} maxLength={60} />
                 </Field>
@@ -607,7 +607,7 @@ const AdminPropietarios = () => {
 
             {/* Datos bancarios */}
             <Section label="Datos bancarios">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Banco">
                   <input type="text" value={form.banco} onChange={e => setForm(f => ({ ...f, banco: e.target.value }))} className={inp} placeholder="Ej. Bancolombia, Davivienda…" maxLength={80} />
                 </Field>

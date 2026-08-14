@@ -46,7 +46,11 @@ export const usePropiedades = (filters?: {
         query = query.lte("precio", filters.precioMax);
       }
 
-      const { data, error } = await query.order("fecha_creacion", { ascending: false });
+      query = filters?.destacada || filters?.tipo_negocio
+        ? query.order("precio", { ascending: true })
+        : query.order("fecha_creacion", { ascending: false });
+
+      const { data, error } = await query;
       if (error) throw error;
       return data as Propiedad[];
     },

@@ -56,6 +56,7 @@ const Admin = () => {
   const [form, setForm] = useState<Partial<Propiedad>>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [incluyeAdmin, setIncluyeAdmin] = useState(false);
 
   // Photo uploads
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -83,6 +84,14 @@ const Admin = () => {
   const [contratoOpen, setContratoOpen] = useState(false);
   const [contratoPropiedad, setContratoPropiedad] = useState<Propiedad | null>(null);
   const [contratoExistingId, setContratoExistingId] = useState<string | null>(null);
+  const [contratoPrefill, setContratoPrefill] = useState<{ nombre: string; celular: string } | null>(null);
+
+  // Selección de inquilino a partir de citas agendadas (al marcar "Arrendado")
+  const [tenantSelectOpen, setTenantSelectOpen] = useState(false);
+  const [tenantSelectProp, setTenantSelectProp] = useState<Propiedad | null>(null);
+  const [tenantCandidates, setTenantCandidates] = useState<
+    { id: string; nombre: string; celular: string; fecha: string; estado: string }[]
+  >([]);
 
   // Captación → propiedad: registra de qué captación provino el form abierto
   const [captacionSource, setCaptacionSource] = useState<Captacion | null>(null);
@@ -109,10 +118,11 @@ const Admin = () => {
     setCoverZoom(1.0);
     setCaptacionSource(c);
     setSelectedCaptacion(null);
+    setIncluyeAdmin(false);
     setFormOpen(true);
   };
 
-  const openContrato = async (p: Propiedad) => {
+  const openContrato = async (p: Propiedad, prefill?: { nombre: string; celular: string } | null) => {
     // Buscar contrato activo existente (si no hay, maybeSingle devuelve data=null sin error)
     const { data, error } = await (supabase as any)
       .from("contratos_arrendamiento")
@@ -128,7 +138,33 @@ const Admin = () => {
     }
     setContratoExistingId(data?.id ?? null);
     setContratoPropiedad(p);
+    setContratoPrefill(prefill ?? null);
     setContratoOpen(true);
+  };
+
+  // Busca personas que vieron/agendaron cita para esta propiedad, para elegir quién queda como inquilino
+  const fetchTenantCandidates = async (propiedadId: string) => {
+    const { data: reservas } = await supabase
+      .from("citas_reservas")
+      .select("id, nombre_cliente, celular_cliente, estado, slot_id, fecha_creacion")
+      .eq("propiedad_id", propiedadId)
+      .neq("estado", "Eliminada")
+      .order("fecha_creacion", { ascending: false });
+
+    const slotIds = ((reservas || []) as any[]).map((r) => r.slot_id).filter(Boolean);
+    let slotMap: Record<string, { fecha: string; hora: string }> = {};
+    if (slotIds.length > 0) {
+      const { data: slots } = await supabase.from("citas_disponibles").select("id, fecha, hora").in("id", slotIds);
+      (slots || []).forEach((s: any) => { slotMap[s.id] = s; });
+    }
+
+    return ((reservas || []) as any[]).map((r) => {
+      const slot = r.slot_id ? slotMap[r.slot_id] : null;
+      const fecha = slot
+        ? `${new Date(slot.fecha + "T12:00:00").toLocaleDateString("es-CO")} ${slot.hora}`
+        : new Date(r.fecha_creacion).toLocaleDateString("es-CO");
+      return { id: r.id, nombre: r.nombre_cliente, celular: r.celular_cliente, estado: r.estado, fecha };
+    });
   };
 
   // Quick status change from table
@@ -141,11 +177,29 @@ const Admin = () => {
     toast({ title: `Estado → ${nuevoEstado}` });
     loadData();
     queryClient.invalidateQueries({ queryKey: ["propiedades"] });
-    // If marking as Arrendado on an Alquiler property, open contract form
-    // (reusa openContrato para detectar si ya existe un contrato activo y no crear uno duplicado)
+    // If marking as Arrendado on an Alquiler property, let the admin pick the tenant from
+    // people who saw/booked a viewing, then open the contract form (reusa openContrato para
+    // detectar si ya existe un contrato activo y no crear uno duplicado)
     if (nuevoEstado === "Arrendado" && p.tipo_negocio === "Alquiler") {
-      openContrato({ ...p, estado: nuevoEstado });
+      const propActualizada = { ...p, estado: nuevoEstado };
+      const candidatos = await fetchTenantCandidates(p.id);
+      if (candidatos.length > 0) {
+        setTenantCandidates(candidatos);
+        setTenantSelectProp(propActualizada);
+        setTenantSelectOpen(true);
+      } else {
+        openContrato(propActualizada);
+      }
     }
+  };
+
+  const chooseTenantCandidate = (candidate: { nombre: string; celular: string } | null) => {
+    setTenantSelectOpen(false);
+    if (tenantSelectProp) {
+      openContrato(tenantSelectProp, candidate);
+    }
+    setTenantSelectProp(null);
+    setTenantCandidates([]);
   };
 
   // Metrics by status
@@ -260,6 +314,7 @@ const Admin = () => {
     setCoverPosX(50);
     setCoverPosY(50);
     setCoverZoom(1.0);
+    setIncluyeAdmin(false);
     setFormOpen(true);
   };
 
@@ -274,6 +329,7 @@ const Admin = () => {
     setCoverPosX(x);
     setCoverPosY(y);
     setCoverZoom((p as any).foto_portada_zoom ?? 1.0);
+    setIncluyeAdmin((p.administracion ?? 0) > 0);
     setFormOpen(true);
   };
 
@@ -917,7 +973,7 @@ const Admin = () => {
               <DialogTitle className="font-heading text-xl">{editingId ? "Editar propiedad" : "Nueva propiedad"}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre inmueble *</label>
                   <input type="text" value={form.nombre_inmueble || ""} onChange={(e) => updateField("nombre_inmueble", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
@@ -930,7 +986,7 @@ const Admin = () => {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo negocio</label>
                   <select value={form.tipo_negocio || "Venta"} onChange={(e) => updateField("tipo_negocio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
@@ -961,7 +1017,7 @@ const Admin = () => {
                   </span>
                 </label>
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Ciudad</label>
                   <input type="text" value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
@@ -975,7 +1031,7 @@ const Admin = () => {
                   <input type="text" value={form.barrio || ""} onChange={(e) => updateField("barrio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Precio</label>
                   <input type="number" value={form.precio ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("precio", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
@@ -989,7 +1045,7 @@ const Admin = () => {
                   <input type="number" value={form.estrato ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("estrato", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Habitaciones</label>
                   <input type="number" value={form.habitaciones ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("habitaciones", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
@@ -1025,21 +1081,26 @@ const Admin = () => {
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Incluye administración?</label>
                   <select
-                    value={(form.administracion ?? 0) > 0 ? "si" : "no"}
-                    onChange={(e) => updateField("administracion", e.target.value === "si" ? (form.administracion && form.administracion > 0 ? form.administracion : 1) : 0)}
+                    value={incluyeAdmin ? "si" : "no"}
+                    onChange={(e) => {
+                      const si = e.target.value === "si";
+                      setIncluyeAdmin(si);
+                      if (!si) updateField("administracion", 0);
+                    }}
                     className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
                   >
                     <option value="no">No</option>
                     <option value="si">Sí</option>
                   </select>
-                  {(form.administracion ?? 0) > 0 && (
+                  {incluyeAdmin && (
                     <div className="mt-2">
                       <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor administración</label>
                       <input type="number" value={form.administracion ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("administracion", e.target.value === "" ? 0 : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                      <p className="font-body text-[11px] text-muted-foreground mt-1">Este valor se muestra por separado y no se suma al precio/canon.</p>
                     </div>
                   )}
                 </div>
@@ -1071,7 +1132,7 @@ const Admin = () => {
                 <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4">
                   <Video size={16} className="text-primary" /> Video de la propiedad
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Red social del video</label>
                     <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
@@ -1205,11 +1266,45 @@ const Admin = () => {
         {contratoPropiedad && (
           <AdminContratoArrendamiento
             open={contratoOpen}
-            onClose={() => { setContratoOpen(false); setContratoPropiedad(null); }}
+            onClose={() => { setContratoOpen(false); setContratoPropiedad(null); setContratoPrefill(null); }}
             propiedad={contratoPropiedad}
             existingId={contratoExistingId}
+            prefill={contratoPrefill}
           />
         )}
+
+        {/* Selección de inquilino a partir de citas agendadas */}
+        <Dialog open={tenantSelectOpen} onOpenChange={(o) => { if (!o) chooseTenantCandidate(null); }}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="font-heading text-xl">¿Quién tomó el inmueble?</DialogTitle>
+            </DialogHeader>
+            <p className="font-body text-sm text-muted-foreground mt-1">
+              {tenantSelectProp?.nombre_inmueble} tuvo {tenantCandidates.length} {tenantCandidates.length === 1 ? "cita agendada" : "citas agendadas"}. Selecciona quién queda como inquilino para precargar sus datos en el contrato.
+            </p>
+            <div className="space-y-2 mt-3 max-h-[50vh] overflow-y-auto">
+              {tenantCandidates.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => chooseTenantCandidate({ nombre: c.nombre, celular: c.celular })}
+                  className="w-full text-left border border-foreground/10 p-3 hover:border-primary hover:bg-primary/5 transition-colors"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-heading text-sm font-bold text-foreground">{c.nombre}</p>
+                    <span className="shrink-0 text-[10px] font-heading font-semibold tracking-widest uppercase text-muted-foreground">{c.estado}</span>
+                  </div>
+                  <p className="font-body text-xs text-muted-foreground mt-0.5">{c.celular} · {c.fecha}</p>
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => chooseTenantCandidate(null)}
+              className="w-full mt-3 py-2.5 bg-muted text-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-muted/80 transition-colors"
+            >
+              Ninguno de la lista / continuar sin seleccionar
+            </button>
+          </DialogContent>
+        </Dialog>
 
         {/* Captacion detail modal */}
         <Dialog open={!!selectedCaptacion} onOpenChange={(o) => !o && setSelectedCaptacion(null)}>

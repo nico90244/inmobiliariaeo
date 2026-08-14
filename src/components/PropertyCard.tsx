@@ -35,29 +35,32 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
 
       {/* Content */}
       <div className="p-4">
-        {/* Tipo inmueble */}
-        <p className="font-heading text-[10px] font-semibold tracking-[0.15em] text-muted-foreground uppercase mb-1">
-          {property.tipo_inmueble}
-        </p>
+        {/* Text block — clickable */}
+        <Link to={`/propiedades/${property.id}`} className="block cursor-pointer">
+          {/* Tipo inmueble */}
+          <p className="font-heading text-[10px] font-semibold tracking-[0.15em] text-muted-foreground uppercase mb-1">
+            {property.tipo_inmueble}
+          </p>
 
-        {/* Nombre */}
-        <h3 className="font-heading text-base font-bold text-foreground mb-1.5 line-clamp-1">
-          {property.nombre_inmueble}
-        </h3>
+          {/* Nombre */}
+          <h3 className="font-heading text-base font-bold text-foreground mb-1.5 line-clamp-1">
+            {property.nombre_inmueble}
+          </h3>
 
-        {/* Barrio + Estrato */}
-        <div className="flex items-center gap-1 text-muted-foreground mb-3">
-          <MapPin size={14} className="shrink-0" />
-          <span className="font-body text-xs">
-            {property.barrio}
-            {property.estrato ? ` · Estrato ${property.estrato}` : ""}
-          </span>
-        </div>
+          {/* Barrio + Estrato */}
+          <div className="flex items-center gap-1 text-muted-foreground mb-3">
+            <MapPin size={14} className="shrink-0" />
+            <span className="font-body text-xs">
+              {property.barrio}
+              {property.estrato ? ` · Estrato ${property.estrato}` : ""}
+            </span>
+          </div>
 
-        {/* Precio */}
-        <p className="font-body text-xl font-bold text-primary mb-3 tabular-nums">
-          {formatPrice(property.precio)}
-        </p>
+          {/* Precio */}
+          <p className="font-body text-xl font-bold text-primary mb-3 tabular-nums">
+            {formatPrice(property.precio)}
+          </p>
+        </Link>
 
         {/* Divider */}
         <div className="border-t border-foreground/5 mb-3" />
