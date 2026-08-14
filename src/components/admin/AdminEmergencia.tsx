@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase, type TablesUpdate } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import type { Tables } from "@/integrations/supabase/types";
-import { Loader2, CheckCircle2, XCircle, PauseCircle, Home, Users, RefreshCw } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle, PauseCircle, Home, Users, RefreshCw, BadgeCheck } from "lucide-react";
 
 type Inmueble = Tables<"emergencia_inmuebles">;
 type Buscador = Tables<"emergencia_buscadores">;
@@ -58,6 +58,20 @@ const AdminEmergencia = () => {
   const rechazar = (id: string) => {
     const motivo = window.prompt("Motivo del rechazo (se lo mostraremos al oferente):") ?? "";
     actualizarEstado(id, "Rechazada", motivo || undefined);
+  };
+
+  const toggleInmobiliariaEO = async (inm: Inmueble) => {
+    setSavingId(inm.id);
+    const { error } = await supabase
+      .from("emergencia_inmuebles")
+      .update({ es_inmobiliaria_eo: !inm.es_inmobiliaria_eo } satisfies TablesUpdate<"emergencia_inmuebles">)
+      .eq("id", inm.id);
+    setSavingId(null);
+    if (error) {
+      toast({ title: "No se pudo actualizar", description: error.message, variant: "destructive" });
+      return;
+    }
+    load();
   };
 
   const visibles = inmuebles.filter((i) => (filtroEstado === "Todos" ? true : i.estado === filtroEstado));
@@ -116,6 +130,11 @@ const AdminEmergencia = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className={`px-2 py-0.5 rounded-sm font-heading text-[10px] font-bold uppercase tracking-wide ${estadoBadge[inm.estado] || ""}`}>{inm.estado}</span>
+                    {inm.es_inmobiliaria_eo && (
+                      <span className="flex items-center gap-1 px-2 py-0.5 rounded-sm bg-primary/10 text-primary font-heading text-[10px] font-bold uppercase tracking-wide">
+                        <BadgeCheck size={11} /> Verificado EO
+                      </span>
+                    )}
                     <span className="font-heading text-sm font-semibold text-foreground">{inm.tipo_inmueble}</span>
                     <span className="font-body text-xs text-muted-foreground">· {inm.barrio}, {inm.ciudad}</span>
                   </div>
@@ -127,6 +146,18 @@ const AdminEmergencia = () => {
                   <p className="font-body text-sm font-bold text-primary tabular-nums mt-1">{fmt(inm.canon)}/mes</p>
                 </div>
                 <div className="flex gap-2 shrink-0">
+                  <button
+                    disabled={savingId === inm.id}
+                    onClick={() => toggleInmobiliariaEO(inm)}
+                    title="Marcar como inventario propio de Inmobiliaria EO"
+                    className={`flex items-center gap-1 px-3 py-2 border font-heading text-xs font-semibold transition-colors disabled:opacity-50 ${
+                      inm.es_inmobiliaria_eo
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-foreground/10 text-muted-foreground hover:bg-foreground/5"
+                    }`}
+                  >
+                    <BadgeCheck size={14} /> {inm.es_inmobiliaria_eo ? "Es EO" : "Marcar EO"}
+                  </button>
                   {inm.estado !== "Disponible" && (
                     <button
                       disabled={savingId === inm.id}

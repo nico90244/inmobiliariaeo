@@ -4,7 +4,7 @@ const EmergenciaBanner = () => {
   return (
     <section
       aria-label="Iniciativa terremoto Colombia"
-      className="sticky top-20 z-40 overflow-hidden bg-background/95 backdrop-blur-md border-b border-foreground/10 shadow-sm"
+      className="sticky top-16 z-40 overflow-hidden bg-background/95 backdrop-blur-md border-b border-foreground/10 shadow-sm"
     >
       {/* Franja nítida con los colores de la bandera de Colombia */}
       <div className="flex h-1.5 w-full" aria-hidden="true">

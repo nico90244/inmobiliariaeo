@@ -352,6 +352,7 @@ export type Database = {
           descripcion: string | null
           desea_administracion: boolean
           direccion: string | null
+          es_inmobiliaria_eo: boolean
           estado: string
           fecha_actualizacion: string
           fecha_creacion: string
@@ -386,6 +387,7 @@ export type Database = {
           descripcion?: string | null
           desea_administracion?: boolean
           direccion?: string | null
+          es_inmobiliaria_eo?: boolean
           estado?: string
           fecha_actualizacion?: string
           fecha_creacion?: string
@@ -420,6 +422,7 @@ export type Database = {
           descripcion?: string | null
           desea_administracion?: boolean
           direccion?: string | null
+          es_inmobiliaria_eo?: boolean
           estado?: string
           fecha_actualizacion?: string
           fecha_creacion?: string
