@@ -3,7 +3,26 @@
     "allow": [
       "Bash(git init *)",
       "Bash(git remote *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git branch *)",
+      "PowerShell(python3 \"C:\\\\Users\\\\Vale\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"real estate luxury property colombia professional web\" --design-system -f markdown -p \"Inmobiliaria Eliana Osorio\" 2>&1)",
+      "PowerShell(python3 \"C:\\\\Users\\\\Vale\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"admin dashboard property management crm professional\" --design-system -f markdown -p \"Admin Panel\" 2>&1)",
+      "PowerShell(python \"C:\\\\Users\\\\Vale\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"real estate luxury property colombia professional web\" --design-system -f markdown -p \"Inmobiliaria Eliana Osorio\" 2>&1)",
+      "mcp__claude_ai_Vercel__get_runtime_errors",
+      "Skill(design-sync)",
+      "Skill(design-sync:*)",
+      "PowerShell(python \"C:\\\\Users\\\\Vale\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"luxury real estate property rental Colombia gold black minimal\" --design-system -p \"Inmobiliaria Eliana Osorio\" -f markdown 2>&1)",
+      "PowerShell(python \"C:\\\\Users\\\\Vale\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"luxury real estate gold black typography spacing\" --domain ux -n 8 2>&1)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:8084\" -TimeoutSec 5 -UseBasicParsing)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:8084/src/components/PropertyCard.tsx\" -TimeoutSec 3 -UseBasicParsing -ErrorAction SilentlyContinue)",
+      "Bash(git pull *)",
+      "Bash(git commit -m ' *)",
+      "Bash(Remove-Item \"d:\\\\Proyectos\\\\inmobiliariaeo_pag_web\\\\.git\\\\index.lock\" -Force)",
+      "Bash(npx supabase *)",
+      "Bash(grep -n \"^      [a-zA-Z_]*: {$\" /tmp/live_types.ts)"
+    ],
+    "additionalDirectories": [
+      "d:\\Proyectos\\inmobiliariaeo_pag_web\\.git"
     ]
   }
 }
