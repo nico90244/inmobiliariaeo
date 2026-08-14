@@ -138,12 +138,20 @@ const Footer = () => {
           <p className="font-heading text-xs tracking-widest text-secondary-foreground/40 uppercase text-center sm:text-left">
             © {new Date().getFullYear()} Inmobiliaria Eliana Osorio. Todos los derechos reservados.
           </p>
-          <Link
-            to="/admin"
-            className="font-heading text-[10px] tracking-widest text-secondary-foreground/20 hover:text-primary/50 transition-colors uppercase"
-          >
-            Acceso Admin
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/politica-privacidad"
+              className="font-heading text-[10px] tracking-widest text-secondary-foreground/40 hover:text-primary transition-colors uppercase"
+            >
+              Política de Datos
+            </Link>
+            <Link
+              to="/admin"
+              className="font-heading text-[10px] tracking-widest text-secondary-foreground/20 hover:text-primary/50 transition-colors uppercase"
+            >
+              Acceso Admin
+            </Link>
+          </div>
         </div>
       </div>
     </footer>);

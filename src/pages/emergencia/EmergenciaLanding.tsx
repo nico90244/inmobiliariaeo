@@ -90,12 +90,13 @@ const EmergenciaLanding = () => {
                 </span>
               </Link>
 
-              {/* Buscador — tarjeta clara */}
+              {/* Buscador — tarjeta clara, borde iluminado al hover */}
               <Link
                 to="/emergencia-terremoto/buscar"
-                className="reveal reveal-delay-2 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-muted/30 border border-foreground/10 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary/60 hover:bg-muted/50 hover:shadow-xl hover:shadow-primary/10"
+                className="reveal reveal-delay-2 group relative isolate overflow-hidden flex flex-col items-start p-8 md:p-10 rounded-3xl bg-muted/20 border border-foreground/10 shadow-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:border-primary hover:shadow-[0_0_45px_-8px] hover:shadow-primary/60"
               >
-                <div className="pointer-events-none absolute -bottom-24 -left-16 w-64 h-64 rounded-full bg-primary/10 blur-[90px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
+                <div className="pointer-events-none absolute -bottom-24 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-[90px] opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
+                <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 ring-1 ring-inset ring-primary/40" aria-hidden="true" />
                 <span className="relative font-heading text-[10px] font-bold tracking-[0.2em] uppercase text-primary mb-6">
                   Busco
                 </span>

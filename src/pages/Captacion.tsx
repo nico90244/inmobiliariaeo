@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Check, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -183,7 +184,12 @@ const Captacion = () => {
                   </div>
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" checked={form.acepta_politica} onChange={(e) => update("acepta_politica", e.target.checked)} className="mt-1 accent-[hsl(40,47%,50%)]" />
-                    <span className="font-body text-xs text-muted-foreground">Acepto la política de tratamiento de datos personales</span>
+                    <span className="font-body text-xs text-muted-foreground">
+                      Acepto la{" "}
+                      <Link to="/politica-privacidad" target="_blank" className="text-primary hover:underline">
+                        política de tratamiento de datos personales
+                      </Link>
+                    </span>
                   </label>
                   <button type="submit" disabled={loading} className="w-full py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                     {loading && <Loader2 size={16} className="animate-spin" />}

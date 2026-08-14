@@ -21,6 +21,7 @@ import EmergenciaLanding from "./pages/emergencia/EmergenciaLanding";
 import EmergenciaPublicar from "./pages/emergencia/EmergenciaPublicar";
 import EmergenciaBuscar from "./pages/emergencia/EmergenciaBuscar";
 import EmergenciaMiPublicacion from "./pages/emergencia/EmergenciaMiPublicacion";
+import PoliticaPrivacidad from "./pages/PoliticaPrivacidad";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/emergencia-terremoto/buscar" element={<EmergenciaBuscar />} />
               <Route path="/emergencia-terremoto/mi-publicacion/:token" element={<EmergenciaMiPublicacion />} />
               <Route path="/mapa-del-sitio" element={<Sitemap />} />
+              <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>

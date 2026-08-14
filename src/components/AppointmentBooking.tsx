@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { CalendarCheck, ChevronLeft, ChevronRight, Loader2, ExternalLink } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { supabase } from "@/lib/supabase";
@@ -37,6 +38,7 @@ const AppointmentBooking = ({ property }: { property: Propiedad }) => {
   const [nombre, setNombre] = useState("");
   const [celular, setCelular] = useState("");
   const [correo, setCorreo] = useState("");
+  const [aceptaPolitica, setAceptaPolitica] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
@@ -84,7 +86,7 @@ const AppointmentBooking = ({ property }: { property: Propiedad }) => {
   const daySlots = selectedDay ? (slotsByDay[selectedDay] || []) : [];
 
   const handleConfirm = async () => {
-    if (!nombre || !celular || !selectedSlot) return;
+    if (!nombre || !celular || !selectedSlot || !aceptaPolitica) return;
     setSubmitting(true);
 
     try {
@@ -227,9 +229,21 @@ const AppointmentBooking = ({ property }: { property: Propiedad }) => {
                 type="email" placeholder="Correo (opcional)" value={correo} onChange={e => setCorreo(e.target.value)}
                 className="w-full bg-background border border-foreground/10 py-2.5 px-3 font-body text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
               />
+              <label className="flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox" checked={aceptaPolitica} onChange={e => setAceptaPolitica(e.target.checked)}
+                  className="mt-0.5 accent-primary"
+                />
+                <span className="font-body text-xs text-muted-foreground">
+                  Acepto la{" "}
+                  <Link to="/politica-privacidad" target="_blank" className="text-primary hover:underline">
+                    política de tratamiento de datos personales
+                  </Link>
+                </span>
+              </label>
               <button
                 onClick={handleConfirm}
-                disabled={submitting || !nombre || !celular}
+                disabled={submitting || !nombre || !celular || !aceptaPolitica}
                 className="w-full py-3 bg-primary text-primary-foreground font-heading text-xs font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {submitting && <Loader2 size={16} className="animate-spin" />}

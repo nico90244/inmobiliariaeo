@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SEO from "@/components/SEO";
+import { Switch } from "@/components/ui/switch";
 import { supabase, type TablesInsert } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { trackSubmitForm } from "@/lib/pixelEvents";
@@ -20,6 +21,8 @@ type FormState = {
   celular: string;
   perfil: "" | "Propietario" | "Agente" | "Inmobiliaria";
   tipo_gestion: "" | "Corretaje" | "Administración";
+  sin_comision: boolean;
+  condiciones_comision: string;
   desea_administracion: boolean;
   tipo_inmueble: string;
   ciudad: string;
@@ -42,7 +45,7 @@ type FormState = {
 };
 
 const emptyForm: FormState = {
-  nombre: "", celular: "", perfil: "", tipo_gestion: "", desea_administracion: false,
+  nombre: "", celular: "", perfil: "", tipo_gestion: "", sin_comision: false, condiciones_comision: "", desea_administracion: false,
   tipo_inmueble: "", ciudad: "Cali", ciudad_otra: "", barrio: "", direccion: "", area_m2: "", habitaciones: "0", banos: "0",
   piso: "", parqueadero: "No", amoblado: false, canon: "", incluye_administracion: false, valor_administracion: "",
   descripcion: "", acepta_politica: false, sitio_web: "",
@@ -132,6 +135,8 @@ const EmergenciaPublicar = () => {
         correo: null,
         perfil: form.perfil as string,
         tipo_gestion: form.tipo_gestion || null,
+        sin_comision: form.tipo_gestion ? form.sin_comision : false,
+        condiciones_comision: form.tipo_gestion && !form.sin_comision ? form.condiciones_comision.trim() || null : null,
         desea_administracion: form.perfil === "Propietario" ? form.desea_administracion : false,
         tipo_inmueble: form.tipo_inmueble,
         ciudad: (form.ciudad === "Otra" ? form.ciudad_otra : form.ciudad).trim(),
@@ -284,20 +289,50 @@ const EmergenciaPublicar = () => {
               {step === 2 && (
                 <div className="space-y-5">
                   {(form.perfil === "Agente" || form.perfil === "Inmobiliaria") ? (
-                    <div>
-                      <span className={labelClass}>¿Cómo gestionas este inmueble?</span>
-                      <div className="grid grid-cols-2 gap-3">
-                        {(["Corretaje", "Administración"] as const).map((t) => (
-                          <button
-                            type="button"
-                            key={t}
-                            onClick={() => update("tipo_gestion", t)}
-                            className={`py-3 px-2 rounded-lg border font-body text-sm transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${form.tipo_gestion === t ? "border-primary bg-primary/10 text-primary shadow-sm" : "border-foreground/10 text-foreground hover:border-primary/40"}`}
-                          >
-                            {t}
-                          </button>
-                        ))}
+                    <div className="space-y-5">
+                      <div>
+                        <span className={labelClass}>¿Cómo gestionas este inmueble?</span>
+                        <div className="grid grid-cols-2 gap-3">
+                          {(["Corretaje", "Administración"] as const).map((t) => (
+                            <button
+                              type="button"
+                              key={t}
+                              onClick={() => update("tipo_gestion", t)}
+                              className={`py-3 px-2 rounded-lg border font-body text-sm transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${form.tipo_gestion === t ? "border-primary bg-primary/10 text-primary shadow-sm" : "border-foreground/10 text-foreground hover:border-primary/40"}`}
+                            >
+                              {t}
+                            </button>
+                          ))}
+                        </div>
                       </div>
+
+                      {form.tipo_gestion && (
+                        <div className="animate-fade-in-up rounded-xl bg-muted/20 border border-foreground/10 p-5 space-y-4">
+                          <label className="flex items-center justify-between gap-3 cursor-pointer">
+                            <span className="font-body text-sm text-foreground">
+                              Sin comisión por {form.tipo_gestion === "Corretaje" ? "el corretaje" : "la administración"}
+                            </span>
+                            <Switch
+                              checked={form.sin_comision}
+                              onCheckedChange={(checked) => update("sin_comision", checked)}
+                            />
+                          </label>
+                          {!form.sin_comision && (
+                            <div className="animate-fade-in-up">
+                              <label className={labelClass} htmlFor="condiciones_comision">Condiciones de la comisión</label>
+                              <textarea
+                                id="condiciones_comision"
+                                rows={2}
+                                maxLength={300}
+                                placeholder={form.tipo_gestion === "Corretaje" ? "Ej: 100% del primer canon de arriendo" : "Ej: 10% mensual del canon"}
+                                value={form.condiciones_comision}
+                                onChange={(e) => update("condiciones_comision", e.target.value)}
+                                className={`${inputClass} resize-none`}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="rounded-xl bg-muted/20 border border-foreground/10 p-5">

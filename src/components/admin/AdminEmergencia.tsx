@@ -121,7 +121,7 @@ const AdminEmergencia = () => {
                   </div>
                   <p className="font-body text-xs text-muted-foreground">
                     {inm.nombre} · {inm.celular} · {inm.perfil}
-                    {inm.tipo_gestion ? ` (${inm.tipo_gestion})` : ""}
+                    {inm.tipo_gestion ? ` (${inm.tipo_gestion}${inm.sin_comision ? " · sin comisión" : inm.condiciones_comision ? ` · ${inm.condiciones_comision}` : ""})` : ""}
                     {inm.desea_administracion ? " · quiere administración (10%)" : ""}
                   </p>
                   <p className="font-body text-sm font-bold text-primary tabular-nums mt-1">{fmt(inm.canon)}/mes</p>

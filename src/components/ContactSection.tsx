@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Phone, MapPin, Loader2, CheckCircle2 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { trackContact } from "@/lib/pixelEvents";
@@ -99,6 +100,12 @@ const ContactSection = () => {
                   <><CheckCircle2 size={16} /> ¡Enviado!</>
                 ) : "Enviar"}
               </button>
+              <p className="font-body text-xs text-muted-foreground -mt-4">
+                Al enviar este formulario aceptas nuestra{" "}
+                <Link to="/politica-privacidad" target="_blank" className="text-primary hover:underline">
+                  política de tratamiento de datos personales
+                </Link>.
+              </p>
             </form>
           </div>
 

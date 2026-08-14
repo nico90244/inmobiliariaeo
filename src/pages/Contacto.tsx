@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Phone, MapPin, Mail } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { trackContact } from "@/lib/pixelEvents";
@@ -76,6 +77,12 @@ const Contacto = () => {
                   <button type="submit" className="px-12 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors">
                     {submitted ? "¡Enviado!" : "Enviar"}
                   </button>
+                  <p className="font-body text-xs text-muted-foreground -mt-4">
+                    Al enviar este formulario aceptas nuestra{" "}
+                    <Link to="/politica-privacidad" target="_blank" className="text-primary hover:underline">
+                      política de tratamiento de datos personales
+                    </Link>.
+                  </p>
                 </form>
               </div>
               <div className="lg:col-span-4 lg:col-start-9 space-y-8 pt-4">

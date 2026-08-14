@@ -12,8 +12,51 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.4"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
+      admins: {
+        Row: {
+          created_at: string
+          email: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       captaciones: {
         Row: {
           barrio: string | null
@@ -24,6 +67,7 @@ export type Database = {
           id: string
           nombre: string | null
           observaciones: string | null
+          reserva_id: string | null
           tipo_inmueble: string | null
           tipo_negocio: string | null
           valor_aproximado: string | null
@@ -37,6 +81,7 @@ export type Database = {
           id?: string
           nombre?: string | null
           observaciones?: string | null
+          reserva_id?: string | null
           tipo_inmueble?: string | null
           tipo_negocio?: string | null
           valor_aproximado?: string | null
@@ -50,11 +95,20 @@ export type Database = {
           id?: string
           nombre?: string | null
           observaciones?: string | null
+          reserva_id?: string | null
           tipo_inmueble?: string | null
           tipo_negocio?: string | null
           valor_aproximado?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "captaciones_reserva_id_fkey"
+            columns: ["reserva_id"]
+            isOneToOne: false
+            referencedRelation: "citas_reservas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       citas_disponibles: {
         Row: {
@@ -169,6 +223,7 @@ export type Database = {
           propiedad_id: string
           propietario_banco: string | null
           propietario_cedula: string | null
+          propietario_celular: string | null
           propietario_nombre: string | null
           propietario_num_cuenta: string | null
           propietario_tipo_cuenta: string | null
@@ -199,6 +254,7 @@ export type Database = {
           propiedad_id: string
           propietario_banco?: string | null
           propietario_cedula?: string | null
+          propietario_celular?: string | null
           propietario_nombre?: string | null
           propietario_num_cuenta?: string | null
           propietario_tipo_cuenta?: string | null
@@ -229,6 +285,7 @@ export type Database = {
           propiedad_id?: string
           propietario_banco?: string | null
           propietario_cedula?: string | null
+          propietario_celular?: string | null
           propietario_nombre?: string | null
           propietario_num_cuenta?: string | null
           propietario_tipo_cuenta?: string | null
@@ -250,7 +307,7 @@ export type Database = {
         Row: {
           acepta_politica: boolean
           celular: string
-          ciudad: string | null
+          ciudad: string
           fecha_creacion: string
           id: string
           nombre: string
@@ -260,7 +317,7 @@ export type Database = {
         Insert: {
           acepta_politica?: boolean
           celular: string
-          ciudad?: string | null
+          ciudad?: string
           fecha_creacion?: string
           id?: string
           nombre: string
@@ -270,7 +327,7 @@ export type Database = {
         Update: {
           acepta_politica?: boolean
           celular?: string
-          ciudad?: string | null
+          ciudad?: string
           fecha_creacion?: string
           id?: string
           nombre?: string
@@ -289,22 +346,26 @@ export type Database = {
           canon: number
           celular: string
           ciudad: string
+          comision_administracion: number
+          condiciones_comision: string | null
           correo: string | null
           descripcion: string | null
           desea_administracion: boolean
           direccion: string | null
           estado: string
+          fecha_actualizacion: string
           fecha_creacion: string
           foto_portada: string | null
-          fotos: string[]
+          fotos: string[] | null
           habitaciones: number
           id: string
           incluye_administracion: boolean
           motivo_rechazo: string | null
           nombre: string
-          parqueadero: string | null
+          parqueadero: string
           perfil: string
           piso: string | null
+          sin_comision: boolean
           tipo_gestion: string | null
           tipo_inmueble: string
           token_gestion: string
@@ -318,23 +379,27 @@ export type Database = {
           barrio?: string | null
           canon: number
           celular: string
-          ciudad: string
+          ciudad?: string
+          comision_administracion?: number
+          condiciones_comision?: string | null
           correo?: string | null
           descripcion?: string | null
           desea_administracion?: boolean
           direccion?: string | null
           estado?: string
+          fecha_actualizacion?: string
           fecha_creacion?: string
           foto_portada?: string | null
-          fotos?: string[]
+          fotos?: string[] | null
           habitaciones?: number
           id?: string
           incluye_administracion?: boolean
           motivo_rechazo?: string | null
           nombre: string
-          parqueadero?: string | null
+          parqueadero?: string
           perfil: string
           piso?: string | null
+          sin_comision?: boolean
           tipo_gestion?: string | null
           tipo_inmueble: string
           token_gestion?: string
@@ -349,22 +414,26 @@ export type Database = {
           canon?: number
           celular?: string
           ciudad?: string
+          comision_administracion?: number
+          condiciones_comision?: string | null
           correo?: string | null
           descripcion?: string | null
           desea_administracion?: boolean
           direccion?: string | null
           estado?: string
+          fecha_actualizacion?: string
           fecha_creacion?: string
           foto_portada?: string | null
-          fotos?: string[]
+          fotos?: string[] | null
           habitaciones?: number
           id?: string
           incluye_administracion?: boolean
           motivo_rechazo?: string | null
           nombre?: string
-          parqueadero?: string | null
+          parqueadero?: string
           perfil?: string
           piso?: string | null
+          sin_comision?: boolean
           tipo_gestion?: string | null
           tipo_inmueble?: string
           token_gestion?: string
@@ -536,6 +605,7 @@ export type Database = {
           area_m2: number | null
           banos: number | null
           barrio: string | null
+          captacion_id: string | null
           ciudad: string | null
           descripcion: string | null
           destacada: boolean
@@ -557,6 +627,7 @@ export type Database = {
           parqueadero: string | null
           piso: string | null
           precio: number | null
+          propietario_id: string | null
           red_social_video: string | null
           tipo_inmueble: string
           tipo_negocio: string
@@ -567,6 +638,7 @@ export type Database = {
           area_m2?: number | null
           banos?: number | null
           barrio?: string | null
+          captacion_id?: string | null
           ciudad?: string | null
           descripcion?: string | null
           destacada?: boolean
@@ -588,6 +660,7 @@ export type Database = {
           parqueadero?: string | null
           piso?: string | null
           precio?: number | null
+          propietario_id?: string | null
           red_social_video?: string | null
           tipo_inmueble: string
           tipo_negocio?: string
@@ -598,6 +671,7 @@ export type Database = {
           area_m2?: number | null
           banos?: number | null
           barrio?: string | null
+          captacion_id?: string | null
           ciudad?: string | null
           descripcion?: string | null
           destacada?: boolean
@@ -619,10 +693,68 @@ export type Database = {
           parqueadero?: string | null
           piso?: string | null
           precio?: number | null
+          propietario_id?: string | null
           red_social_video?: string | null
           tipo_inmueble?: string
           tipo_negocio?: string
           zona?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "propiedades_captacion_id_fkey"
+            columns: ["captacion_id"]
+            isOneToOne: false
+            referencedRelation: "captaciones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "propiedades_propietario_id_fkey"
+            columns: ["propietario_id"]
+            isOneToOne: false
+            referencedRelation: "propietarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      propietarios: {
+        Row: {
+          apellido: string | null
+          ciudad: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          nombre: string
+          notas: string | null
+          numero_documento: string | null
+          pais: string | null
+          telefono: string | null
+          tipo_documento: string | null
+        }
+        Insert: {
+          apellido?: string | null
+          ciudad?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          nombre: string
+          notas?: string | null
+          numero_documento?: string | null
+          pais?: string | null
+          telefono?: string | null
+          tipo_documento?: string | null
+        }
+        Update: {
+          apellido?: string | null
+          ciudad?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          nombre?: string
+          notas?: string | null
+          numero_documento?: string | null
+          pais?: string | null
+          telefono?: string | null
+          tipo_documento?: string | null
         }
         Relationships: []
       }
@@ -692,7 +824,10 @@ export type Database = {
     Functions: {
       emergencia_actualizar_estado: {
         Args: { p_nuevo_estado: string; p_token: string }
-        Returns: undefined
+        Returns: {
+          estado: string
+          id: string
+        }[]
       }
       emergencia_obtener_por_token: {
         Args: { p_token: string }
@@ -708,6 +843,7 @@ export type Database = {
           tipo_inmueble: string
         }[]
       }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -836,6 +972,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },
