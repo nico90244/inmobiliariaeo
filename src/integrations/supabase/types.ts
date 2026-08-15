@@ -57,6 +57,30 @@ export type Database = {
         }
         Relationships: []
       }
+      agente_escalaciones: {
+        Row: {
+          fecha_creacion: string
+          id: string
+          mensaje_usuario: string | null
+          motivo: string
+          session_id: string
+        }
+        Insert: {
+          fecha_creacion?: string
+          id?: string
+          mensaje_usuario?: string | null
+          motivo: string
+          session_id: string
+        }
+        Update: {
+          fecha_creacion?: string
+          id?: string
+          mensaje_usuario?: string | null
+          motivo?: string
+          session_id?: string
+        }
+        Relationships: []
+      }
       captaciones: {
         Row: {
           barrio: string | null
@@ -870,6 +894,29 @@ export type Database = {
       }
     }
     Functions: {
+      _url_encode: { Args: { input: string }; Returns: string }
+      buscar_propiedades_agente: {
+        Args: {
+          p_ciudad?: string
+          p_operacion: string
+          p_presupuesto_max?: number
+          p_tipo_inmueble?: string
+        }
+        Returns: {
+          acepta_mascotas: boolean
+          barrio: string
+          ciudad: string
+          disponible_desde: string
+          es_inmobiliaria_eo: boolean
+          foto_portada: string
+          fuente: string
+          id: string
+          operacion: string
+          precio: number
+          sin_comision: boolean
+          tipo_inmueble: string
+        }[]
+      }
       emergencia_actualizar_estado: {
         Args: { p_nuevo_estado: string; p_token: string }
         Returns: {
@@ -891,6 +938,14 @@ export type Database = {
           tipo_inmueble: string
         }[]
       }
+      escalar_asesor_agente: {
+        Args: {
+          p_mensaje_usuario?: string
+          p_motivo: string
+          p_session_id: string
+        }
+        Returns: Json
+      }
       is_admin: { Args: never; Returns: boolean }
       obtener_contacto_inmueble: {
         Args: { p_inmueble_id: string; p_session_id: string }
@@ -899,6 +954,10 @@ export type Database = {
           es_inmobiliaria_eo: boolean
           nombre: string
         }[]
+      }
+      solicitar_contacto_agente: {
+        Args: { p_fuente: string; p_inmueble_id: string; p_session_id: string }
+        Returns: Json
       }
     }
     Enums: {
