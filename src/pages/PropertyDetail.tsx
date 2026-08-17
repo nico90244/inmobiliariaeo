@@ -18,6 +18,7 @@ import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { usePropiedades } from "@/hooks/usePropiedades";
 import { formatPrice } from "@/lib/utils";
+import { AGENTES_WHATSAPP, extraerNumeroWhatsApp } from "@/lib/whatsapp";
 import {
   Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink,
   BreadcrumbSeparator, BreadcrumbPage,
@@ -137,7 +138,8 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
 
   const handleWhatsApp = () => {
     trackContact({ content_id: property.id, content_name: property.nombre_inmueble });
-    window.open(`https://wa.me/573186531598?text=${encodeURIComponent(mensaje)}`, "_blank");
+    const numero = extraerNumeroWhatsApp(property.link_whatsapp) || AGENTES_WHATSAPP.eliana.numero;
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`, "_blank");
   };
 
   const handleCopyLink = async () => {
