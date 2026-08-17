@@ -10,23 +10,16 @@ interface SEOProps {
   image?: string;
   type?: "website" | "article" | "product";
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
-  noIndex?: boolean;
-  siteName?: string;
-  imageAlt?: string;
 }
 
-const SEO = ({
-  title, description, path = "/", image = DEFAULT_IMAGE, type = "website", jsonLd, noIndex = false,
-  siteName = "Inmobiliaria Eliana Osorio",
-  imageAlt = "Inmobiliaria Eliana Osorio — Propiedades en Cali, Colombia",
-}: SEOProps) => {
+const SEO = ({ title, description, path = "/", image = DEFAULT_IMAGE, type = "website", jsonLd }: SEOProps) => {
   const url = `${SITE_URL}${path}`;
   return (
     <Helmet>
       {/* Básicos */}
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"} />
+      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
       <link rel="canonical" href={url} />
 
       {/* Geo — Cali, Valle del Cauca, Colombia */}
@@ -44,7 +37,7 @@ const SEO = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
-      <meta property="og:site_name" content={siteName} />
+      <meta property="og:site_name" content="Inmobiliaria Eliana Osorio" />
       <meta property="og:locale" content="es_CO" />
       <meta property="og:locale:alternate" content="es_ES" />
       <meta property="og:locale:alternate" content="es_CL" />
@@ -52,7 +45,7 @@ const SEO = ({
       <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content={imageAlt} />
+      <meta property="og:image:alt" content="Inmobiliaria Eliana Osorio — Propiedades en Cali, Colombia" />
 
       {/* Twitter / X */}
       <meta name="twitter:card" content="summary_large_image" />

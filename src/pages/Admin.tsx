@@ -8,7 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
   TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList, Wallet, ShieldCheck,
-  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu, User, ChevronDown, HeartHandshake, Share2,
+  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu, User, ChevronDown, HeartHandshake,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
@@ -165,17 +165,6 @@ const Admin = () => {
         : new Date(r.fecha_creacion).toLocaleDateString("es-CO");
       return { id: r.id, nombre: r.nombre_cliente, celular: r.celular_cliente, estado: r.estado, fecha };
     });
-  };
-
-  // Copia el link del micrositio sin marca (sin logo ni teléfono) para compartir con otros agentes
-  const handleCopyShareLink = async (p: Propiedad) => {
-    const url = `${window.location.origin}/compartir/${p.id}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast({ title: "Link sin marca copiado" });
-    } catch {
-      toast({ title: "No se pudo copiar", description: url, variant: "destructive" });
-    }
   };
 
   // Quick status change from table
@@ -779,7 +768,6 @@ const Admin = () => {
                           {p.tipo_negocio === "Alquiler" && p.estado === "Arrendado" && (
                             <button onClick={() => openContrato(p)} className="p-1.5 text-muted-foreground hover:text-primary" aria-label="Contrato"><ClipboardList size={16} /></button>
                           )}
-                          <button onClick={() => handleCopyShareLink(p)} className="p-1.5 text-muted-foreground hover:text-primary" aria-label="Copiar link sin marca" title="Copiar link sin marca (para compartir con otros agentes)"><Share2 size={16} /></button>
                           <button onClick={() => openEditForm(p)} className="p-1.5 text-muted-foreground hover:text-primary" aria-label="Editar"><Pencil size={16} /></button>
                           <button onClick={() => handleDelete(p.id)} className="p-1.5 text-muted-foreground hover:text-destructive" aria-label="Eliminar"><Trash2 size={16} /></button>
                         </div>
@@ -852,7 +840,6 @@ const Admin = () => {
                             )}
                           </td>
                           <td className="p-4 flex gap-2">
-                            <button onClick={() => handleCopyShareLink(p)} title="Copiar link sin marca (para compartir con otros agentes)" className="p-2 text-muted-foreground hover:text-primary transition-colors"><Share2 size={16} /></button>
                             <button onClick={() => openEditForm(p)} className="p-2 text-muted-foreground hover:text-primary transition-colors"><Pencil size={16} /></button>
                             <button onClick={() => handleDelete(p.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors"><Trash2 size={16} /></button>
                           </td>

@@ -5,7 +5,7 @@ import { trackViewContent, trackContact } from "@/lib/pixelEvents";
 import {
   Loader2, AlertCircle, ArrowLeft, Maximize2, Bed, Bath, Building2, Car,
   DollarSign, MapPin, Play, Video, Phone, Copy, X, ChevronLeft,
-  ChevronRight, Check, FileText, Share2,
+  ChevronRight, Check, FileText,
 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import Header from "@/components/Header";
@@ -370,13 +370,6 @@ const PropertyDetail = () => {
                 className="inline-flex items-center gap-1.5 font-heading text-[10px] font-semibold tracking-widest uppercase text-muted-foreground border border-foreground/15 px-3 py-1.5 hover:border-primary hover:text-primary transition-colors duration-200"
               >
                 <FileText size={12} /> Ver ficha técnica
-              </Link>
-              <Link
-                to={`/compartir/${property.id}`}
-                title="Página sin logo ni teléfono, pensada para que otros agentes la compartan"
-                className="inline-flex items-center gap-1.5 font-heading text-[10px] font-semibold tracking-widest uppercase text-muted-foreground border border-foreground/15 px-3 py-1.5 hover:border-primary hover:text-primary transition-colors duration-200"
-              >
-                <Share2 size={12} /> Compartir sin marca
               </Link>
             </div>
           </div>
