@@ -15,6 +15,7 @@ import Contacto from "./pages/Contacto";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
 import PropertyFicha from "./pages/PropertyFicha";
+import PropertyMicrosite from "./pages/PropertyMicrosite";
 import NotFound from "./pages/NotFound";
 import Sitemap from "./pages/Sitemap";
 import EmergenciaLanding from "./pages/emergencia/EmergenciaLanding";
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/propiedades" element={<Propiedades />} />
               <Route path="/propiedades/:id" element={<PropertyDetail />} />
               <Route path="/ficha/:id" element={<PropertyFicha />} />
+              <Route path="/compartir/:id" element={<PropertyMicrosite />} />
               <Route path="/venta" element={<Propiedades />} />
               <Route path="/alquiler" element={<Propiedades />} />
               <Route path="/servicios" element={<Servicios />} />
