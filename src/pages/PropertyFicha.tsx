@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft, Printer, Copy, Check,
   Bed, Bath, Building2, Car, Maximize2, DollarSign, MapPin,
-  Instagram, Facebook,
+  Instagram, Facebook, MessageCircle, RotateCcw,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
@@ -117,6 +117,12 @@ const PropertyFicha = () => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
 
+  // Modo agente: ficha de Alquiler sin logo, sin redes y con el WhatsApp
+  // de otro agente en lugar del de la inmobiliaria.
+  const [agentPhone, setAgentPhone] = useState<string | null>(null);
+  const [showPhoneModal, setShowPhoneModal] = useState(false);
+  const [phoneInput, setPhoneInput] = useState("");
+
   const { data: property, isLoading, error } = useQuery({
     queryKey: ["propiedad-ficha", id],
     queryFn: async () => {
@@ -127,6 +133,8 @@ const PropertyFicha = () => {
     },
     enabled: !!id,
   });
+
+  const isAlquiler = property?.tipo_negocio === "Alquiler";
 
   const handleCopy = async () => {
     try {
@@ -141,7 +149,7 @@ const PropertyFicha = () => {
    * renderice el documento a ancho A4 (en lugar de usar el ancho de
    * la pantalla del dispositivo).  Después de imprimir restauramos.
    */
-  const handlePrint = () => {
+  const doPrint = () => {
     const vp = document.querySelector('meta[name="viewport"]') as HTMLMetaElement | null;
     const original = vp?.content ?? "width=device-width, initial-scale=1";
     if (vp) vp.content = "width=794";
@@ -153,6 +161,33 @@ const PropertyFicha = () => {
       });
     });
   };
+
+  // En Alquiler, antes de generar el PDF pedimos el WhatsApp del agente que
+  // va a compartir la ficha: la versión impresa sale sin logo ni redes,
+  // y con ese número en vez del de la inmobiliaria.
+  const handlePrint = () => {
+    if (isAlquiler && !agentPhone) {
+      setPhoneInput("");
+      setShowPhoneModal(true);
+      return;
+    }
+    doPrint();
+  };
+
+  const handleConfirmPhone = () => {
+    const digits = phoneInput.replace(/\D/g, "");
+    if (digits.length < 10) return;
+    setAgentPhone(digits);
+    setShowPhoneModal(false);
+    // Espera a que el logo/redes/QR se oculten del DOM antes de imprimir
+    requestAnimationFrame(() => requestAnimationFrame(() => doPrint()));
+  };
+
+  const whatsappNumber  = agentPhone ? (agentPhone.length === 10 ? `57${agentPhone}` : agentPhone) : null;
+  const whatsappLink    = whatsappNumber ? `https://wa.me/${whatsappNumber}` : null;
+  const whatsappDisplay = agentPhone && agentPhone.length === 10
+    ? `${agentPhone.slice(0, 3)} ${agentPhone.slice(3, 6)} ${agentPhone.slice(6)}`
+    : agentPhone;
 
   /* ── Estados de carga ── */
   if (isLoading) {
@@ -179,9 +214,8 @@ const PropertyFicha = () => {
   // Galería: fotos adicionales, mínimo 3 - máximo 6
   const galleryPhotos = allPhotos.slice(1, 7);
 
-  const fichaUrl   = window.location.href;
-  const qrUrl      = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(fichaUrl)}`;
-  const isAlquiler = property.tipo_negocio === "Alquiler";
+  const fichaUrl = window.location.href;
+  const qrUrl    = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(fichaUrl)}`;
 
   // Ingresos mínimos: 2× el canon (arrendatario y codeudor)
   const minIngresos = property.precio ? property.precio * 2 : null;
@@ -221,6 +255,21 @@ const PropertyFicha = () => {
           <ArrowLeft size={15} /> Volver al detalle
         </button>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {isAlquiler && agentPhone && (
+            <button
+              onClick={() => setAgentPhone(null)}
+              title="Volver a la ficha con tu marca"
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                color: "rgba(255,255,255,0.5)",
+                fontFamily: "Josefin Sans, sans-serif", fontSize: 9, fontWeight: 600,
+                letterSpacing: "0.1em", textTransform: "uppercase",
+                background: "none", border: "none", cursor: "pointer",
+              }}
+            >
+              <RotateCcw size={12} /> Agente {whatsappDisplay}
+            </button>
+          )}
           <button onClick={handleCopy} style={{
             display: "flex", alignItems: "center", gap: 6,
             padding: "6px 14px",
@@ -416,13 +465,16 @@ const PropertyFicha = () => {
             <>
               {/* ─── PÁGINA 1: portada + specs + requisitos + descripción ─── */}
               <div data-ficha-page1>
-                {/* Header de marca */}
+                {/* Header de marca — se oculta en modo agente */}
                 <div style={{
                   backgroundColor: DARK, padding: "14px 32px",
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  display: "flex", alignItems: "center",
+                  justifyContent: agentPhone ? "flex-start" : "space-between",
                 }}>
-                  <img src={logoGold} alt="Inmobiliaria Eliana Osorio"
-                    style={{ height: 40, width: "auto" }} />
+                  {!agentPhone && (
+                    <img src={logoGold} alt="Inmobiliaria Eliana Osorio"
+                      style={{ height: 40, width: "auto" }} />
+                  )}
                   <span style={{
                     fontFamily: "Josefin Sans, sans-serif", fontSize: 9, fontWeight: 600,
                     letterSpacing: "0.18em", textTransform: "uppercase", color: GOLD,
@@ -553,9 +605,9 @@ const PropertyFicha = () => {
                   </div>
                 </div>
 
-                {/* Descripción + QR */}
+                {/* Descripción + QR (el QR se omite en modo agente) */}
                 <div style={{
-                  display: "grid", gridTemplateColumns: "1fr 130px",
+                  display: "grid", gridTemplateColumns: agentPhone ? "1fr" : "1fr 130px",
                   gap: 20, padding: "18px 28px 22px",
                   borderTop: "1px solid #E5E7EB",
                 }}>
@@ -572,16 +624,18 @@ const PropertyFicha = () => {
                       </>
                     )}
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, paddingTop: 2 }}>
-                    <img src={qrUrl} alt="QR ficha" style={{ width: 110, height: 110 }} />
-                    <p style={{
-                      fontFamily: "Josefin Sans, sans-serif", fontSize: 7, fontWeight: 600,
-                      letterSpacing: "0.1em", textTransform: "uppercase",
-                      color: "#9CA3AF", textAlign: "center", lineHeight: 1.5,
-                    }}>
-                      Escanea para<br />ver la ficha
-                    </p>
-                  </div>
+                  {!agentPhone && (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, paddingTop: 2 }}>
+                      <img src={qrUrl} alt="QR ficha" style={{ width: 110, height: 110 }} />
+                      <p style={{
+                        fontFamily: "Josefin Sans, sans-serif", fontSize: 7, fontWeight: 600,
+                        letterSpacing: "0.1em", textTransform: "uppercase",
+                        color: "#9CA3AF", textAlign: "center", lineHeight: 1.5,
+                      }}>
+                        Escanea para<br />ver la ficha
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -627,10 +681,11 @@ const PropertyFicha = () => {
                   </div>
                 )}
 
-                {/* Footer */}
+                {/* Footer — en modo agente solo queda el WhatsApp del agente, sin logo/redes/QR */}
                 <div style={{
                   backgroundColor: DARK, padding: "18px 28px",
-                  display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
+                  display: "flex", alignItems: "center",
+                  justifyContent: agentPhone ? "flex-start" : "space-between", gap: 16,
                 }}>
                   <div>
                     <p style={{
@@ -639,55 +694,68 @@ const PropertyFicha = () => {
                     }}>
                       WhatsApp
                     </p>
-                    <p style={{
-                      fontFamily: "DM Sans, sans-serif", fontSize: 14, color: WHITE,
-                      fontWeight: 700, marginBottom: 14, letterSpacing: "0.02em",
-                    }}>
-                      +57 318 653 1598
-                    </p>
-                    <p style={{
-                      fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
-                      letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD, marginBottom: 5,
-                    }}>
-                      Síguenos en nuestras redes
-                    </p>
-                    <p style={{
-                      fontFamily: "DM Sans, sans-serif", fontSize: 12, fontWeight: 600,
-                      color: WHITE, marginBottom: 8, letterSpacing: "0.01em",
-                    }}>
-                      @inmobiliaria_eo
-                    </p>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      {[
-                        { href: "https://instagram.com/inmobiliaria_eo", icon: <Instagram size={13} style={{ color: GOLD }} /> },
-                        { href: "https://facebook.com/inmobiliariaeo",    icon: <Facebook size={13} style={{ color: GOLD }} /> },
-                        { href: "https://tiktok.com/@inmobiliaria_eo",    icon: <TikTokIcon size={12} color={GOLD} /> },
-                      ].map(({ href, icon }) => (
-                        <a key={href} href={href} target="_blank" rel="noopener noreferrer"
-                          style={{ textDecoration: "none" }}>
-                          <div style={{
-                            width: 30, height: 30,
-                            backgroundColor: "rgba(255,255,255,0.08)",
-                            borderRadius: "50%",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                          }}>
-                            {icon}
-                          </div>
-                        </a>
-                      ))}
+                    {agentPhone ? (
+                      <a href={whatsappLink!} target="_blank" rel="noopener noreferrer" style={{
+                        fontFamily: "DM Sans, sans-serif", fontSize: 15, color: WHITE,
+                        fontWeight: 700, letterSpacing: "0.02em",
+                      }}>
+                        {whatsappDisplay}
+                      </a>
+                    ) : (
+                      <>
+                        <p style={{
+                          fontFamily: "DM Sans, sans-serif", fontSize: 14, color: WHITE,
+                          fontWeight: 700, marginBottom: 14, letterSpacing: "0.02em",
+                        }}>
+                          +57 318 653 1598
+                        </p>
+                        <p style={{
+                          fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
+                          letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD, marginBottom: 5,
+                        }}>
+                          Síguenos en nuestras redes
+                        </p>
+                        <p style={{
+                          fontFamily: "DM Sans, sans-serif", fontSize: 12, fontWeight: 600,
+                          color: WHITE, marginBottom: 8, letterSpacing: "0.01em",
+                        }}>
+                          @inmobiliaria_eo
+                        </p>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          {[
+                            { href: "https://instagram.com/inmobiliaria_eo", icon: <Instagram size={13} style={{ color: GOLD }} /> },
+                            { href: "https://facebook.com/inmobiliariaeo",    icon: <Facebook size={13} style={{ color: GOLD }} /> },
+                            { href: "https://tiktok.com/@inmobiliaria_eo",    icon: <TikTokIcon size={12} color={GOLD} /> },
+                          ].map(({ href, icon }) => (
+                            <a key={href} href={href} target="_blank" rel="noopener noreferrer"
+                              style={{ textDecoration: "none" }}>
+                              <div style={{
+                                width: 30, height: 30,
+                                backgroundColor: "rgba(255,255,255,0.08)",
+                                borderRadius: "50%",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                              }}>
+                                {icon}
+                              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  {/* QR en footer — se omite en modo agente */}
+                  {!agentPhone && (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, flexShrink: 0 }}>
+                      <img src={qrUrl} alt="QR ficha" style={{ width: 78, height: 78 }} />
+                      <p style={{
+                        fontFamily: "Josefin Sans, sans-serif", fontSize: 7, fontWeight: 600,
+                        letterSpacing: "0.1em", textTransform: "uppercase",
+                        color: "rgba(255,255,255,0.3)", textAlign: "center", lineHeight: 1.5,
+                      }}>
+                        Ver ficha<br />online
+                      </p>
                     </div>
-                  </div>
-                  {/* QR en footer */}
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, flexShrink: 0 }}>
-                    <img src={qrUrl} alt="QR ficha" style={{ width: 78, height: 78 }} />
-                    <p style={{
-                      fontFamily: "Josefin Sans, sans-serif", fontSize: 7, fontWeight: 600,
-                      letterSpacing: "0.1em", textTransform: "uppercase",
-                      color: "rgba(255,255,255,0.3)", textAlign: "center", lineHeight: 1.5,
-                    }}>
-                      Ver ficha<br />online
-                    </p>
-                  </div>
+                  )}
                 </div>
               </div>
             </>
@@ -695,6 +763,73 @@ const PropertyFicha = () => {
 
         </div>
       </div>
+
+      {/* ── Modal: pide el WhatsApp del agente antes de generar el PDF sin marca ── */}
+      {showPhoneModal && (
+        <div
+          className="ficha-no-print"
+          onClick={() => setShowPhoneModal(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 200,
+            backgroundColor: "rgba(0,0,0,0.6)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
+          }}
+        >
+          <div onClick={(e) => e.stopPropagation()} style={{
+            backgroundColor: WHITE, maxWidth: 380, width: "100%", padding: "28px 24px",
+          }}>
+            <h2 style={{
+              fontFamily: "Josefin Sans, sans-serif", fontSize: 14, fontWeight: 700,
+              letterSpacing: "0.08em", textTransform: "uppercase", color: DARK, marginBottom: 8,
+            }}>
+              Ficha para agente
+            </h2>
+            <p style={{
+              fontFamily: "DM Sans, sans-serif", fontSize: 12, color: GRAY_T,
+              lineHeight: 1.5, marginBottom: 18,
+            }}>
+              Esta ficha se genera sin logo ni redes sociales. Ingresa el WhatsApp que debe aparecer para que el cliente contacte directamente al agente.
+            </p>
+            <input
+              type="tel"
+              autoFocus
+              value={phoneInput}
+              onChange={(e) => setPhoneInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleConfirmPhone(); }}
+              placeholder="Ej: 300 123 4567"
+              style={{
+                width: "100%", padding: "10px 12px", marginBottom: 18,
+                border: "1px solid #E5E7EB", fontFamily: "DM Sans, sans-serif", fontSize: 13,
+                outline: "none", boxSizing: "border-box",
+              }}
+            />
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+              <button onClick={() => setShowPhoneModal(false)} style={{
+                padding: "9px 16px", background: "none", border: "none", cursor: "pointer",
+                fontFamily: "Josefin Sans, sans-serif", fontSize: 10, fontWeight: 600,
+                letterSpacing: "0.1em", textTransform: "uppercase", color: GRAY_T,
+              }}>
+                Cancelar
+              </button>
+              <button
+                onClick={handleConfirmPhone}
+                disabled={phoneInput.replace(/\D/g, "").length < 10}
+                style={{
+                  display: "flex", alignItems: "center", gap: 6,
+                  padding: "9px 20px", border: "none",
+                  cursor: phoneInput.replace(/\D/g, "").length < 10 ? "not-allowed" : "pointer",
+                  opacity: phoneInput.replace(/\D/g, "").length < 10 ? 0.5 : 1,
+                  backgroundColor: GOLD, color: CREAM,
+                  fontFamily: "Josefin Sans, sans-serif", fontSize: 10, fontWeight: 600,
+                  letterSpacing: "0.1em", textTransform: "uppercase",
+                }}
+              >
+                <MessageCircle size={13} /> Generar ficha
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
