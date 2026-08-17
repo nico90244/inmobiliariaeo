@@ -1,5 +1,16 @@
 {
   "rewrites": [
+    {
+      "source": "/propiedades/:id",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|WhatsApp|Twitterbot|LinkedInBot|Slackbot|TelegramBot|Discordbot|SkypeUriPreview|vkShare|Pinterest|redditbot|Google-InspectionTool|W3C_Validator|Applebot|Iframely|Embedly).*"
+        }
+      ],
+      "destination": "/api/property-meta?id=:id"
+    },
     { "source": "/((?!assets|api|favicon.ico|robots.txt|sitemap.xml|hero-bg.jpg|emergencia-hero.mp4).*)", "destination": "/index.html" }
   ],
   "headers": [

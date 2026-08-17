@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { trackViewContent, trackContact } from "@/lib/pixelEvents";
 import {
   Loader2, AlertCircle, ArrowLeft, Maximize2, Bed, Bath, Building2, Car,
-  DollarSign, MapPin, Play, Video, Phone, Copy, X, ChevronLeft,
+  DollarSign, MapPin, Play, Video, Phone, Share2, X, ChevronLeft,
   ChevronRight, Check, FileText,
 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
@@ -18,6 +18,7 @@ import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { usePropiedades } from "@/hooks/usePropiedades";
 import { formatPrice } from "@/lib/utils";
+import { AGENTES_WHATSAPP, extraerNumeroWhatsApp } from "@/lib/whatsapp";
 import {
   Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink,
   BreadcrumbSeparator, BreadcrumbPage,
@@ -137,10 +138,30 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
 
   const handleWhatsApp = () => {
     trackContact({ content_id: property.id, content_name: property.nombre_inmueble });
-    window.open(`https://wa.me/573186531598?text=${encodeURIComponent(mensaje)}`, "_blank");
+    const numero = extraerNumeroWhatsApp(property.link_whatsapp) || AGENTES_WHATSAPP.eliana.numero;
+    // El link va al final del mensaje para que quede en el chat y sea fácil
+    // identificar de qué propiedad se trata.
+    const texto = `${mensaje}\n\n${window.location.href}`;
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(texto)}`, "_blank");
   };
 
-  const handleCopyLink = async () => {
+  // Una sola opción de "Compartir": en móvil abre el selector nativo (WhatsApp,
+  // Mensajes, AirDrop, etc.) para que la persona elija por dónde compartir.
+  // En navegadores sin ese selector (la mayoría de escritorio), copia el link.
+  const handleShare = async () => {
+    const shareData = {
+      title: property.nombre_inmueble,
+      text: `${property.tipo_negocio} · ${property.barrio || ""} · ${formatPrice(property.precio)}`,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch {
+        /* el usuario canceló el selector, no hacer nada */
+      }
+      return;
+    }
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
@@ -149,11 +170,6 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
     } catch {
       toast({ title: "No se pudo copiar", description: "Copia manualmente la URL del navegador.", variant: "destructive" });
     }
-  };
-
-  const shareWA = () => {
-    const text = `🏠 *${property.nombre_inmueble}*\n${property.tipo_negocio} · ${property.barrio || ""}\n💰 ${formatPrice(property.precio)}\n\n👉 ${window.location.href}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   return (
@@ -181,21 +197,14 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
       </a>
       <p className="font-body text-xs text-muted-foreground text-center mt-2 mb-6">Respuesta inmediata en horario laboral</p>
 
-      {/* Share — solo las acciones útiles */}
-      <div className="flex gap-2 pt-5 border-t border-foreground/10">
+      {/* Share — una sola opción, el usuario elige por dónde */}
+      <div className="pt-5 border-t border-foreground/10">
         <button
-          onClick={handleCopyLink}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary transition-all duration-200 font-heading text-[9px] font-semibold tracking-widest uppercase"
+          onClick={handleShare}
+          className="w-full flex items-center justify-center gap-1.5 py-2 border border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary transition-all duration-200 font-heading text-[9px] font-semibold tracking-widest uppercase"
         >
-          {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
-          {copied ? "Copiado" : "Copiar link"}
-        </button>
-        <button
-          onClick={shareWA}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary transition-all duration-200 font-heading text-[9px] font-semibold tracking-widest uppercase"
-        >
-          <WhatsAppIcon size={14} />
-          Compartir
+          {copied ? <Check size={14} className="text-green-600" /> : <Share2 size={14} />}
+          {copied ? "Copiado" : "Compartir"}
         </button>
       </div>
     </div>

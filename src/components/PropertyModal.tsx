@@ -4,6 +4,7 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { formatPrice } from "@/lib/utils";
+import { AGENTES_WHATSAPP, buildWhatsAppLink } from "@/lib/whatsapp";
 
 interface PropertyModalProps {
   property: Propiedad | null;
@@ -24,8 +25,11 @@ const PropertyModal = ({ property, open, onClose }: PropertyModalProps) => {
   const prevImage = () => setCurrentImage((i) => (i === 0 ? allImages.length - 1 : i - 1));
   const nextImage = () => setCurrentImage((i) => (i === allImages.length - 1 ? 0 : i + 1));
 
-  const whatsappLink = property.link_whatsapp || 
-    `https://wa.me/573162225604?text=${encodeURIComponent(`Hola, me interesa ${property.nombre_inmueble} en ${property.barrio}`)}`;
+  const whatsappLink = buildWhatsAppLink(
+    property.link_whatsapp,
+    AGENTES_WHATSAPP.valeria.numero,
+    `Hola, me interesa ${property.nombre_inmueble} en ${property.barrio}`
+  );
 
   const characteristics = [
     { icon: MapPin, label: "Dirección", value: property.direccion },

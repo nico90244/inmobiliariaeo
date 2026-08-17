@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Tables } from "@/integrations/supabase/types";
+import { AGENTES_WHATSAPP, detectarAgenteWhatsApp, type AgenteWhatsAppKey } from "@/lib/whatsapp";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
   TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList, Wallet, ShieldCheck,
@@ -1117,8 +1118,22 @@ const Admin = () => {
                 <textarea value={form.descripcion || ""} onChange={(e) => updateField("descripcion", e.target.value)} rows={3} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none resize-none" />
               </div>
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link WhatsApp</label>
-                <input type="text" value={form.link_whatsapp || ""} onChange={(e) => updateField("link_whatsapp", e.target.value)} placeholder="https://wa.me/573162225604?text=..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Contacto WhatsApp de esta propiedad</label>
+                <select
+                  value={detectarAgenteWhatsApp(form.link_whatsapp) || ""}
+                  onChange={(e) => {
+                    const key = e.target.value as AgenteWhatsAppKey | "";
+                    updateField("link_whatsapp", key ? `https://wa.me/${AGENTES_WHATSAPP[key].numero}` : "");
+                  }}
+                  className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                >
+                  <option value="">Sin asignar (número general)</option>
+                  <option value="eliana">Eliana ({AGENTES_WHATSAPP.eliana.numero.replace(/^57(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")})</option>
+                  <option value="valeria">Valeria ({AGENTES_WHATSAPP.valeria.numero.replace(/^57(\d{3})(\d{3})(\d{4})$/, "$1 $2 $3")})</option>
+                </select>
+                <p className="font-body text-[11px] text-muted-foreground mt-1">
+                  Los mensajes de quien esté interesado en esta propiedad le llegarán directo a la persona seleccionada.
+                </p>
               </div>
 
               {/*
