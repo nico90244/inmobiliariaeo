@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, Bot } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { trackContact } from "@/lib/pixelEvents";
+import EliChat from "@/components/EliChat";
 
 const WhatsAppButton = () => {
   const [chatOpen, setChatOpen] = useState(false);
@@ -48,23 +49,7 @@ const WhatsAppButton = () => {
             <p className="font-heading text-sm font-semibold text-foreground">Eli - Asistente</p>
           </div>
 
-          <p className="font-body text-sm text-foreground/80 leading-relaxed mb-5">
-            ¡Hola! Soy Eli, tu asistente de Inmobiliaria EO. Próximamente podré ayudarte desde aquí. Por ahora escríbenos al WhatsApp.
-          </p>
-
-          <a
-            href="https://wa.me/573162225604"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 py-3 bg-[hsl(142,70%,45%)] text-white font-heading text-sm font-semibold tracking-widest uppercase hover:bg-[hsl(142,70%,40%)] transition-colors"
-          >
-            <WhatsAppIcon size={16} className="text-white" />
-            Abrir WhatsApp
-          </a>
-
-          <p className="font-body text-xs text-muted-foreground text-center mt-3 flex items-center justify-center gap-1">
-            <Bot size={12} /> Chatbot con IA en camino
-          </p>
+          <EliChat />
         </div>
       )}
     </>
