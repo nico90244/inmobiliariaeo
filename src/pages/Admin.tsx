@@ -30,6 +30,10 @@ const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca",
 
 const ZONAS = ["Sur", "Norte", "Oeste", "Oriente", "Nororiente", "Suroriente"];
 
+const CIUDADES = ["Cali", "Jamundí", "Palmira", "Yumbo"];
+
+const ELIANA_WHATSAPP = "573162225604";
+
 const emptyForm: Partial<Propiedad> & Record<string, any> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
   area_m2: 0, habitaciones: 0, banos: 0, piso: "", parqueadero: "No", estrato: 0, administracion: 0, descripcion: "",
@@ -57,6 +61,8 @@ const Admin = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [incluyeAdmin, setIncluyeAdmin] = useState(false);
+  const [waOwner, setWaOwner] = useState<"eliana" | "mio">("eliana");
+  const [miWhatsapp, setMiWhatsapp] = useState(() => localStorage.getItem("admin_mi_whatsapp") || "");
 
   // Photo uploads
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -119,6 +125,7 @@ const Admin = () => {
     setCaptacionSource(c);
     setSelectedCaptacion(null);
     setIncluyeAdmin(false);
+    setWaOwner("eliana");
     setFormOpen(true);
   };
 
@@ -315,6 +322,7 @@ const Admin = () => {
     setCoverPosY(50);
     setCoverZoom(1.0);
     setIncluyeAdmin(false);
+    setWaOwner("eliana");
     setFormOpen(true);
   };
 
@@ -330,6 +338,13 @@ const Admin = () => {
     setCoverPosY(y);
     setCoverZoom((p as any).foto_portada_zoom ?? 1.0);
     setIncluyeAdmin((p.administracion ?? 0) > 0);
+    const linkNum = (p.link_whatsapp || "").match(/wa\.me\/(\d+)/)?.[1];
+    if (linkNum && linkNum !== ELIANA_WHATSAPP) {
+      setWaOwner("mio");
+      setMiWhatsapp(linkNum);
+    } else {
+      setWaOwner("eliana");
+    }
     setFormOpen(true);
   };
 
@@ -358,6 +373,12 @@ const Admin = () => {
     return data.publicUrl;
   };
 
+  const buildWaLink = () => {
+    const numero = waOwner === "mio" ? miWhatsapp.replace(/\D/g, "") : ELIANA_WHATSAPP;
+    const texto = `Hola, me interesa ${form.nombre_inmueble || "esta propiedad"}${form.barrio ? ` en ${form.barrio}` : ""}`;
+    return `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+  };
+
   const handleSave = async () => {
     if (!form.nombre_inmueble || !form.tipo_inmueble) {
       toast({ title: "Nombre y tipo de inmueble son requeridos", variant: "destructive" });
@@ -365,6 +386,10 @@ const Admin = () => {
     }
     if (form.red_social_video && form.link_video && !form.link_video.startsWith("https://")) {
       toast({ title: "El link del video debe empezar con https://", variant: "destructive" });
+      return;
+    }
+    if (waOwner === "mio" && !miWhatsapp.replace(/\D/g, "")) {
+      toast({ title: "Ingresa tu número de WhatsApp", variant: "destructive" });
       return;
     }
     setSaving(true);
@@ -393,6 +418,7 @@ const Admin = () => {
         foto_portada_position: coverPosStr,
         foto_portada_zoom: coverZoom,
         fotos: fotosUrls,
+        link_whatsapp: buildWaLink(),
       };
 
       // Remove readonly fields
@@ -968,12 +994,12 @@ const Admin = () => {
 
         {/* Property form modal */}
         <Dialog open={formOpen} onOpenChange={(o) => { if (!o) { setFormOpen(false); setCaptacionSource(null); } }}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden p-4 sm:p-6">
             <DialogHeader>
               <DialogTitle className="font-heading text-xl">{editingId ? "Editar propiedad" : "Nueva propiedad"}</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 mt-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-3 sm:space-y-4 mt-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre inmueble *</label>
                   <input type="text" value={form.nombre_inmueble || ""} onChange={(e) => updateField("nombre_inmueble", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
@@ -986,7 +1012,7 @@ const Admin = () => {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo negocio</label>
                   <select value={form.tipo_negocio || "Venta"} onChange={(e) => updateField("tipo_negocio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
@@ -1017,10 +1043,12 @@ const Admin = () => {
                   </span>
                 </label>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Ciudad</label>
-                  <input type="text" value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <select value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                    {CIUDADES.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Dirección</label>
@@ -1031,7 +1059,7 @@ const Admin = () => {
                   <input type="text" value={form.barrio || ""} onChange={(e) => updateField("barrio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Precio</label>
                   <input type="number" value={form.precio ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("precio", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
@@ -1045,7 +1073,7 @@ const Admin = () => {
                   <input type="number" value={form.estrato ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("estrato", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Habitaciones</label>
                   <input type="number" value={form.habitaciones ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("habitaciones", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
@@ -1081,7 +1109,7 @@ const Admin = () => {
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Incluye administración?</label>
                   <select
@@ -1117,8 +1145,36 @@ const Admin = () => {
                 <textarea value={form.descripcion || ""} onChange={(e) => updateField("descripcion", e.target.value)} rows={3} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none resize-none" />
               </div>
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link WhatsApp</label>
-                <input type="text" value={form.link_whatsapp || ""} onChange={(e) => updateField("link_whatsapp", e.target.value)} placeholder="https://wa.me/573162225604?text=..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">WhatsApp de contacto</label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setWaOwner("eliana")}
+                    className={`flex-1 py-2 px-3 font-body text-sm border transition-colors ${waOwner === "eliana" ? "border-primary bg-primary/5 text-primary font-semibold" : "border-foreground/10 text-muted-foreground hover:border-foreground/20"}`}
+                  >
+                    Eliana
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setWaOwner("mio")}
+                    className={`flex-1 py-2 px-3 font-body text-sm border transition-colors ${waOwner === "mio" ? "border-primary bg-primary/5 text-primary font-semibold" : "border-foreground/10 text-muted-foreground hover:border-foreground/20"}`}
+                  >
+                    Mío
+                  </button>
+                </div>
+                {waOwner === "mio" && (
+                  <input
+                    type="tel"
+                    value={miWhatsapp}
+                    onChange={(e) => {
+                      const v = e.target.value.replace(/\D/g, "");
+                      setMiWhatsapp(v);
+                      localStorage.setItem("admin_mi_whatsapp", v);
+                    }}
+                    placeholder="Tu número con indicativo, ej: 573001234567"
+                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none mt-2"
+                  />
+                )}
               </div>
 
               {/*
@@ -1132,7 +1188,7 @@ const Admin = () => {
                 <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-4">
                   <Video size={16} className="text-primary" /> Video de la propiedad
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Red social del video</label>
                     <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
