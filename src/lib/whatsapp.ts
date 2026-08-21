@@ -1,3 +1,5 @@
+import { formatPrice } from "@/lib/utils";
+
 /**
  * Los dos números de WhatsApp reales del equipo. `link_whatsapp` en `propiedades`
  * guarda el link completo (para compatibilidad con valores antiguos que incluían
@@ -31,4 +33,35 @@ export function detectarAgenteWhatsApp(raw?: string | null): AgenteWhatsAppKey |
 export function buildWhatsAppLink(linkWhatsapp: string | null | undefined, numeroFallback: string, mensaje: string): string {
   const numero = extraerNumeroWhatsApp(linkWhatsapp) || numeroFallback;
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+}
+
+type PropiedadWhatsAppInfo = {
+  nombre_inmueble: string;
+  tipo_inmueble?: string | null;
+  tipo_negocio?: string | null;
+  barrio?: string | null;
+  ciudad?: string | null;
+  precio?: number | null;
+};
+
+/**
+ * Mensaje de contacto estándar para una propiedad: nombre, tipo de inmueble
+ * (casa/apto/etc), tipo de negocio (venta/alquiler), ubicación y valor.
+ * Si se pasa `url`, se agrega al final para que quede en el chat.
+ */
+export function buildPropertyWhatsAppMessage(property: PropiedadWhatsAppInfo, url?: string): string {
+  const detalle = [
+    property.tipo_inmueble,
+    property.tipo_negocio ? `en ${property.tipo_negocio}` : null,
+    property.barrio || property.ciudad,
+  ].filter(Boolean).join(" · ");
+
+  const lineas = [
+    `🏠 ${property.nombre_inmueble}`,
+    detalle,
+    `💰 ${formatPrice(property.precio ?? null)}`,
+  ].filter(Boolean);
+
+  const mensaje = `Hola, me interesa esta propiedad:\n\n${lineas.join("\n")}\n\n¿Podría obtener más información?`;
+  return url ? `${mensaje}\n\n${url}` : mensaje;
 }

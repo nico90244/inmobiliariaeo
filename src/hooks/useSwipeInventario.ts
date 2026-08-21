@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import type { Tables } from "@/integrations/supabase/types";
-import { AGENTES_WHATSAPP, buildWhatsAppLink } from "@/lib/whatsapp";
+import { AGENTES_WHATSAPP, buildWhatsAppLink, buildPropertyWhatsAppMessage } from "@/lib/whatsapp";
 
 /**
  * Tarjeta unificada del swipe: puede venir de la Iniciativa Terremoto
@@ -104,7 +104,7 @@ const desdePropiedad = (p: PropiedadRow): TarjetaSwipe => {
     link_whatsapp: buildWhatsAppLink(
       p.link_whatsapp,
       AGENTES_WHATSAPP.valeria.numero,
-      `Hola, me interesa ${p.nombre_inmueble} en ${p.barrio ?? p.ciudad ?? "Cali"}`
+      buildPropertyWhatsAppMessage(p, `${window.location.origin}/propiedades/${p.id}`)
     ),
     nombre_inmueble: p.nombre_inmueble,
   };

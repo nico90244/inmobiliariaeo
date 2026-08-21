@@ -18,7 +18,7 @@ import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { usePropiedades } from "@/hooks/usePropiedades";
 import { formatPrice } from "@/lib/utils";
-import { AGENTES_WHATSAPP, extraerNumeroWhatsApp } from "@/lib/whatsapp";
+import { AGENTES_WHATSAPP, extraerNumeroWhatsApp, buildPropertyWhatsAppMessage } from "@/lib/whatsapp";
 import {
   Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink,
   BreadcrumbSeparator, BreadcrumbPage,
@@ -130,9 +130,7 @@ const Gallery = ({ photos, coverPosition, coverZoom }: { photos: string[]; cover
 
 /* ─── Contact Card ─── */
 const ContactCard = ({ property }: { property: Propiedad }) => {
-  const [mensaje, setMensaje] = useState(
-    `Hola, me interesa la propiedad ${property.nombre_inmueble} en ${property.barrio || ""}. ¿Podría obtener más información?`
-  );
+  const [mensaje, setMensaje] = useState(buildPropertyWhatsAppMessage(property));
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
@@ -151,7 +149,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
   const handleShare = async () => {
     const shareData = {
       title: property.nombre_inmueble,
-      text: `${property.tipo_negocio} · ${property.barrio || ""} · ${formatPrice(property.precio)}`,
+      text: `${property.tipo_inmueble ? `${property.tipo_inmueble} en ` : ""}${property.tipo_negocio} · ${property.barrio || property.ciudad || ""} · ${formatPrice(property.precio)}`,
       url: window.location.href,
     };
     if (navigator.share) {

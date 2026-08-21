@@ -4,13 +4,13 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { formatPrice } from "@/lib/utils";
 import { trackContact } from "@/lib/pixelEvents";
-import { AGENTES_WHATSAPP, buildWhatsAppLink } from "@/lib/whatsapp";
+import { AGENTES_WHATSAPP, buildWhatsAppLink, buildPropertyWhatsAppMessage } from "@/lib/whatsapp";
 
 const PropertyCard = ({ property }: { property: Propiedad }) => {
   const waLink = buildWhatsAppLink(
     property.link_whatsapp,
     AGENTES_WHATSAPP.valeria.numero,
-    `Hola, me interesa ${property.nombre_inmueble} en ${property.barrio}`
+    buildPropertyWhatsAppMessage(property, `${window.location.origin}/propiedades/${property.id}`)
   );
 
   return (
