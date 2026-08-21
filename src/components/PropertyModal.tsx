@@ -3,7 +3,7 @@ import { X, ChevronLeft, ChevronRight, MapPin, Building2, Zap, Ruler, BedDouble,
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { Propiedad } from "@/hooks/usePropiedades";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, tipoNegocioLabel } from "@/lib/utils";
 
 interface PropertyModalProps {
   property: Propiedad | null;
@@ -83,7 +83,7 @@ const PropertyModal = ({ property, open, onClose }: PropertyModalProps) => {
           {/* Badges */}
           <div className="flex gap-2 mb-3">
             <span className="font-heading text-xs font-semibold tracking-widest uppercase px-3 py-1 bg-primary text-primary-foreground">
-              {property.tipo_negocio}
+              {tipoNegocioLabel(property.tipo_negocio)}
             </span>
             <span className="font-heading text-xs font-semibold tracking-widest uppercase px-3 py-1 bg-muted text-foreground">
               {property.tipo_inmueble}

@@ -22,6 +22,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
+import { tipoNegocioLabel } from "@/lib/utils";
 
 type Propiedad = Tables<"propiedades">;
 type Captacion = Tables<"captaciones">;
@@ -32,7 +33,8 @@ const ZONAS = ["Sur", "Norte", "Oeste", "Oriente", "Nororiente", "Suroriente"];
 
 const CIUDADES = ["Cali", "Jamundí", "Palmira", "Yumbo"];
 
-const ELIANA_WHATSAPP = "573162225604";
+const MI_WHATSAPP = "573162225604";
+const ELIANA_WHATSAPP = "573186531598";
 
 const emptyForm: Partial<Propiedad> & Record<string, any> = {
   tipo_negocio: "Venta", nombre_inmueble: "", tipo_inmueble: "", direccion: "", barrio: "", zona: "", precio: 0,
@@ -62,7 +64,6 @@ const Admin = () => {
   const [saving, setSaving] = useState(false);
   const [incluyeAdmin, setIncluyeAdmin] = useState(false);
   const [waOwner, setWaOwner] = useState<"eliana" | "mio">("eliana");
-  const [miWhatsapp, setMiWhatsapp] = useState(() => localStorage.getItem("admin_mi_whatsapp") || "");
 
   // Photo uploads
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -339,12 +340,7 @@ const Admin = () => {
     setCoverZoom((p as any).foto_portada_zoom ?? 1.0);
     setIncluyeAdmin((p.administracion ?? 0) > 0);
     const linkNum = (p.link_whatsapp || "").match(/wa\.me\/(\d+)/)?.[1];
-    if (linkNum && linkNum !== ELIANA_WHATSAPP) {
-      setWaOwner("mio");
-      setMiWhatsapp(linkNum);
-    } else {
-      setWaOwner("eliana");
-    }
+    setWaOwner(linkNum === MI_WHATSAPP ? "mio" : "eliana");
     setFormOpen(true);
   };
 
@@ -374,7 +370,7 @@ const Admin = () => {
   };
 
   const buildWaLink = () => {
-    const numero = waOwner === "mio" ? miWhatsapp.replace(/\D/g, "") : ELIANA_WHATSAPP;
+    const numero = waOwner === "mio" ? MI_WHATSAPP : ELIANA_WHATSAPP;
     const texto = `Hola, me interesa ${form.nombre_inmueble || "esta propiedad"}${form.barrio ? ` en ${form.barrio}` : ""}`;
     return `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
   };
@@ -386,10 +382,6 @@ const Admin = () => {
     }
     if (form.red_social_video && form.link_video && !form.link_video.startsWith("https://")) {
       toast({ title: "El link del video debe empezar con https://", variant: "destructive" });
-      return;
-    }
-    if (waOwner === "mio" && !miWhatsapp.replace(/\D/g, "")) {
-      toast({ title: "Ingresa tu número de WhatsApp", variant: "destructive" });
       return;
     }
     setSaving(true);
@@ -768,7 +760,7 @@ const Admin = () => {
                           </p>
                         </div>
                         <span className={`shrink-0 px-1.5 py-0.5 text-[10px] font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
-                          {p.tipo_negocio}
+                          {tipoNegocioLabel(p.tipo_negocio)}
                         </span>
                       </div>
                       <p className="font-body text-sm font-semibold text-foreground mb-2">
@@ -829,7 +821,7 @@ const Admin = () => {
                           <td className="p-4 font-body">{p.tipo_inmueble}</td>
                           <td className="p-4">
                             <span className={`px-2 py-1 text-xs font-heading font-semibold ${p.tipo_negocio === "Venta" ? "bg-blue-500/10 text-blue-700 dark:text-blue-400" : "bg-primary/10 text-primary"}`}>
-                              {p.tipo_negocio}
+                              {tipoNegocioLabel(p.tipo_negocio)}
                             </span>
                           </td>
                           <td className="p-4 font-body text-muted-foreground">
@@ -994,7 +986,7 @@ const Admin = () => {
 
         {/* Property form modal */}
         <Dialog open={formOpen} onOpenChange={(o) => { if (!o) { setFormOpen(false); setCaptacionSource(null); } }}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden p-4 sm:p-6">
+          <DialogContent className="max-w-2xl max-h-[90dvh] overflow-y-auto overflow-x-hidden p-4 sm:p-6">
             <DialogHeader>
               <DialogTitle className="font-heading text-xl">{editingId ? "Editar propiedad" : "Nueva propiedad"}</DialogTitle>
             </DialogHeader>
@@ -1006,7 +998,7 @@ const Admin = () => {
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo inmueble *</label>
-                  <select value={form.tipo_inmueble || ""} onChange={(e) => updateField("tipo_inmueble", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={form.tipo_inmueble || ""} onChange={(e) => updateField("tipo_inmueble", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
                     <option value="">Seleccionar</option>
                     {propertyTypes.map((p) => <option key={p} value={p}>{p}</option>)}
                   </select>
@@ -1015,14 +1007,15 @@ const Admin = () => {
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo negocio</label>
-                  <select value={form.tipo_negocio || "Venta"} onChange={(e) => updateField("tipo_negocio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={form.tipo_negocio || "Venta"} onChange={(e) => updateField("tipo_negocio", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
                     <option value="Venta">Venta</option>
                     <option value="Alquiler">Alquiler</option>
+                    <option value="Ambos">Alquiler o Venta</option>
                   </select>
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Estado</label>
-                  <select value={form.estado || "Disponible"} onChange={(e) => updateField("estado", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={form.estado || "Disponible"} onChange={(e) => updateField("estado", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
                     <option value="Disponible">Disponible</option>
                     <option value="Arrendado">Arrendado</option>
                     <option value="Vendido">Vendido</option>
@@ -1046,7 +1039,7 @@ const Admin = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Ciudad</label>
-                  <select value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
                     {CIUDADES.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
@@ -1091,7 +1084,7 @@ const Admin = () => {
                   <select
                     value={form.parqueadero && form.parqueadero !== "No" ? "Si" : "No"}
                     onChange={(e) => updateField("parqueadero", e.target.value === "No" ? "No" : "Carro")}
-                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                    className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
                   >
                     <option value="No">No</option>
                     <option value="Si">Sí</option>
@@ -1100,7 +1093,7 @@ const Admin = () => {
                     <select
                       value={form.parqueadero}
                       onChange={(e) => updateField("parqueadero", e.target.value)}
-                      className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none mt-1.5"
+                      className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none mt-1.5"
                     >
                       <option value="Carro">Carro</option>
                       <option value="Moto">Moto</option>
@@ -1119,7 +1112,7 @@ const Admin = () => {
                       setIncluyeAdmin(si);
                       if (!si) updateField("administracion", 0);
                     }}
-                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                    className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
                   >
                     <option value="no">No</option>
                     <option value="si">Sí</option>
@@ -1134,7 +1127,7 @@ const Admin = () => {
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
-                  <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
                     <option value="">Seleccionar</option>
                     {ZONAS.map((z) => <option key={z} value={z}>{z}</option>)}
                   </select>
@@ -1162,19 +1155,6 @@ const Admin = () => {
                     Mío
                   </button>
                 </div>
-                {waOwner === "mio" && (
-                  <input
-                    type="tel"
-                    value={miWhatsapp}
-                    onChange={(e) => {
-                      const v = e.target.value.replace(/\D/g, "");
-                      setMiWhatsapp(v);
-                      localStorage.setItem("admin_mi_whatsapp", v);
-                    }}
-                    placeholder="Tu número con indicativo, ej: 573001234567"
-                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none mt-2"
-                  />
-                )}
               </div>
 
               {/*
@@ -1191,7 +1171,7 @@ const Admin = () => {
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Red social del video</label>
-                    <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                    <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
                       <option value="">(ninguno)</option>
                       <option value="instagram">Instagram</option>
                       <option value="tiktok">TikTok</option>

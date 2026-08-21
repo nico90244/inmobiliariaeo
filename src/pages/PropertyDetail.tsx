@@ -17,7 +17,7 @@ import SEO from "@/components/SEO";
 import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { usePropiedades } from "@/hooks/usePropiedades";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, tipoNegocioLabel } from "@/lib/utils";
 import {
   Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink,
   BreadcrumbSeparator, BreadcrumbPage,
@@ -218,7 +218,7 @@ const RelatedCard = ({ property }: { property: Propiedad }) => (
   <Link to={`/propiedades/${property.id}`} className="group border border-foreground/10 bg-background overflow-hidden block">
     <div className="relative overflow-hidden">
       <img src={property.foto_portada || "/placeholder.svg"} alt={property.nombre_inmueble} className="w-full h-56 object-cover transition-all duration-500 group-hover:grayscale" loading="lazy" />
-      <span className="absolute top-4 left-4 font-heading text-xs font-semibold tracking-widest uppercase px-3 py-1 bg-primary text-primary-foreground">{property.tipo_negocio}</span>
+      <span className="absolute top-4 left-4 font-heading text-xs font-semibold tracking-widest uppercase px-3 py-1 bg-primary text-primary-foreground">{tipoNegocioLabel(property.tipo_negocio)}</span>
     </div>
     <div className="p-6">
       <p className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-1">{property.tipo_inmueble} · {property.barrio}</p>
@@ -357,7 +357,7 @@ const PropertyDetail = () => {
           {/* Header info – left aligned */}
           <div className="mb-5">
             <Badge className="bg-primary text-primary-foreground font-heading text-[10px] font-bold tracking-widest uppercase px-3 py-1 mb-2">
-              {property.tipo_negocio}
+              {tipoNegocioLabel(property.tipo_negocio)}
             </Badge>
             <p className="font-body text-sm text-muted-foreground mb-1">
               {[property.ciudad || "Cali", property.zona, property.tipo_inmueble].filter(Boolean).join(" | ")}

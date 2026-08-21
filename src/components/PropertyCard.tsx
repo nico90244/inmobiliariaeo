@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { MapPin, Maximize2, Bed, Bath, Car } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import type { Propiedad } from "@/hooks/usePropiedades";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, tipoNegocioLabel } from "@/lib/utils";
 import { trackContact } from "@/lib/pixelEvents";
 
 const PropertyCard = ({ property }: { property: Propiedad }) => {
@@ -28,7 +28,7 @@ const PropertyCard = ({ property }: { property: Propiedad }) => {
         <span
           className="absolute top-2.5 left-2.5 font-heading text-[11px] font-bold tracking-widest uppercase px-3 py-1 bg-primary text-primary-foreground"
         >
-          {property.tipo_negocio}
+          {tipoNegocioLabel(property.tipo_negocio)}
           {property.zona && <> | {property.zona}</>}
         </span>
       </Link>
