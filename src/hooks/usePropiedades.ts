@@ -28,7 +28,7 @@ export const usePropiedades = (filters?: {
       }
 
       if (filters?.tipo_negocio) {
-        query = query.eq("tipo_negocio", filters.tipo_negocio);
+        query = query.in("tipo_negocio", [filters.tipo_negocio, "Ambos"]);
       }
       if (filters?.tipo_inmueble) {
         query = query.eq("tipo_inmueble", filters.tipo_inmueble);
