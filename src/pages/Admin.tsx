@@ -8,7 +8,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import {
   Home, FileText, LogOut, Plus, Pencil, Trash2, Loader2, X, Image as ImageIcon, Video, Calendar, Search, FilterX,
   TrendingDown, CheckCircle2, XCircle, BarChart3, ClipboardList, Wallet, ShieldCheck,
-  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu, User, ChevronDown, HeartHandshake,
+  ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Crosshair, Menu, User, ChevronDown, HeartHandshake, Handshake,
 } from "lucide-react";
 import AdminCitasDisponibilidad from "@/components/admin/AdminCitasDisponibilidad";
 import AdminCitasReservas from "@/components/admin/AdminCitasReservas";
@@ -17,6 +17,7 @@ import AdminReportes from "@/components/admin/AdminReportes";
 import AdminAlquileres from "@/components/admin/AdminAlquileres";
 import AdminPolizas from "@/components/admin/AdminPolizas";
 import AdminPropietarios from "@/components/admin/AdminPropietarios";
+import AdminReferidos from "@/components/admin/AdminReferidos";
 import AdminEmergencia from "@/components/admin/AdminEmergencia";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
@@ -49,7 +50,7 @@ const Admin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas" | "alquileres" | "propietarios" | "polizas" | "reportes" | "emergencia">("propiedades");
+  const [section, setSection] = useState<"propiedades" | "captaciones" | "citas-disponibilidad" | "citas-reservas" | "alquileres" | "propietarios" | "polizas" | "reportes" | "emergencia" | "referidos">("propiedades");
   const [alquileresExpanded, setAlquileresExpanded] = useState(false);
   const [pendingReservas, setPendingReservas] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -64,6 +65,29 @@ const Admin = () => {
   const [saving, setSaving] = useState(false);
   const [incluyeAdmin, setIncluyeAdmin] = useState(false);
   const [waOwner, setWaOwner] = useState<"eliana" | "mio">("eliana");
+
+  // Comisión / modalidad de negocio (solo panel admin, no visible al público)
+  const [modalidadComision, setModalidadComision] = useState("Directo");
+  const [propNombreDirecto, setPropNombreDirecto] = useState("");
+  const [propCelularDirecto, setPropCelularDirecto] = useState("");
+  const [propietarioYaVinculado, setPropietarioYaVinculado] = useState(false);
+  const [refNombre, setRefNombre] = useState("");
+  const [refInmobiliaria, setRefInmobiliaria] = useState("");
+  const [refCelular, setRefCelular] = useState("");
+  const [comisionTipo, setComisionTipo] = useState<"porcentaje" | "valor">("porcentaje");
+  const [comisionValor, setComisionValor] = useState<number | "">("");
+
+  const resetComision = () => {
+    setModalidadComision("Directo");
+    setPropNombreDirecto("");
+    setPropCelularDirecto("");
+    setPropietarioYaVinculado(false);
+    setRefNombre("");
+    setRefInmobiliaria("");
+    setRefCelular("");
+    setComisionTipo("porcentaje");
+    setComisionValor("");
+  };
 
   // Photo uploads
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -127,6 +151,9 @@ const Admin = () => {
     setSelectedCaptacion(null);
     setIncluyeAdmin(false);
     setWaOwner("eliana");
+    resetComision();
+    setPropNombreDirecto(c.nombre || "");
+    setPropCelularDirecto(c.celular || "");
     setFormOpen(true);
   };
 
@@ -268,6 +295,15 @@ const Admin = () => {
     loadPending();
   }, [user, section]);
 
+  // Si cambia el tipo de negocio, la modalidad de comisión puede dejar de ser
+  // válida (ej. "Compartida" era de Venta y se cambió a Alquiler) — se resetea.
+  useEffect(() => {
+    const validas = form.tipo_negocio === "Venta"
+      ? ["Directo", "Compartida"]
+      : ["Directo", "Corretaje", "Administracion"];
+    if (!validas.includes(modalidadComision)) setModalidadComision("Directo");
+  }, [form.tipo_negocio]);
+
   const loadData = async () => {
     setLoadingData(true);
     if (section === "propiedades") {
@@ -324,10 +360,11 @@ const Admin = () => {
     setCoverZoom(1.0);
     setIncluyeAdmin(false);
     setWaOwner("eliana");
+    resetComision();
     setFormOpen(true);
   };
 
-  const openEditForm = (p: Propiedad) => {
+  const openEditForm = async (p: Propiedad) => {
     setForm(p);
     setEditingId(p.id);
     setCoverPreview(p.foto_portada || null);
@@ -341,6 +378,37 @@ const Admin = () => {
     setIncluyeAdmin((p.administracion ?? 0) > 0);
     const linkNum = (p.link_whatsapp || "").match(/wa\.me\/(\d+)/)?.[1];
     setWaOwner(linkNum === MI_WHATSAPP ? "mio" : "eliana");
+
+    resetComision();
+    const modalidad = (p as any).modalidad_comision || "Directo";
+    setModalidadComision(modalidad);
+    if (modalidad === "Directo") {
+      if (p.propietario_id) {
+        setPropietarioYaVinculado(true);
+        const { data: prop } = await supabase
+          .from("propietarios")
+          .select("nombre, apellido, telefono")
+          .eq("id", p.propietario_id)
+          .maybeSingle();
+        if (prop) {
+          setPropNombreDirecto([prop.nombre, prop.apellido].filter(Boolean).join(" "));
+          setPropCelularDirecto(prop.telefono || "");
+        }
+      }
+    } else {
+      const { data: ref } = await (supabase as any)
+        .from("referidos")
+        .select("nombre_agente, inmobiliaria, celular, comision_tipo, comision_valor")
+        .eq("propiedad_id", p.id)
+        .maybeSingle();
+      if (ref) {
+        setRefNombre(ref.nombre_agente || "");
+        setRefInmobiliaria(ref.inmobiliaria || "");
+        setRefCelular(ref.celular || "");
+        setComisionTipo(ref.comision_tipo || "porcentaje");
+        setComisionValor(ref.comision_valor ?? "");
+      }
+    }
     setFormOpen(true);
   };
 
@@ -411,6 +479,7 @@ const Admin = () => {
         foto_portada_zoom: coverZoom,
         fotos: fotosUrls,
         link_whatsapp: buildWaLink(),
+        modalidad_comision: modalidadComision,
       };
 
       // Remove readonly fields
@@ -428,15 +497,20 @@ const Admin = () => {
       }
 
       toast({ title: editingId ? "Propiedad actualizada" : "Propiedad creada" });
-      if (!editingId && captacionSource) {
-        // Auto-vincular propietario cuando la captación es para alquiler
-        if (["Alquiler", "Ambos"].includes(captacionSource.tipo_negocio || "")) {
+
+      // Comisión / modalidad de negocio (solo panel admin — no visible al público).
+      // "Directo" vincula (o crea) un propietario, igual que antes con captaciones.
+      // Cualquier otra modalidad (Corretaje/Administración/Compartida) se guarda
+      // aparte en "referidos", sin tocar la base de propietarios/pólizas/canon.
+      if (modalidadComision === "Directo") {
+        await (supabase as any).from("referidos").delete().eq("propiedad_id", propId);
+
+        if (!(record as any).propietario_id) {
           let propietarioVinculadoId: string | null = null;
 
-          // Buscar por celular
-          if (captacionSource.celular) {
-            const tel = captacionSource.celular.replace(/\s/g, "");
-            const { data: byTel } = await (supabase as any)
+          if (propCelularDirecto) {
+            const tel = propCelularDirecto.replace(/\s/g, "");
+            const { data: byTel } = await supabase
               .from("propietarios")
               .select("id")
               .ilike("telefono", `%${tel}%`)
@@ -444,10 +518,9 @@ const Admin = () => {
             propietarioVinculadoId = byTel?.[0]?.id || null;
           }
 
-          // Buscar por primer nombre exacto
-          if (!propietarioVinculadoId && captacionSource.nombre) {
-            const primerNombre = captacionSource.nombre.trim().split(" ")[0];
-            const { data: byNombre } = await (supabase as any)
+          if (!propietarioVinculadoId && propNombreDirecto) {
+            const primerNombre = propNombreDirecto.trim().split(" ")[0];
+            const { data: byNombre } = await supabase
               .from("propietarios")
               .select("id")
               .ilike("nombre", primerNombre)
@@ -455,18 +528,16 @@ const Admin = () => {
             propietarioVinculadoId = byNombre?.[0]?.id || null;
           }
 
-          // Crear nuevo si no existe
-          if (!propietarioVinculadoId) {
-            const partes = (captacionSource.nombre || "").trim().split(" ");
-            const { data: newP } = await (supabase as any)
+          if (!propietarioVinculadoId && propNombreDirecto) {
+            const partes = propNombreDirecto.trim().split(" ");
+            const { data: newP } = await supabase
               .from("propietarios")
               .insert({
-                nombre: partes[0] || captacionSource.nombre || "",
+                nombre: partes[0] || propNombreDirecto,
                 apellido: partes.slice(1).join(" ") || null,
                 tipo_documento: "CC",
-                telefono: captacionSource.celular || null,
-                email: captacionSource.correo || null,
-              })
+                telefono: propCelularDirecto || null,
+              } as any)
               .select("id")
               .single();
             propietarioVinculadoId = newP?.id || null;
@@ -479,7 +550,21 @@ const Admin = () => {
               .eq("id", propId);
           }
         }
+      } else {
+        await (supabase as any).from("referidos").delete().eq("propiedad_id", propId);
+        await (supabase as any).from("referidos").insert({
+          propiedad_id: propId,
+          tipo_negocio: form.tipo_negocio,
+          modalidad: modalidadComision,
+          nombre_agente: refNombre || null,
+          inmobiliaria: refInmobiliaria || null,
+          celular: refCelular || null,
+          comision_tipo: comisionValor !== "" ? comisionTipo : null,
+          comision_valor: comisionValor === "" ? null : Number(comisionValor),
+        });
+      }
 
+      if (!editingId && captacionSource) {
         await supabase.from("captaciones").update({ estado: "Convertida" }).eq("id", captacionSource.id);
         setCaptacionSource(null);
       }
@@ -611,6 +696,9 @@ const Admin = () => {
           </div>
           <button onClick={() => { setSection("polizas"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "polizas" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <ShieldCheck size={18} /> Pólizas
+          </button>
+          <button onClick={() => { setSection("referidos"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "referidos" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
+            <Handshake size={18} /> Referidos
           </button>
           <button onClick={() => { setSection("reportes"); setSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 font-heading text-sm font-medium transition-colors ${section === "reportes" ? "bg-primary text-primary-foreground" : "text-secondary-foreground/60 hover:text-secondary-foreground"}`}>
             <BarChart3 size={18} /> Reportes
@@ -982,6 +1070,7 @@ const Admin = () => {
         {section === "alquileres" && <AdminAlquileres />}
         {section === "propietarios" && <AdminPropietarios />}
         {section === "polizas" && <AdminPolizas />}
+        {section === "referidos" && <AdminReferidos />}
         {section === "reportes" && <AdminReportes />}
 
         {/* Property form modal */}
@@ -1023,6 +1112,82 @@ const Admin = () => {
                   </select>
                 </div>
               </div>
+
+              {/* Comisión — uso interno, NO se muestra en el sitio público */}
+              <div className="border-t border-foreground/10 pt-4">
+                <h3 className="font-heading text-sm font-bold text-foreground flex items-center gap-2 mb-1">
+                  <Handshake size={16} className="text-primary" /> Comisión
+                </h3>
+                <p className="font-body text-[11px] text-muted-foreground mb-3">Solo para control interno del panel admin — no aparece en la página pública.</p>
+                <div>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Modalidad</label>
+                  <select value={modalidadComision} onChange={(e) => setModalidadComision(e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                    {form.tipo_negocio === "Venta" ? (
+                      <>
+                        <option value="Directo">Directa</option>
+                        <option value="Compartida">Compartida</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="Directo">Directo</option>
+                        <option value="Corretaje">Corretaje</option>
+                        <option value="Administracion">Administración</option>
+                      </>
+                    )}
+                  </select>
+                </div>
+
+                {modalidadComision === "Directo" ? (
+                  <div className="mt-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      <div>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre propietario</label>
+                        <input type="text" value={propNombreDirecto} disabled={propietarioYaVinculado} onChange={(e) => setPropNombreDirecto(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
+                      </div>
+                      <div>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular propietario</label>
+                        <input type="tel" value={propCelularDirecto} disabled={propietarioYaVinculado} onChange={(e) => setPropCelularDirecto(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
+                      </div>
+                    </div>
+                    <p className="font-body text-[11px] text-muted-foreground mt-1">
+                      {propietarioYaVinculado
+                        ? "Ya está vinculada a un propietario existente — para cambiar sus datos, edítalo desde la pestaña Propietarios."
+                        : "Al guardar se busca o crea automáticamente en la pestaña Propietarios."}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3 sm:space-y-4 mt-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                      <div>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre agente/referido</label>
+                        <input type="text" value={refNombre} onChange={(e) => setRefNombre(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                      </div>
+                      <div>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Inmobiliaria</label>
+                        <input type="text" value={refInmobiliaria} onChange={(e) => setRefInmobiliaria(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                      </div>
+                      <div>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular</label>
+                        <input type="tel" value={refCelular} onChange={(e) => setRefCelular(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                      <div>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo comisión</label>
+                        <select value={comisionTipo} onChange={(e) => setComisionTipo(e.target.value as "porcentaje" | "valor")} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                          <option value="porcentaje">Porcentaje (%)</option>
+                          <option value="valor">Valor fijo ($)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">{comisionTipo === "porcentaje" ? "Comisión (%)" : "Comisión ($)"}</label>
+                        <input type="number" value={comisionValor} onFocus={(e) => e.target.select()} onChange={(e) => setComisionValor(e.target.value === "" ? "" : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <label className="flex items-center gap-3 border border-foreground/10 py-2 px-3 cursor-pointer hover:bg-muted/30 transition-colors">
                   <input
