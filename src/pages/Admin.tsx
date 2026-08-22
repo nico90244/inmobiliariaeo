@@ -60,7 +60,8 @@ const Admin = () => {
 
   // Property form
   const [formOpen, setFormOpen] = useState(false);
-  const [formMaxH, setFormMaxH] = useState("90dvh");
+  const [formMaxH, setFormMaxH] = useState<string | undefined>(undefined);
+  const [formTop, setFormTop] = useState<string | undefined>(undefined);
   const [form, setForm] = useState<Partial<Propiedad>>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -308,17 +309,31 @@ const Admin = () => {
     loadPending();
   }, [user, section]);
 
-  // Ajusta el alto del modal al viewport visual real (no al layout viewport),
-  // que es lo que iOS Safari reduce cuando aparece el teclado — así el modal
-  // no queda cortado ni obliga a hacer zoom para verlo completo.
+  // En móvil el formulario es una hoja de pantalla completa fijada al viewport
+  // VISUAL real (no al layout viewport, que iOS Safari no reduce cuando aparece
+  // el teclado). Sin esto, position:fixed queda anclado al alto total de la
+  // página y el teclado tapa los botones o deja un hueco vacío arriba.
   useEffect(() => {
     if (!formOpen) return;
     const vv = window.visualViewport;
     if (!vv) return;
-    const update = () => setFormMaxH(`${Math.round(vv.height * 0.9)}px`);
+    const update = () => {
+      if (window.innerWidth >= 640) {
+        // Escritorio: diálogo centrado normal, sin fijar por JS.
+        setFormMaxH(undefined);
+        setFormTop(undefined);
+        return;
+      }
+      setFormMaxH(`${Math.round(vv.height)}px`);
+      setFormTop(`${Math.round(vv.offsetTop)}px`);
+    };
     update();
     vv.addEventListener("resize", update);
-    return () => vv.removeEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+    };
   }, [formOpen]);
 
   // Agentes/inmobiliarias ya registrados en Referidos, para sugerirlos al crear uno nuevo
@@ -1142,19 +1157,23 @@ const Admin = () => {
 
         {/* Property form modal */}
         <Dialog open={formOpen} onOpenChange={(o) => { if (!o) { setFormOpen(false); setCaptacionSource(null); } }}>
-          <DialogContent className="max-w-2xl overflow-y-auto overflow-x-hidden p-4 sm:p-6" style={{ maxHeight: formMaxH }}>
-            <DialogHeader>
+          <DialogContent
+            className="fixed inset-0 left-0 top-0 h-[100dvh] w-full max-w-full translate-x-0 translate-y-0 rounded-none border-0 shadow-none gap-0 p-0 flex flex-col overflow-hidden sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-auto sm:max-h-[85vh] sm:w-full sm:max-w-2xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border sm:shadow-lg"
+            style={formTop != null ? { top: formTop, height: formMaxH, maxHeight: formMaxH } : undefined}
+          >
+            <DialogHeader className="shrink-0 border-b border-foreground/10 px-4 sm:px-6 py-3">
               <DialogTitle className="font-heading text-xl">{editingId ? "Editar propiedad" : "Nueva propiedad"}</DialogTitle>
             </DialogHeader>
-            <div className="space-y-3 sm:space-y-4 mt-4">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-6 py-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre inmueble *</label>
-                  <input type="text" value={form.nombre_inmueble || ""} onChange={(e) => updateField("nombre_inmueble", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="text" value={form.nombre_inmueble || ""} onChange={(e) => updateField("nombre_inmueble", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo inmueble *</label>
-                  <select value={form.tipo_inmueble || ""} onChange={(e) => updateField("tipo_inmueble", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={form.tipo_inmueble || ""} onChange={(e) => updateField("tipo_inmueble", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     <option value="">Seleccionar</option>
                     {propertyTypes.map((p) => <option key={p} value={p}>{p}</option>)}
                   </select>
@@ -1163,7 +1182,7 @@ const Admin = () => {
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo negocio</label>
-                  <select value={form.tipo_negocio || "Venta"} onChange={(e) => updateField("tipo_negocio", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={form.tipo_negocio || "Venta"} onChange={(e) => updateField("tipo_negocio", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     <option value="Venta">Venta</option>
                     <option value="Alquiler">Alquiler</option>
                     <option value="Ambos">Alquiler o Venta</option>
@@ -1171,7 +1190,7 @@ const Admin = () => {
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Estado</label>
-                  <select value={form.estado || "Disponible"} onChange={(e) => updateField("estado", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={form.estado || "Disponible"} onChange={(e) => updateField("estado", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     <option value="Disponible">Disponible</option>
                     <option value="Arrendado">Arrendado</option>
                     <option value="Vendido">Vendido</option>
@@ -1188,7 +1207,7 @@ const Admin = () => {
                 <p className="font-body text-[11px] text-muted-foreground mb-3">Solo para control interno del panel admin — no aparece en la página pública.</p>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Modalidad</label>
-                  <select value={modalidadComision} onChange={(e) => setModalidadComision(e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={modalidadComision} onChange={(e) => setModalidadComision(e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     {form.tipo_negocio === "Venta" ? (
                       <>
                         <option value="Directo">Directo</option>
@@ -1216,11 +1235,11 @@ const Admin = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre propietario</label>
-                        <input type="text" value={propNombreDirecto} disabled={propietarioYaVinculado} onChange={(e) => setPropNombreDirecto(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
+                        <input type="text" value={propNombreDirecto} disabled={propietarioYaVinculado} onChange={(e) => setPropNombreDirecto(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
                       </div>
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular propietario</label>
-                        <input type="tel" value={propCelularDirecto} disabled={propietarioYaVinculado} onChange={(e) => setPropCelularDirecto(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
+                        <input type="tel" value={propCelularDirecto} disabled={propietarioYaVinculado} onChange={(e) => setPropCelularDirecto(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
                       </div>
                     </div>
                     <p className="font-body text-[11px] text-muted-foreground mt-1">
@@ -1234,34 +1253,34 @@ const Admin = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre agente/referido</label>
-                        <input type="text" list="agentes-conocidos" value={refNombre} onChange={(e) => handleRefNombreChange(e.target.value)} placeholder="Nuevo o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                        <input type="text" list="agentes-conocidos" value={refNombre} onChange={(e) => handleRefNombreChange(e.target.value)} placeholder="Nuevo o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                         <datalist id="agentes-conocidos">
                           {agentesConocidos.map((a) => <option key={a.nombre_agente} value={a.nombre_agente} />)}
                         </datalist>
                       </div>
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Inmobiliaria</label>
-                        <input type="text" list="inmobiliarias-conocidas" value={refInmobiliaria} onChange={(e) => setRefInmobiliaria(e.target.value)} placeholder="Nueva o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                        <input type="text" list="inmobiliarias-conocidas" value={refInmobiliaria} onChange={(e) => setRefInmobiliaria(e.target.value)} placeholder="Nueva o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                         <datalist id="inmobiliarias-conocidas">
                           {inmobiliariasConocidas.map((i) => <option key={i} value={i} />)}
                         </datalist>
                       </div>
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular</label>
-                        <input type="tel" value={refCelular} onChange={(e) => setRefCelular(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                        <input type="tel" value={refCelular} onChange={(e) => setRefCelular(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3 sm:gap-4">
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo comisión</label>
-                        <select value={comisionTipo} onChange={(e) => setComisionTipo(e.target.value as "porcentaje" | "valor")} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                        <select value={comisionTipo} onChange={(e) => setComisionTipo(e.target.value as "porcentaje" | "valor")} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                           <option value="porcentaje">Porcentaje (%)</option>
                           <option value="valor">Valor fijo ($)</option>
                         </select>
                       </div>
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">{comisionTipo === "porcentaje" ? "Comisión (%)" : "Comisión ($)"}</label>
-                        <input type="number" value={comisionValor} onFocus={(e) => e.target.select()} onChange={(e) => setComisionValor(e.target.value === "" ? "" : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                        <input type="number" value={comisionValor} onFocus={(e) => e.target.select()} onChange={(e) => setComisionValor(e.target.value === "" ? "" : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                       </div>
                     </div>
                   </div>
@@ -1284,52 +1303,52 @@ const Admin = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Ciudad</label>
-                  <select value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     {CIUDADES.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Dirección</label>
-                  <input type="text" value={form.direccion || ""} onChange={(e) => updateField("direccion", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="text" value={form.direccion || ""} onChange={(e) => updateField("direccion", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Barrio</label>
-                  <input type="text" value={form.barrio || ""} onChange={(e) => updateField("barrio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="text" value={form.barrio || ""} onChange={(e) => updateField("barrio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Precio</label>
-                  <input type="number" value={form.precio ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("precio", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.precio ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("precio", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Área m²</label>
-                  <input type="number" value={form.area_m2 ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("area_m2", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.area_m2 ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("area_m2", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Estrato</label>
-                  <input type="number" value={form.estrato ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("estrato", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.estrato ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("estrato", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Habitaciones</label>
-                  <input type="number" value={form.habitaciones ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("habitaciones", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.habitaciones ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("habitaciones", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Baños</label>
-                  <input type="number" value={form.banos ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("banos", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="number" value={form.banos ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("banos", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Piso</label>
-                  <input type="text" value={form.piso || ""} onChange={(e) => updateField("piso", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                  <input type="text" value={form.piso || ""} onChange={(e) => updateField("piso", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Parqueadero</label>
                   <select
                     value={form.parqueadero && form.parqueadero !== "No" ? "Si" : "No"}
                     onChange={(e) => updateField("parqueadero", e.target.value === "No" ? "No" : "Carro")}
-                    className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                    className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none"
                   >
                     <option value="No">No</option>
                     <option value="Si">Sí</option>
@@ -1338,7 +1357,7 @@ const Admin = () => {
                     <select
                       value={form.parqueadero}
                       onChange={(e) => updateField("parqueadero", e.target.value)}
-                      className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none mt-1.5"
+                      className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none mt-1.5"
                     >
                       <option value="Carro">Carro</option>
                       <option value="Moto">Moto</option>
@@ -1357,7 +1376,7 @@ const Admin = () => {
                       setIncluyeAdmin(si);
                       if (!si) updateField("administracion", 0);
                     }}
-                    className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none"
+                    className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none"
                   >
                     <option value="no">No</option>
                     <option value="si">Sí</option>
@@ -1365,14 +1384,14 @@ const Admin = () => {
                   {incluyeAdmin && (
                     <div className="mt-2">
                       <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor administración</label>
-                      <input type="number" value={form.administracion ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("administracion", e.target.value === "" ? 0 : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                      <input type="number" value={form.administracion ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("administracion", e.target.value === "" ? 0 : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                       <p className="font-body text-[11px] text-muted-foreground mt-1">Este valor se muestra por separado y no se suma al precio/canon.</p>
                     </div>
                   )}
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
-                  <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                  <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     <option value="">Seleccionar</option>
                     {ZONAS.map((z) => <option key={z} value={z}>{z}</option>)}
                   </select>
@@ -1380,7 +1399,7 @@ const Admin = () => {
               </div>
               <div>
                 <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Descripción</label>
-                <textarea value={form.descripcion || ""} onChange={(e) => updateField("descripcion", e.target.value)} rows={3} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none resize-none" />
+                <textarea value={form.descripcion || ""} onChange={(e) => updateField("descripcion", e.target.value)} rows={3} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none resize-none" />
               </div>
               <div>
                 <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">WhatsApp de contacto</label>
@@ -1416,7 +1435,7 @@ const Admin = () => {
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Red social</label>
-                    <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
+                    <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                       <option value="">(ninguno)</option>
                       <option value="instagram">Instagram</option>
                       <option value="tiktok">TikTok</option>
@@ -1425,7 +1444,7 @@ const Admin = () => {
                   </div>
                   <div>
                     <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Link del video</label>
-                    <input type="url" value={form.link_video || ""} onChange={(e) => updateField("link_video", e.target.value || null)} placeholder="https://www.instagram.com/reel/..." disabled={!form.red_social_video} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed" />
+                    <input type="url" value={form.link_video || ""} onChange={(e) => updateField("link_video", e.target.value || null)} placeholder="https://www.instagram.com/reel/..." disabled={!form.red_social_video} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed" />
                   </div>
                 </div>
               </div>
@@ -1529,16 +1548,18 @@ const Admin = () => {
                 </label>
               </div>
 
-              {/* Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
-                  {saving && <Loader2 size={16} className="animate-spin" />}
-                  {saving ? "Guardando..." : "Guardar"}
-                </button>
-                <button onClick={() => setFormOpen(false)} className="px-8 py-3 bg-muted text-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-muted/80 transition-colors">
-                  Cancelar
-                </button>
-              </div>
+            </div>
+            </div>
+
+            {/* Buttons — pie fijo, siempre visible sin necesidad de hacer scroll */}
+            <div className="shrink-0 border-t border-foreground/10 bg-background px-4 sm:px-6 py-3 flex gap-3">
+              <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-primary text-primary-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-primary-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
+                {saving && <Loader2 size={16} className="animate-spin" />}
+                {saving ? "Guardando..." : "Guardar"}
+              </button>
+              <button onClick={() => setFormOpen(false)} className="px-8 py-3 bg-muted text-foreground font-heading text-sm font-semibold tracking-widest uppercase hover:bg-muted/80 transition-colors">
+                Cancelar
+              </button>
             </div>
           </DialogContent>
         </Dialog>
@@ -1621,7 +1642,7 @@ const Admin = () => {
                     value={(selectedCaptacion as any).reserva_id || ""}
                     onChange={(e) => saveCitaLink(selectedCaptacion.id, e.target.value || null)}
                     disabled={savingCitaLink}
-                    className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none bg-background"
+                    className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none bg-background"
                   >
                     <option value="">— Sin cita vinculada —</option>
                     {reservasSimples.map((r) => (
