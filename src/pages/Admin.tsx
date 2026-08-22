@@ -76,6 +76,18 @@ const Admin = () => {
   const [refCelular, setRefCelular] = useState("");
   const [comisionTipo, setComisionTipo] = useState<"porcentaje" | "valor">("porcentaje");
   const [comisionValor, setComisionValor] = useState<number | "">("");
+  const [referidosConocidos, setReferidosConocidos] = useState<
+    { nombre_agente: string; inmobiliaria: string | null; celular: string | null }[]
+  >([]);
+
+  const loadReferidosConocidos = async () => {
+    const { data } = await (supabase as any)
+      .from("referidos")
+      .select("nombre_agente, inmobiliaria, celular")
+      .not("nombre_agente", "is", null)
+      .order("created_at", { ascending: false });
+    setReferidosConocidos((data || []) as any);
+  };
 
   const resetComision = () => {
     setModalidadComision("Directo");
@@ -295,11 +307,51 @@ const Admin = () => {
     loadPending();
   }, [user, section]);
 
+  // Agentes/inmobiliarias ya registrados en Referidos, para sugerirlos al crear uno nuevo
+  useEffect(() => {
+    if (!user) return;
+    loadReferidosConocidos();
+  }, [user]);
+
+  const agentesConocidos = useMemo(() => {
+    const vistos = new Set<string>();
+    return referidosConocidos.filter((r) => {
+      const key = r.nombre_agente.trim().toLowerCase();
+      if (!key || vistos.has(key)) return false;
+      vistos.add(key);
+      return true;
+    });
+  }, [referidosConocidos]);
+
+  const inmobiliariasConocidas = useMemo(() => {
+    const vistos = new Set<string>();
+    return referidosConocidos
+      .map((r) => r.inmobiliaria)
+      .filter((v): v is string => !!v && v.trim() !== "")
+      .filter((v) => {
+        const key = v.trim().toLowerCase();
+        if (vistos.has(key)) return false;
+        vistos.add(key);
+        return true;
+      });
+  }, [referidosConocidos]);
+
+  const handleRefNombreChange = (value: string) => {
+    setRefNombre(value);
+    const match = referidosConocidos.find((r) => r.nombre_agente.trim().toLowerCase() === value.trim().toLowerCase());
+    if (match) {
+      if (!refInmobiliaria && match.inmobiliaria) setRefInmobiliaria(match.inmobiliaria);
+      if (!refCelular && match.celular) setRefCelular(match.celular);
+    }
+  };
+
   // Si cambia el tipo de negocio, la modalidad de comisión puede dejar de ser
   // válida (ej. "Compartida" era de Venta y se cambió a Alquiler) — se resetea.
   useEffect(() => {
     const validas = form.tipo_negocio === "Venta"
       ? ["Directo", "Compartida"]
+      : form.tipo_negocio === "Ambos"
+      ? ["Directo", "Corretaje", "Administracion", "Compartida"]
       : ["Directo", "Corretaje", "Administracion"];
     if (!validas.includes(modalidadComision)) setModalidadComision("Directo");
   }, [form.tipo_negocio]);
@@ -562,6 +614,7 @@ const Admin = () => {
           comision_tipo: comisionValor !== "" ? comisionTipo : null,
           comision_valor: comisionValor === "" ? null : Number(comisionValor),
         });
+        loadReferidosConocidos();
       }
 
       if (!editingId && captacionSource) {
@@ -1124,7 +1177,14 @@ const Admin = () => {
                   <select value={modalidadComision} onChange={(e) => setModalidadComision(e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
                     {form.tipo_negocio === "Venta" ? (
                       <>
-                        <option value="Directo">Directa</option>
+                        <option value="Directo">Directo</option>
+                        <option value="Compartida">Compartida</option>
+                      </>
+                    ) : form.tipo_negocio === "Ambos" ? (
+                      <>
+                        <option value="Directo">Directo</option>
+                        <option value="Corretaje">Corretaje</option>
+                        <option value="Administracion">Administración</option>
                         <option value="Compartida">Compartida</option>
                       </>
                     ) : (
@@ -1160,11 +1220,17 @@ const Admin = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre agente/referido</label>
-                        <input type="text" value={refNombre} onChange={(e) => setRefNombre(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                        <input type="text" list="agentes-conocidos" value={refNombre} onChange={(e) => handleRefNombreChange(e.target.value)} placeholder="Nuevo o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                        <datalist id="agentes-conocidos">
+                          {agentesConocidos.map((a) => <option key={a.nombre_agente} value={a.nombre_agente} />)}
+                        </datalist>
                       </div>
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Inmobiliaria</label>
-                        <input type="text" value={refInmobiliaria} onChange={(e) => setRefInmobiliaria(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                        <input type="text" list="inmobiliarias-conocidas" value={refInmobiliaria} onChange={(e) => setRefInmobiliaria(e.target.value)} placeholder="Nueva o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none" />
+                        <datalist id="inmobiliarias-conocidas">
+                          {inmobiliariasConocidas.map((i) => <option key={i} value={i} />)}
+                        </datalist>
                       </div>
                       <div>
                         <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular</label>
