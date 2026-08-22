@@ -60,6 +60,7 @@ const Admin = () => {
 
   // Property form
   const [formOpen, setFormOpen] = useState(false);
+  const [formMaxH, setFormMaxH] = useState("90dvh");
   const [form, setForm] = useState<Partial<Propiedad>>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -306,6 +307,19 @@ const Admin = () => {
     };
     loadPending();
   }, [user, section]);
+
+  // Ajusta el alto del modal al viewport visual real (no al layout viewport),
+  // que es lo que iOS Safari reduce cuando aparece el teclado — así el modal
+  // no queda cortado ni obliga a hacer zoom para verlo completo.
+  useEffect(() => {
+    if (!formOpen) return;
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => setFormMaxH(`${Math.round(vv.height * 0.9)}px`);
+    update();
+    vv.addEventListener("resize", update);
+    return () => vv.removeEventListener("resize", update);
+  }, [formOpen]);
 
   // Agentes/inmobiliarias ya registrados en Referidos, para sugerirlos al crear uno nuevo
   useEffect(() => {
@@ -1128,7 +1142,7 @@ const Admin = () => {
 
         {/* Property form modal */}
         <Dialog open={formOpen} onOpenChange={(o) => { if (!o) { setFormOpen(false); setCaptacionSource(null); } }}>
-          <DialogContent className="max-w-2xl max-h-[90dvh] overflow-y-auto overflow-x-hidden p-4 sm:p-6">
+          <DialogContent className="max-w-2xl overflow-y-auto overflow-x-hidden p-4 sm:p-6" style={{ maxHeight: formMaxH }}>
             <DialogHeader>
               <DialogTitle className="font-heading text-xl">{editingId ? "Editar propiedad" : "Nueva propiedad"}</DialogTitle>
             </DialogHeader>
@@ -1401,7 +1415,7 @@ const Admin = () => {
                 </h3>
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Red social del video</label>
+                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Red social</label>
                     <select value={form.red_social_video || ""} onChange={(e) => { updateField("red_social_video", e.target.value || null); if (!e.target.value) updateField("link_video", null); }} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none">
                       <option value="">(ninguno)</option>
                       <option value="instagram">Instagram</option>
@@ -1410,7 +1424,7 @@ const Admin = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Link del video (Reel/TikTok/Post)</label>
+                    <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Link del video</label>
                     <input type="url" value={form.link_video || ""} onChange={(e) => updateField("link_video", e.target.value || null)} placeholder="https://www.instagram.com/reel/..." disabled={!form.red_social_video} className="w-full border border-foreground/10 py-2 px-3 font-body text-sm focus:border-primary focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed" />
                   </div>
                 </div>
