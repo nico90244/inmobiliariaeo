@@ -1168,11 +1168,11 @@ const Admin = () => {
             <div className="space-y-3 sm:space-y-4">
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre inmueble *</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Nombre inmueble *</label>
                   <input type="text" value={form.nombre_inmueble || ""} onChange={(e) => updateField("nombre_inmueble", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo inmueble *</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Tipo inmueble *</label>
                   <select value={form.tipo_inmueble || ""} onChange={(e) => updateField("tipo_inmueble", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     <option value="">Seleccionar</option>
                     {propertyTypes.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -1181,7 +1181,7 @@ const Admin = () => {
               </div>
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo negocio</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Tipo negocio</label>
                   <select value={form.tipo_negocio || "Venta"} onChange={(e) => updateField("tipo_negocio", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     <option value="Venta">Venta</option>
                     <option value="Alquiler">Alquiler</option>
@@ -1189,7 +1189,7 @@ const Admin = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Estado</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Estado</label>
                   <select value={form.estado || "Disponible"} onChange={(e) => updateField("estado", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     <option value="Disponible">Disponible</option>
                     <option value="Arrendado">Arrendado</option>
@@ -1206,7 +1206,7 @@ const Admin = () => {
                 </h3>
                 <p className="font-body text-[11px] text-muted-foreground mb-3">Solo para control interno del panel admin — no aparece en la página pública.</p>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Modalidad</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Modalidad</label>
                   <select value={modalidadComision} onChange={(e) => setModalidadComision(e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     {form.tipo_negocio === "Venta" ? (
                       <>
@@ -1234,11 +1234,11 @@ const Admin = () => {
                   <div className="mt-3">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre propietario</label>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Nombre propietario</label>
                         <input type="text" value={propNombreDirecto} disabled={propietarioYaVinculado} onChange={(e) => setPropNombreDirecto(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
                       </div>
                       <div>
-                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular propietario</label>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Celular propietario</label>
                         <input type="tel" value={propCelularDirecto} disabled={propietarioYaVinculado} onChange={(e) => setPropCelularDirecto(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed" />
                       </div>
                     </div>
@@ -1252,34 +1252,34 @@ const Admin = () => {
                   <div className="space-y-3 sm:space-y-4 mt-3">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                       <div>
-                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Nombre agente/referido</label>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Nombre agente/referido</label>
                         <input type="text" list="agentes-conocidos" value={refNombre} onChange={(e) => handleRefNombreChange(e.target.value)} placeholder="Nuevo o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                         <datalist id="agentes-conocidos">
                           {agentesConocidos.map((a) => <option key={a.nombre_agente} value={a.nombre_agente} />)}
                         </datalist>
                       </div>
                       <div>
-                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Inmobiliaria</label>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Inmobiliaria</label>
                         <input type="text" list="inmobiliarias-conocidas" value={refInmobiliaria} onChange={(e) => setRefInmobiliaria(e.target.value)} placeholder="Nueva o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                         <datalist id="inmobiliarias-conocidas">
                           {inmobiliariasConocidas.map((i) => <option key={i} value={i} />)}
                         </datalist>
                       </div>
                       <div>
-                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Celular</label>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Celular</label>
                         <input type="tel" value={refCelular} onChange={(e) => setRefCelular(e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Tipo comisión</label>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Tipo comisión</label>
                         <select value={comisionTipo} onChange={(e) => setComisionTipo(e.target.value as "porcentaje" | "valor")} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                           <option value="porcentaje">Porcentaje (%)</option>
                           <option value="valor">Valor fijo ($)</option>
                         </select>
                       </div>
                       <div>
-                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">{comisionTipo === "porcentaje" ? "Comisión (%)" : "Comisión ($)"}</label>
+                        <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">{comisionTipo === "porcentaje" ? "Comisión (%)" : "Comisión ($)"}</label>
                         <input type="number" value={comisionValor} onFocus={(e) => e.target.select()} onChange={(e) => setComisionValor(e.target.value === "" ? "" : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                       </div>
                     </div>
@@ -1287,64 +1287,62 @@ const Admin = () => {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <label className="flex items-center gap-3 border border-foreground/10 py-2 px-3 cursor-pointer hover:bg-muted/30 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={!!form.destacada}
-                    onChange={(e) => updateField("destacada" as any, e.target.checked)}
-                    className="w-4 h-4 accent-primary"
-                  />
-                  <span className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-                    Propiedad destacada (se muestra en inicio)
-                  </span>
-                </label>
-              </div>
+              <label className="flex items-center gap-3 border border-foreground/10 py-2 px-3 cursor-pointer hover:bg-muted/30 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={!!form.destacada}
+                  onChange={(e) => updateField("destacada" as any, e.target.checked)}
+                  className="w-4 h-4 accent-primary shrink-0"
+                />
+                <span className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+                  Propiedad destacada (se muestra en inicio)
+                </span>
+              </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Ciudad</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Ciudad</label>
                   <select value={(form as any).ciudad || "Cali"} onChange={(e) => updateField("ciudad" as any, e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     {CIUDADES.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Dirección</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Dirección</label>
                   <input type="text" value={form.direccion || ""} onChange={(e) => updateField("direccion", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Barrio</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Barrio</label>
                   <input type="text" value={form.barrio || ""} onChange={(e) => updateField("barrio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Precio</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Precio</label>
                   <input type="number" value={form.precio ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("precio", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Área m²</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Área m²</label>
                   <input type="number" value={form.area_m2 ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("area_m2", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Estrato</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Estrato</label>
                   <input type="number" value={form.estrato ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("estrato", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Habitaciones</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Habitaciones</label>
                   <input type="number" value={form.habitaciones ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("habitaciones", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Baños</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Baños</label>
                   <input type="number" value={form.banos ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("banos", e.target.value === "" ? null : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Piso</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Piso</label>
                   <input type="text" value={form.piso || ""} onChange={(e) => updateField("piso", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Parqueadero</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Parqueadero</label>
                   <select
                     value={form.parqueadero && form.parqueadero !== "No" ? "Si" : "No"}
                     onChange={(e) => updateField("parqueadero", e.target.value === "No" ? "No" : "Carro")}
@@ -1368,7 +1366,7 @@ const Admin = () => {
               </div>
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">¿Incluye administración?</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">¿Incluye admón.?</label>
                   <select
                     value={incluyeAdmin ? "si" : "no"}
                     onChange={(e) => {
@@ -1383,14 +1381,14 @@ const Admin = () => {
                   </select>
                   {incluyeAdmin && (
                     <div className="mt-2">
-                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Valor administración</label>
+                      <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Valor administración</label>
                       <input type="number" value={form.administracion ?? ""} onFocus={(e) => e.target.select()} onChange={(e) => updateField("administracion", e.target.value === "" ? 0 : Number(e.target.value))} placeholder="0" className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
                       <p className="font-body text-[11px] text-muted-foreground mt-1">Este valor se muestra por separado y no se suma al precio/canon.</p>
                     </div>
                   )}
                 </div>
                 <div>
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Zona</label>
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Zona</label>
                   <select value={form.zona || ""} onChange={(e) => updateField("zona", e.target.value)} className="eo-select w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none">
                     <option value="">Seleccionar</option>
                     {ZONAS.map((z) => <option key={z} value={z}>{z}</option>)}
@@ -1398,11 +1396,11 @@ const Admin = () => {
                 </div>
               </div>
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">Descripción</label>
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Descripción</label>
                 <textarea value={form.descripcion || ""} onChange={(e) => updateField("descripcion", e.target.value)} rows={3} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none resize-none" />
               </div>
               <div>
-                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">WhatsApp de contacto</label>
+                <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">WhatsApp de contacto</label>
                 <div className="flex gap-2">
                   <button
                     type="button"
@@ -1635,7 +1633,7 @@ const Admin = () => {
                 ))}
                 {/* Cita relacionada */}
                 <div className="pt-3 border-t border-foreground/10">
-                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1">
+                  <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">
                     Cita relacionada {savingCitaLink && <span className="text-primary">· guardando…</span>}
                   </label>
                   <select
