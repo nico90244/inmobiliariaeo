@@ -9,6 +9,7 @@ import SEO from "@/components/SEO";
 import { usePropiedades } from "@/hooks/usePropiedades";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatPrice } from "@/lib/utils";
+import { barrios } from "@/data/barrios";
 
 const propertyTypes = ["Casa", "Apartamento", "Apartaestudio", "Local", "Finca", "Lote"];
 
@@ -208,6 +209,36 @@ const Propiedades = () => {
                 </>
               );
             })()}
+
+            {/* Barrios populares — enlaces internos a las páginas por barrio */}
+            <div className="mt-16 pt-10 border-t border-foreground/10">
+              <h2 className="font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground mb-4">
+                Barrios populares en Cali
+              </h2>
+              <div className="flex flex-wrap gap-x-2 gap-y-3">
+                {barrios.map((b) => (
+                  <span key={b.slug} className="flex items-center gap-2">
+                    {tipoNegocio !== "Alquiler" && (
+                      <Link
+                        to={`/venta/${b.slug}`}
+                        className="font-body text-sm text-muted-foreground hover:text-primary transition-colors underline decoration-foreground/20 hover:decoration-primary"
+                      >
+                        Casas en venta en {b.nombre}
+                      </Link>
+                    )}
+                    {tipoNegocio === "" && <span className="text-foreground/20">·</span>}
+                    {tipoNegocio !== "Venta" && (
+                      <Link
+                        to={`/alquiler/${b.slug}`}
+                        className="font-body text-sm text-muted-foreground hover:text-primary transition-colors underline decoration-foreground/20 hover:decoration-primary"
+                      >
+                        Apartamentos en arriendo en {b.nombre}
+                      </Link>
+                    )}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
       </main>

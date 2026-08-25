@@ -10,6 +10,51 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# Crawlers de buscadores y asistentes de IA — se permiten explícitamente
+# para maximizar la aparición de las propiedades en respuestas de IA
+# (ChatGPT, Perplexity, Google AI Overviews, Claude, etc).
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
 User-agent: *
 Allow: /
 Disallow: /admin

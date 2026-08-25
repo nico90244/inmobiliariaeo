@@ -305,10 +305,25 @@ const PropertyDetail = () => {
     return "Sí";
   };
 
-  const seoTitle = `${property.nombre_inmueble} en ${property.tipo_negocio} | ${property.barrio || property.ciudad || "Cali"}`.slice(0, 60);
+  const SITE_URL = "https://inmobiliariaeo.com";
+  const propertyUrl = `${SITE_URL}/propiedades/${property.id}`;
+  const locality = property.barrio || property.ciudad || "Cali";
+  const SCHEMA_TYPE_BY_TIPO_INMUEBLE: Record<string, string> = {
+    Apartamento: "Apartment",
+    Apartaestudio: "Apartment",
+    Casa: "House",
+    Finca: "House",
+    Lote: "Place",
+    Local: "Place",
+    Bodega: "Place",
+    Oficina: "Place",
+  };
+
+  const seoTitle = `${property.nombre_inmueble} en ${property.tipo_negocio} | ${locality}`.slice(0, 60);
   const seoDesc = (property.descripcion?.slice(0, 155) ||
-    `${property.tipo_inmueble} en ${property.tipo_negocio.toLowerCase()} en ${property.barrio || property.ciudad || "Cali"}. ${property.area_m2 ? property.area_m2 + " m². " : ""}${property.habitaciones ? property.habitaciones + " hab. " : ""}Precio: ${formatPrice(property.precio)}.`).slice(0, 160);
-  const propertyJsonLd = {
+    `${property.tipo_inmueble} en ${property.tipo_negocio.toLowerCase()} en ${locality}. ${property.area_m2 ? property.area_m2 + " m². " : ""}${property.habitaciones ? property.habitaciones + " hab. " : ""}Precio: ${formatPrice(property.precio)}.`).slice(0, 160);
+
+  const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: property.nombre_inmueble,
@@ -320,11 +335,54 @@ const PropertyDetail = () => {
           price: property.precio,
           priceCurrency: "COP",
           availability: "https://schema.org/InStock",
-          url: `https://inmobiliariaeo.com/propiedades/${property.id}`,
+          url: propertyUrl,
         }
       : undefined,
     brand: { "@type": "Organization", name: "Inmobiliaria Eliana Osorio" },
   };
+
+  // RealEstateListing es el tipo schema.org específico para fichas inmobiliarias
+  // (además de Product, que es el que Google usa para el rich snippet de precio).
+  // Ayuda a que buscadores de IA (que leen schema.org de forma más amplia que
+  // el subconjunto de rich results de Google) entiendan la propiedad como tal.
+  const realEstateListingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "@id": `${propertyUrl}#listing`,
+    url: propertyUrl,
+    name: property.nombre_inmueble,
+    description: property.descripcion || seoDesc,
+    datePosted: property.fecha_creacion,
+    dateModified: property.fecha_actualizacion,
+    image: allPhotos,
+    broker: { "@type": "RealEstateAgent", "@id": `${SITE_URL}/#organization`, name: "Inmobiliaria Eliana Osorio" },
+    about: {
+      "@type": SCHEMA_TYPE_BY_TIPO_INMUEBLE[property.tipo_inmueble] || "Place",
+      name: property.nombre_inmueble,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: property.direccion || undefined,
+        addressLocality: property.ciudad || "Cali",
+        addressRegion: "Valle del Cauca",
+        addressCountry: "CO",
+      },
+      numberOfRooms: property.habitaciones || undefined,
+      numberOfBathroomsTotal: property.banos || undefined,
+      floorSize: property.area_m2 ? { "@type": "QuantitativeValue", value: property.area_m2, unitCode: "MTK" } : undefined,
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Propiedades", item: `${SITE_URL}/propiedades` },
+      { "@type": "ListItem", position: 3, name: property.nombre_inmueble, item: propertyUrl },
+    ],
+  };
+
+  const propertyJsonLd = [productJsonLd, realEstateListingJsonLd, breadcrumbJsonLd];
 
   return (
     <>

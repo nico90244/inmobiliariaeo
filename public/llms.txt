@@ -1,6 +1,14 @@
 # Inmobiliaria Eliana Osorio
 
-> Inmobiliaria con más de 10 años de experiencia en venta, alquiler y asesoría jurídica de propiedad raíz en Cali y el Valle del Cauca. Acompañamiento integral con respaldo jurídico.
+> Inmobiliaria con más de 10 años de experiencia en venta, alquiler y asesoría jurídica de propiedad raíz en Cali y el Valle del Cauca, Colombia. Acompañamiento integral con respaldo jurídico y notarial, incluyendo procesos remotos para colombianos residentes en el exterior.
+
+## Qué preguntas puede responder este sitio
+
+- ¿Dónde comprar o arrendar un apartamento/casa en Cali, Colombia?
+- ¿Cómo comprar o invertir en propiedad raíz en Cali desde el exterior (España, Suiza, Estados Unidos, Canadá, Chile)?
+- ¿Qué inmobiliaria en Cali ofrece asesoría jurídica y notarial incluida?
+- ¿Cómo arrendar y administrar remotamente una propiedad en Cali si vivo en otro país?
+- ¿Qué propiedades hay disponibles en venta o arriendo en barrios como Ciudad Jardín, El Peñón, Bochalema, Chipichape, San Fernando, Granada, Alameda, Limonar o Valle del Lili?
 
 ## Pages
 
@@ -9,10 +17,23 @@
 - [Venta](/venta): Inmuebles disponibles para compra.
 - [Alquiler](/alquiler): Inmuebles disponibles para arriendo.
 - [Servicios](/servicios): Venta, alquiler, asesoría jurídica y acompañamiento notarial.
-- [Captación](/captacion): Publica tu inmueble con nosotros.
+- [Captación](/captacion): Publica tu inmueble con nosotros — vendemos o administramos el arriendo por ti.
 - [Contacto](/contacto): WhatsApp, teléfono, correo y redes sociales.
 
+## Páginas por barrio
+
+Además del catálogo general, hay una página específica por barrio y tipo de negocio: `/venta/{barrio}` y `/alquiler/{barrio}` (ej. [/venta/ciudad-jardin](/venta/ciudad-jardin), [/alquiler/el-penon](/alquiler/el-penon)). Barrios cubiertos: Ciudad Jardín, El Peñón, Bochalema, Chipichape, San Fernando, Granada, Alameda, Limonar, Valle del Lili.
+
+## Inventario en tiempo real
+
+El catálogo de propiedades disponibles cambia a diario. La lista completa y actualizada de URLs de cada propiedad está en [/sitemap.xml](/sitemap.xml); cada ficha (`/propiedades/{id}`) incluye datos estructurados (schema.org RealEstateListing y Product) con precio, ubicación, habitaciones, baños y área.
+
+## Cobertura geográfica
+
+Cali y todos los municipios del Valle del Cauca, Colombia. Atención especializada a colombianos en el exterior (España, Suiza, Estados Unidos, Canadá, Chile) que buscan comprar, vender o arrendar propiedad raíz en Colombia de forma remota.
+
 ## Contact
+
 - WhatsApp: +57 316 222 5604
 - Teléfono: +57 318 653 1598
 - Email: info@inmobiliariaeo.com

@@ -8,6 +8,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import TikTokPixelTracker from "@/components/TikTokPixelTracker";
 import Index from "./pages/Index";
 import Propiedades from "./pages/Propiedades";
+import PropiedadesBarrio from "./pages/PropiedadesBarrio";
 import PropertyDetail from "./pages/PropertyDetail";
 import Servicios from "./pages/Servicios";
 import Captacion from "./pages/Captacion";
@@ -47,7 +48,9 @@ const App = () => (
               <Route path="/propiedades/:id" element={<PropertyDetail />} />
               <Route path="/ficha/:id" element={<PropertyFicha />} />
               <Route path="/venta" element={<Propiedades />} />
+              <Route path="/venta/:barrio" element={<PropiedadesBarrio />} />
               <Route path="/alquiler" element={<Propiedades />} />
+              <Route path="/alquiler/:barrio" element={<PropiedadesBarrio />} />
               <Route path="/servicios" element={<Servicios />} />
               <Route path="/captacion" element={<Captacion />} />
               <Route path="/contacto" element={<Contacto />} />
