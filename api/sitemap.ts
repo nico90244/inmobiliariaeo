@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
+import { barrios } from "../src/data/barrios";
 
 /**
  * Sitemap dinámico: además de las páginas estáticas del sitio, incluye una
@@ -43,6 +44,11 @@ function urlEntry(loc: string, lastmod: string, changefreq: string, priority: st
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const today = new Date().toISOString().split("T")[0];
   const entries: string[] = STATIC_PAGES.map((p) => urlEntry(`${SITE_URL}${p.path}`, today, p.changefreq, p.priority));
+
+  for (const barrio of barrios) {
+    entries.push(urlEntry(`${SITE_URL}/venta/${barrio.slug}`, today, "weekly", "0.75"));
+    entries.push(urlEntry(`${SITE_URL}/alquiler/${barrio.slug}`, today, "weekly", "0.75"));
+  }
 
   if (SUPABASE_URL && SUPABASE_KEY) {
     try {

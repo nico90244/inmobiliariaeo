@@ -17,8 +17,12 @@
 - [Venta](/venta): Inmuebles disponibles para compra.
 - [Alquiler](/alquiler): Inmuebles disponibles para arriendo.
 - [Servicios](/servicios): Venta, alquiler, asesoría jurídica y acompañamiento notarial.
-- [Captación](/captacion): Publica tu inmueble con nosotros.
+- [Captación](/captacion): Publica tu inmueble con nosotros — vendemos o administramos el arriendo por ti.
 - [Contacto](/contacto): WhatsApp, teléfono, correo y redes sociales.
+
+## Páginas por barrio
+
+Además del catálogo general, hay una página específica por barrio y tipo de negocio: `/venta/{barrio}` y `/alquiler/{barrio}` (ej. [/venta/ciudad-jardin](/venta/ciudad-jardin), [/alquiler/el-penon](/alquiler/el-penon)). Barrios cubiertos: Ciudad Jardín, El Peñón, Bochalema, Chipichape, San Fernando, Granada, Alameda, Limonar, Valle del Lili.
 
 ## Inventario en tiempo real
 

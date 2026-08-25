@@ -78,12 +78,44 @@ const Captacion = () => {
     setForm({ nombre: "", celular: "", correo: "", tipo_negocio: "", tipo_inmueble: "", barrio: "", valor_aproximado: "", observaciones: "", acepta_politica: false });
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "¿Cómo vendo mi casa en Cali con Inmobiliaria Eliana Osorio?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Consigna tu inmueble con el formulario de esta página o por WhatsApp. Publicamos la propiedad en Metrocuadrado y Finca Raíz, gestionamos las visitas, la negociación y toda la documentación jurídica hasta la firma de escritura, sin costos ocultos.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "¿Administran mi propiedad si la quiero arrendar?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Sí. Nos encargamos de la administración completa del arriendo: selección del arrendatario, contrato, cobro del canon mensual y transferencia a tu cuenta, incluso si vives fuera de Cali o de Colombia.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "¿Cuánto cobran por consignar o administrar mi inmueble?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "La asesoría jurídica está incluida sin costo adicional. Cuéntanos los datos de tu propiedad en el formulario y te explicamos la comisión aplicable según si es venta o administración de arriendo.",
+        },
+      },
+    ],
+  };
+
   return (
     <>
       <SEO
-        title="Consigna tu Inmueble en Cali | Publicación y Venta con Asesoría Jurídica | Inmobiliaria EO"
-        description="¿Tienes un inmueble en Cali o el Valle del Cauca? Consígnalo con nosotros: lo publicamos en Metrocuadrado y Finca Raíz, gestionamos contratos y te damos asesoría jurídica gratuita. También para propietarios desde el exterior."
+        title="Vende o Arrienda tu Propiedad en Cali | Administramos tu Inmueble | Inmobiliaria EO"
+        description="¿Quieres vender tu casa en Cali o necesitas quien administre el arriendo de tu apartamento? Publicamos tu inmueble en Metrocuadrado y Finca Raíz, gestionamos contratos y te damos asesoría jurídica gratuita. También para propietarios desde el exterior."
         path="/captacion"
+        jsonLd={faqJsonLd}
       />
       <Header />
       <main className="pt-20">
@@ -94,10 +126,10 @@ const Captacion = () => {
               <div className="flex flex-col justify-start pt-0">
                 <div className="w-8 h-0.5 bg-primary mb-6" aria-hidden="true" />
                 <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                  Consigna tu inmueble con nosotros
+                  ¿Quieres vender o arrendar tu propiedad en Cali? Nosotros la administramos por ti
                 </h1>
                 <p className="font-body text-lg text-muted-foreground mb-8 leading-relaxed">
-                  Te ayudamos a vender o arrendar tu propiedad con asesoría jurídica y gestión completa sin costos ocultos
+                  Consigna tu inmueble con nosotros: nos encargamos de la venta o de la administración completa del arriendo, con asesoría jurídica y gestión sin costos ocultos.
                 </p>
                 <ul className="space-y-4">
                   {benefits.map((b) => (
@@ -196,6 +228,19 @@ const Captacion = () => {
                     {loading ? "Enviando..." : "Enviar"}
                   </button>
                 </form>
+              </div>
+            </div>
+
+            {/* FAQ — visible además de su JSON-LD, para usuarios y para IA generativa */}
+            <div className="max-w-3xl mt-16 pt-10 border-t border-foreground/10">
+              <h2 className="font-heading text-lg font-semibold text-foreground mb-6">Preguntas frecuentes</h2>
+              <div className="space-y-6">
+                {faqJsonLd.mainEntity.map((f) => (
+                  <div key={f.name}>
+                    <h3 className="font-heading text-sm font-semibold text-foreground mb-1">{f.name}</h3>
+                    <p className="font-body text-sm text-muted-foreground leading-relaxed">{f.acceptedAnswer.text}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
