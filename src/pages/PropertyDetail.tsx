@@ -18,6 +18,7 @@ import { supabase } from "@/lib/supabase";
 import type { Propiedad } from "@/hooks/usePropiedades";
 import { usePropiedades } from "@/hooks/usePropiedades";
 import { formatPrice, tipoNegocioLabel } from "@/lib/utils";
+import { slugify } from "@/data/barrios";
 import {
   Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink,
   BreadcrumbSeparator, BreadcrumbPage,
@@ -473,6 +474,18 @@ const PropertyDetail = () => {
                     {[property.zona, property.barrio, property.ciudad || "Cali"].filter(Boolean).join(" · ")}
                   </p>
                 )}
+                {property.barrio && (() => {
+                  const barrioPath = property.tipo_negocio === "Alquiler" ? "alquiler" : "venta";
+                  const verbo = barrioPath === "alquiler" ? "arriendo" : "venta";
+                  return (
+                    <Link
+                      to={`/${barrioPath}/${slugify(property.barrio)}`}
+                      className="inline-block font-heading text-xs font-semibold tracking-widest uppercase text-primary hover:underline mb-4"
+                    >
+                      Ver más propiedades en {verbo} en {property.barrio} →
+                    </Link>
+                  );
+                })()}
                 <iframe
                   title="Mapa"
                   src={`https://maps.google.com/maps?q=${mapQuery}&output=embed`}

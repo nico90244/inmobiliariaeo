@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
-import { barrios } from "../src/data/barrios";
+import { barrios, slugify } from "../src/data/barrios";
 
 /**
  * Sitemap dinámico: además de las páginas estáticas del sitio, incluye una
@@ -45,9 +45,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const today = new Date().toISOString().split("T")[0];
   const entries: string[] = STATIC_PAGES.map((p) => urlEntry(`${SITE_URL}${p.path}`, today, p.changefreq, p.priority));
 
+  // Los barrios curados siempre tienen página, tengan o no inventario activo
+  // en este momento (el catálogo rota a diario).
+  const barrioPages = new Set<string>();
   for (const barrio of barrios) {
-    entries.push(urlEntry(`${SITE_URL}/venta/${barrio.slug}`, today, "weekly", "0.75"));
-    entries.push(urlEntry(`${SITE_URL}/alquiler/${barrio.slug}`, today, "weekly", "0.75"));
+    barrioPages.add(`venta/${barrio.slug}`);
+    barrioPages.add(`alquiler/${barrio.slug}`);
   }
 
   if (SUPABASE_URL && SUPABASE_KEY) {
@@ -55,18 +58,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
       const { data, error } = await supabase
         .from("propiedades")
-        .select("id, fecha_actualizacion")
+        .select("id, fecha_actualizacion, barrio, tipo_negocio")
         .eq("estado", "Disponible");
 
       if (!error && data) {
-        for (const row of data as { id: string; fecha_actualizacion: string | null }[]) {
+        for (const row of data as {
+          id: string;
+          fecha_actualizacion: string | null;
+          barrio: string | null;
+          tipo_negocio: string | null;
+        }[]) {
           const lastmod = row.fecha_actualizacion ? row.fecha_actualizacion.split("T")[0] : today;
           entries.push(urlEntry(`${SITE_URL}/propiedades/${row.id}`, lastmod, "weekly", "0.85"));
+
+          // Cualquier barrio con inventario real obtiene su propia página en
+          // el sitemap, aunque no esté en la lista curada — así una
+          // propiedad publicada en un barrio nuevo queda indexable de una vez.
+          if (!row.barrio) continue;
+          const slug = slugify(row.barrio);
+          if (!slug) continue;
+          if (row.tipo_negocio === "Venta" || row.tipo_negocio === "Ambos") barrioPages.add(`venta/${slug}`);
+          if (row.tipo_negocio === "Alquiler" || row.tipo_negocio === "Ambos") barrioPages.add(`alquiler/${slug}`);
         }
       }
     } catch {
-      // Si Supabase falla, igual servimos el sitemap con las páginas estáticas.
+      // Si Supabase falla, igual servimos el sitemap con las páginas estáticas y curadas.
     }
+  }
+
+  for (const page of barrioPages) {
+    entries.push(urlEntry(`${SITE_URL}/${page}`, today, "weekly", "0.75"));
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</urlset>\n`;

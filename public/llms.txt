@@ -22,7 +22,7 @@
 
 ## Páginas por barrio
 
-Además del catálogo general, hay una página específica por barrio y tipo de negocio: `/venta/{barrio}` y `/alquiler/{barrio}` (ej. [/venta/ciudad-jardin](/venta/ciudad-jardin), [/alquiler/el-penon](/alquiler/el-penon)). Barrios cubiertos: Ciudad Jardín, El Peñón, Bochalema, Chipichape, San Fernando, Granada, Alameda, Limonar, Valle del Lili.
+Además del catálogo general, hay una página específica por barrio y tipo de negocio: `/venta/{barrio}` y `/alquiler/{barrio}` (ej. [/venta/ciudad-jardin](/venta/ciudad-jardin), [/alquiler/el-penon](/alquiler/el-penon)). Barrios con contenido curado: Ciudad Jardín, El Peñón, Bochalema, Chipichape, San Fernando, Granada, Alameda, Limonar, Valle del Lili, San Antonio. Cualquier otro barrio con inventario activo también tiene su propia página y aparece en el sitemap.
 
 ## Inventario en tiempo real
 
