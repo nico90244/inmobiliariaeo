@@ -493,6 +493,14 @@ const PropertyDetail = () => {
                   loading="lazy"
                   allowFullScreen
                 />
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 font-heading text-xs font-semibold tracking-widest uppercase text-primary hover:underline mt-3"
+                >
+                  <MapPin size={14} /> Ver ubicación en Google Maps ↗
+                </a>
               </div>
 
               {/* Video */}
