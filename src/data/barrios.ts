@@ -1,6 +1,10 @@
 export interface Barrio {
   slug: string;
   nombre: string;
+  /** Ciudad a la que pertenece este barrio curado. Los barrios sin lista
+   * curada (resueltos dinámicamente desde el inventario real) no traen este
+   * campo — su ciudad se determina a partir de las propiedades encontradas. */
+  ciudad?: string;
 }
 
 // Barrios/sectores de Cali con contenido curado (nombre bien acentuado,
@@ -16,16 +20,16 @@ export interface Barrio {
 // qué barrios tienen nombre bien acentuado y aparecen como enlace destacado
 // en /propiedades.
 export const barrios: Barrio[] = [
-  { slug: "ciudad-jardin", nombre: "Ciudad Jardín" },
-  { slug: "el-penon", nombre: "El Peñón" },
-  { slug: "bochalema", nombre: "Bochalema" },
-  { slug: "chipichape", nombre: "Chipichape" },
-  { slug: "san-fernando", nombre: "San Fernando" },
-  { slug: "granada", nombre: "Granada" },
-  { slug: "alameda", nombre: "Alameda" },
-  { slug: "limonar", nombre: "Limonar" },
-  { slug: "valle-del-lili", nombre: "Valle del Lili" },
-  { slug: "san-antonio", nombre: "San Antonio" },
+  { slug: "ciudad-jardin", nombre: "Ciudad Jardín", ciudad: "Cali" },
+  { slug: "el-penon", nombre: "El Peñón", ciudad: "Cali" },
+  { slug: "bochalema", nombre: "Bochalema", ciudad: "Cali" },
+  { slug: "chipichape", nombre: "Chipichape", ciudad: "Cali" },
+  { slug: "san-fernando", nombre: "San Fernando", ciudad: "Cali" },
+  { slug: "granada", nombre: "Granada", ciudad: "Cali" },
+  { slug: "alameda", nombre: "Alameda", ciudad: "Cali" },
+  { slug: "limonar", nombre: "Limonar", ciudad: "Cali" },
+  { slug: "valle-del-lili", nombre: "Valle del Lili", ciudad: "Cali" },
+  { slug: "san-antonio", nombre: "San Antonio", ciudad: "Cali" },
 ];
 
 export function getBarrioBySlug(slug: string | undefined): Barrio | undefined {
