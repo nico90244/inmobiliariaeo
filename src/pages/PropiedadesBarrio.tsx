@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams, useLocation, Navigate, Link } from "react-router-dom";
 import { AlertCircle } from "lucide-react";
 import Header from "@/components/Header";
@@ -27,31 +27,55 @@ const PropiedadesBarrio = () => {
   const tipoNegocio = location.pathname.startsWith("/alquiler") ? "Alquiler" : "Venta";
   const barrio = resolveBarrio(barrioSlug);
 
-  const { data, isLoading, error } = usePropiedades({
+  const { data: rawData, isLoading, error } = usePropiedades({
     tipo_negocio: tipoNegocio,
     barrio: barrio?.nombre,
+    ciudad: barrio?.ciudad,
   });
+
+  // Barrios curados ya traen su ciudad (todos en Cali por ahora). Para un
+  // barrio no curado, la ciudad se determina por la más frecuente entre las
+  // propiedades encontradas — así la página sirve a Cali, Jamundí, Yumbo o
+  // Palmira sin tener que mantener una lista fija por ciudad.
+  const ciudad = useMemo(() => {
+    if (barrio?.ciudad) return barrio.ciudad;
+    if (!rawData || rawData.length === 0) return "Cali";
+    const conteo = new Map<string, number>();
+    for (const p of rawData) {
+      const c = p.ciudad || "Cali";
+      conteo.set(c, (conteo.get(c) || 0) + 1);
+    }
+    return [...conteo.entries()].sort((a, b) => b[1] - a[1])[0][0];
+  }, [barrio, rawData]);
+
+  // Si el barrio no es curado y el mismo nombre existe en más de una ciudad
+  // (ej. "Centro"), nos quedamos solo con las propiedades de la ciudad
+  // resuelta para no mezclar inventario de ciudades distintas en una página.
+  const data = useMemo(() => {
+    if (!rawData || barrio?.ciudad) return rawData;
+    return rawData.filter((p) => (p.ciudad || "Cali") === ciudad);
+  }, [rawData, ciudad, barrio]);
 
   if (!barrio) {
     return <Navigate to={tipoNegocio === "Venta" ? "/venta" : "/alquiler"} replace />;
   }
 
   const verbo = tipoNegocio === "Venta" ? "venta" : "arriendo";
-  const seoTitle = `Casas y Apartamentos en ${tipoNegocio} en ${barrio.nombre}, Cali | Inmobiliaria Eliana Osorio`;
+  const seoTitle = `Casas y Apartamentos en ${tipoNegocio} en ${barrio.nombre}, ${ciudad} | Inmobiliaria Eliana Osorio`;
   const seoDesc =
     tipoNegocio === "Venta"
-      ? `Compra casa o apartamento en ${barrio.nombre}, Cali con asesoría jurídica incluida. Catálogo actualizado y acompañamiento para compradores en Colombia y en el exterior.`
-      : `Arrienda casa o apartamento en ${barrio.nombre}, Cali con contrato y administración incluida. Catálogo actualizado y acompañamiento para propietarios e inquilinos.`;
+      ? `Compra casa o apartamento en ${barrio.nombre}, ${ciudad} con asesoría jurídica incluida. Catálogo actualizado y acompañamiento para compradores en Colombia y en el exterior.`
+      : `Arrienda casa o apartamento en ${barrio.nombre}, ${ciudad} con contrato y administración incluida. Catálogo actualizado y acompañamiento para propietarios e inquilinos.`;
 
   const faqs =
     tipoNegocio === "Venta"
       ? [
           {
-            q: `¿Cómo comprar una casa o apartamento en ${barrio.nombre}, Cali?`,
+            q: `¿Cómo comprar una casa o apartamento en ${barrio.nombre}, ${ciudad}?`,
             a: `Te acompañamos en todo el proceso: selección del inmueble, estudio de títulos, promesa de compraventa y firma de escritura, con asesoría jurídica incluida sin costo adicional. Atendemos compradores en Colombia y colombianos residentes en el exterior.`,
           },
           {
-            q: `¿Qué documentos necesito para comprar una propiedad en Cali?`,
+            q: `¿Qué documentos necesito para comprar una propiedad en ${ciudad}?`,
             a: `Generalmente cédula o pasaporte, certificado de ingresos si vas a solicitar crédito hipotecario, y los documentos del inmueble (certificado de tradición y libertad, paz y salvo de impuesto predial). Te asesoramos en cada paso.`,
           },
           {
@@ -61,16 +85,16 @@ const PropiedadesBarrio = () => {
         ]
       : [
           {
-            q: `¿Cómo arrendar un apartamento o casa en ${barrio.nombre}, Cali?`,
+            q: `¿Cómo arrendar un apartamento o casa en ${barrio.nombre}, ${ciudad}?`,
             a: `Publicamos tu solicitud, agendamos visitas y gestionamos el contrato de arrendamiento con las garantías legales correspondientes. Escríbenos por WhatsApp para conocer la disponibilidad actual en ${barrio.nombre}.`,
           },
           {
-            q: `¿Qué necesito para arrendar una propiedad en Cali?`,
+            q: `¿Qué necesito para arrendar una propiedad en ${ciudad}?`,
             a: `Normalmente cédula, certificado de ingresos o codeudor, y referencias. Te guiamos en los requisitos exactos según cada propietario.`,
           },
           {
             q: `¿Administran el arriendo si el propietario vive en otro país?`,
-            a: `Sí. Gestionamos cobro del canon, mantenimiento y administración completa del contrato, aunque el propietario o el arrendatario estén fuera de Cali o de Colombia.`,
+            a: `Sí. Gestionamos cobro del canon, mantenimiento y administración completa del contrato, aunque el propietario o el arrendatario estén fuera de ${ciudad} o de Colombia.`,
           },
         ];
 
@@ -110,8 +134,8 @@ const PropiedadesBarrio = () => {
             </h1>
             <p className="font-body text-sm md:text-base text-muted-foreground mb-3 max-w-2xl mx-auto">
               {tipoNegocio === "Venta"
-                ? `Compra tu próxima casa o apartamento en ${barrio.nombre}, Cali, con asesoría jurídica incluida en todo el proceso.`
-                : `Arrienda casa o apartamento en ${barrio.nombre}, Cali, con contrato y administración incluida.`}
+                ? `Compra tu próxima casa o apartamento en ${barrio.nombre}, ${ciudad}, con asesoría jurídica incluida en todo el proceso.`
+                : `Arrienda casa o apartamento en ${barrio.nombre}, ${ciudad}, con contrato y administración incluida.`}
             </p>
             <nav className="flex items-center justify-center gap-2 font-body text-xs text-muted-foreground/60" aria-label="Breadcrumb">
               <Link to="/" className="hover:text-foreground transition-colors">Inicio</Link>
@@ -152,7 +176,7 @@ const PropiedadesBarrio = () => {
                   Por ahora no hay inventario publicado en {barrio.nombre}
                 </h2>
                 <p className="font-body text-muted-foreground mb-6">
-                  Nuestro catálogo cambia constantemente. Escríbenos por WhatsApp y te avisamos apenas tengamos disponibilidad en {barrio.nombre}, o mira el catálogo completo de {tipoNegocio.toLowerCase()} en Cali.
+                  Nuestro catálogo cambia constantemente. Escríbenos por WhatsApp y te avisamos apenas tengamos disponibilidad en {barrio.nombre}, o mira el catálogo completo de {tipoNegocio.toLowerCase()} en {ciudad}.
                 </p>
                 <Link
                   to={tipoNegocio === "Venta" ? "/venta" : "/alquiler"}

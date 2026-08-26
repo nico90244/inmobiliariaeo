@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import logo from "@/assets/logo.png";
 import { tipoNegocioLabel } from "@/lib/utils";
+import { barrios as barriosCurados } from "@/data/barrios";
 
 type Propiedad = Tables<"propiedades">;
 type Captacion = Tables<"captaciones">;
@@ -364,6 +365,27 @@ const Admin = () => {
         return true;
       });
   }, [referidosConocidos]);
+
+  // Sugerencias de barrio por ciudad: aprende de los barrios que ya se han
+  // escrito antes para esa misma ciudad (sin inventar nombres), más la lista
+  // curada de barrios de Cali usada en las páginas SEO por barrio.
+  const formCiudad = (form as Record<string, unknown>).ciudad as string | undefined;
+  const barriosSugeridos = useMemo(() => {
+    const ciudadForm = formCiudad || "Cali";
+    const vistos = new Set<string>();
+    const resultado: string[] = [];
+    const agregar = (nombre: string) => {
+      const key = nombre.trim().toLowerCase();
+      if (!key || vistos.has(key)) return;
+      vistos.add(key);
+      resultado.push(nombre.trim());
+    };
+    if (ciudadForm === "Cali") barriosCurados.forEach((b) => agregar(b.nombre));
+    propiedades
+      .filter((p) => (p.ciudad || "Cali") === ciudadForm)
+      .forEach((p) => { if (p.barrio) agregar(p.barrio); });
+    return resultado.sort((a, b) => a.localeCompare(b, "es"));
+  }, [propiedades, formCiudad]);
 
   const handleRefNombreChange = (value: string) => {
     setRefNombre(value);
@@ -1311,7 +1333,10 @@ const Admin = () => {
                 </div>
                 <div>
                   <label className="font-heading text-xs font-semibold tracking-widest text-muted-foreground uppercase block mb-1 truncate">Barrio</label>
-                  <input type="text" value={form.barrio || ""} onChange={(e) => updateField("barrio", e.target.value)} className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
+                  <input type="text" list="barrios-sugeridos" value={form.barrio || ""} onChange={(e) => updateField("barrio", e.target.value)} placeholder="Nuevo o de la lista..." className="w-full border border-foreground/10 py-2 px-3 font-body text-base sm:text-sm focus:border-primary focus:outline-none" />
+                  <datalist id="barrios-sugeridos">
+                    {barriosSugeridos.map((b) => <option key={b} value={b} />)}
+                  </datalist>
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">

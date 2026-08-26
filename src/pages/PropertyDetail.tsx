@@ -297,7 +297,7 @@ const PropertyDetail = () => {
   }
 
   const allPhotos = [property.foto_portada, ...(property.fotos || [])].filter(Boolean) as string[];
-  const mapQuery = encodeURIComponent(`${property.direccion || property.barrio || property.nombre_inmueble}, Cali, Colombia`);
+  const mapQuery = encodeURIComponent(`${property.direccion || property.barrio || property.nombre_inmueble}, ${property.ciudad || "Cali"}, Colombia`);
 
   const formatParqueadero = (val: string | null) => {
     if (!val) return null;
