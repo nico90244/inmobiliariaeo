@@ -136,7 +136,15 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-primary/30 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="font-heading text-xs tracking-widest text-secondary-foreground/40 uppercase text-center sm:text-left">
-            © {new Date().getFullYear()} Inmobiliaria Eliana Osorio. Todos los derechos reservados.
+            © {new Date().getFullYear()} Inmobiliaria Eliana Osorio. Todos los derechos reservados. Diseñado por{" "}
+            <a
+              href="https://www.linkedin.com/in/soyvaleriaosorio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="normal-case tracking-normal text-secondary-foreground/60 hover:text-primary transition-colors"
+            >
+              Nikole Valeria Osorio
+            </a>
           </p>
           <div className="flex items-center gap-4">
             <Link

@@ -7,7 +7,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import PropertyCard from "@/components/PropertyCard";
 import SEO from "@/components/SEO";
 import { usePropiedades } from "@/hooks/usePropiedades";
-import { getBarrioBySlug } from "@/data/barrios";
+import { resolveBarrio } from "@/data/barrios";
 
 const SITE_URL = "https://inmobiliariaeo.com";
 
@@ -25,7 +25,7 @@ const PropiedadesBarrio = () => {
   const PAGE_SIZE = 12;
 
   const tipoNegocio = location.pathname.startsWith("/alquiler") ? "Alquiler" : "Venta";
-  const barrio = getBarrioBySlug(barrioSlug);
+  const barrio = resolveBarrio(barrioSlug);
 
   const { data, isLoading, error } = usePropiedades({
     tipo_negocio: tipoNegocio,
