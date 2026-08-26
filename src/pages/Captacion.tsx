@@ -10,9 +10,10 @@ import { useToast } from "@/hooks/use-toast";
 import { trackSubmitForm } from "@/lib/pixelEvents";
 
 const benefits = [
-  "Publicidad en Metrocuadrado y Finca Raíz",
+  "Promoción en portales inmobiliarios y difusión en redes sociales",
   "Asesoría jurídica incluida",
-  "Gestión completa de contratos",
+  "Elegimos el inquilino por ti",
+  "Gestión de contratos",
   "Cobro y administración del canon",
   "Acompañamiento notarial",
   "Sin costos ocultos",
