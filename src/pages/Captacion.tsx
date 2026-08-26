@@ -15,6 +15,7 @@ const benefits = [
   "Elegimos el inquilino por ti",
   "Gestión de contratos",
   "Cobro y administración del canon",
+  "Canon garantizado con seguro de arrendamiento",
   "Acompañamiento notarial",
   "Sin costos ocultos",
 ];
