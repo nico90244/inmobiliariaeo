@@ -162,11 +162,11 @@ const PropertyFicha = () => {
     });
   };
 
-  // En Alquiler, antes de generar el PDF pedimos el WhatsApp del agente que
-  // va a compartir la ficha: la versión impresa sale sin logo ni redes,
+  // Antes de generar el PDF pedimos el WhatsApp del agente que va a
+  // compartir la ficha: la versión impresa sale sin logo ni redes,
   // y con ese número en vez del de la inmobiliaria.
   const handlePrint = () => {
-    if (isAlquiler && !agentPhone) {
+    if (!agentPhone) {
       setPhoneInput("");
       setShowPhoneModal(true);
       return;
@@ -255,7 +255,7 @@ const PropertyFicha = () => {
           <ArrowLeft size={15} /> Volver al detalle
         </button>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {isAlquiler && agentPhone && (
+          {agentPhone && (
             <button
               onClick={() => setAgentPhone(null)}
               title="Volver a la ficha con tu marca"
@@ -376,9 +376,9 @@ const PropertyFicha = () => {
                   ))}
                 </div>
 
-                {/* Precio + Descripción + QR */}
+                {/* Precio + Descripción + QR (el QR se omite en modo agente) */}
                 <div style={{
-                  display: "grid", gridTemplateColumns: "1fr 150px",
+                  display: "grid", gridTemplateColumns: agentPhone ? "1fr" : "1fr 150px",
                   gap: 24, padding: "20px 40px 24px",
                 }}>
                   <div>
@@ -401,17 +401,19 @@ const PropertyFicha = () => {
                       </>
                     )}
                   </div>
-                  {/* QR */}
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, paddingTop: 2 }}>
-                    <img src={qrUrl} alt="QR ficha" style={{ width: 130, height: 130 }} />
-                    <p style={{
-                      fontFamily: "Josefin Sans, sans-serif", fontSize: 7, fontWeight: 600,
-                      letterSpacing: "0.1em", textTransform: "uppercase",
-                      color: "#C4C4C4", textAlign: "center", lineHeight: 1.5,
-                    }}>
-                      Escanea para<br />ver la ficha
-                    </p>
-                  </div>
+                  {/* QR — se omite en modo agente */}
+                  {!agentPhone && (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 7, paddingTop: 2 }}>
+                      <img src={qrUrl} alt="QR ficha" style={{ width: 130, height: 130 }} />
+                      <p style={{
+                        fontFamily: "Josefin Sans, sans-serif", fontSize: 7, fontWeight: 600,
+                        letterSpacing: "0.1em", textTransform: "uppercase",
+                        color: "#C4C4C4", textAlign: "center", lineHeight: 1.5,
+                      }}>
+                        Escanea para<br />ver la ficha
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -433,28 +435,40 @@ const PropertyFicha = () => {
                   </div>
                 )}
 
-                {/* Footer */}
+                {/* Footer — en modo agente solo queda el WhatsApp del agente, sin teléfono ni ciudad de la inmobiliaria */}
                 <div style={{
                   backgroundColor: DARK, padding: "18px 40px",
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  display: "flex", alignItems: "center",
+                  justifyContent: agentPhone ? "flex-start" : "space-between",
                   marginTop: 12,
                 }}>
                   <div>
                     <Label>Contacto</Label>
-                    <p style={{
-                      fontFamily: "DM Sans, sans-serif", fontSize: 14, color: WHITE,
-                      fontWeight: 700, marginTop: 5, letterSpacing: "0.02em",
-                    }}>
-                      +57 318 653 1598
-                    </p>
+                    {agentPhone ? (
+                      <a href={whatsappLink!} target="_blank" rel="noopener noreferrer" style={{
+                        fontFamily: "DM Sans, sans-serif", fontSize: 14, color: WHITE,
+                        fontWeight: 700, marginTop: 5, letterSpacing: "0.02em",
+                      }}>
+                        {whatsappDisplay}
+                      </a>
+                    ) : (
+                      <p style={{
+                        fontFamily: "DM Sans, sans-serif", fontSize: 14, color: WHITE,
+                        fontWeight: 700, marginTop: 5, letterSpacing: "0.02em",
+                      }}>
+                        +57 318 653 1598
+                      </p>
+                    )}
                   </div>
-                  <p style={{
-                    fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
-                    letterSpacing: "0.1em", textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.25)", textAlign: "right",
-                  }}>
-                    Cali, Colombia
-                  </p>
+                  {!agentPhone && (
+                    <p style={{
+                      fontFamily: "Josefin Sans, sans-serif", fontSize: 8, fontWeight: 600,
+                      letterSpacing: "0.1em", textTransform: "uppercase",
+                      color: "rgba(255,255,255,0.25)", textAlign: "right",
+                    }}>
+                      Cali, Colombia
+                    </p>
+                  )}
                 </div>
               </div>
             </>

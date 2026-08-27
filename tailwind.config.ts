@@ -4,6 +4,12 @@ export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
+  future: {
+    // En touch (celular) el navegador simula ":hover" al tocar y lo deja
+    // "pegado" hasta el siguiente toque — con esto los estilos hover: solo
+    // se aplican en dispositivos que realmente tienen mouse/trackpad.
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     container: {
       center: true,
