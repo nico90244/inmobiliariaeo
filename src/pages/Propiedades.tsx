@@ -212,30 +212,27 @@ const Propiedades = () => {
 
             {/* Barrios populares — enlaces internos a las páginas por barrio */}
             <div className="mt-16 pt-10 border-t border-foreground/10">
-              <h2 className="font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground mb-4">
+              <h2 className="font-heading text-xs font-semibold tracking-widest uppercase text-muted-foreground mb-5">
                 Barrios populares en Cali
               </h2>
-              <div className="flex flex-wrap gap-x-2 gap-y-3">
-                {barrios.map((b) => (
-                  <span key={b.slug} className="flex items-center gap-2">
-                    {tipoNegocio !== "Alquiler" && (
-                      <Link
-                        to={`/venta/${b.slug}`}
-                        className="font-body text-sm text-muted-foreground hover:text-primary transition-colors underline decoration-foreground/20 hover:decoration-primary"
-                      >
-                        Casas en venta en {b.nombre}
-                      </Link>
-                    )}
-                    {tipoNegocio === "" && <span className="text-foreground/20">·</span>}
-                    {tipoNegocio !== "Venta" && (
-                      <Link
-                        to={`/alquiler/${b.slug}`}
-                        className="font-body text-sm text-muted-foreground hover:text-primary transition-colors underline decoration-foreground/20 hover:decoration-primary"
-                      >
-                        Apartamentos en arriendo en {b.nombre}
-                      </Link>
-                    )}
-                  </span>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
+                {barrios.flatMap((b) => {
+                  const links: { key: string; to: string; label: string }[] = [];
+                  if (tipoNegocio !== "Alquiler") {
+                    links.push({ key: `venta-${b.slug}`, to: `/venta/${b.slug}`, label: `Venta en ${b.nombre}` });
+                  }
+                  if (tipoNegocio !== "Venta") {
+                    links.push({ key: `alquiler-${b.slug}`, to: `/alquiler/${b.slug}`, label: `Arriendo en ${b.nombre}` });
+                  }
+                  return links;
+                }).map((l) => (
+                  <Link
+                    key={l.key}
+                    to={l.to}
+                    className="px-4 py-3 bg-muted/20 border border-foreground/10 font-body text-sm text-foreground/70 text-center hover:border-primary hover:text-primary hover:bg-primary/5 transition-colors"
+                  >
+                    {l.label}
+                  </Link>
                 ))}
               </div>
             </div>
