@@ -158,7 +158,7 @@ const ContactCard = ({ property }: { property: Propiedad }) => {
   };
 
   return (
-    <div className="bg-background border border-primary/20 shadow-lg p-6">
+    <div className="bg-background border border-primary/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6">
       <h3 className="font-heading text-lg font-bold text-foreground mb-1">¿Te interesa esta propiedad?</h3>
       <p className="font-body text-sm text-muted-foreground mb-5">Contáctanos y te asesoramos sin costo</p>
 

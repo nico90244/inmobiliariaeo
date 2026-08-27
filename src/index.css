@@ -221,7 +221,9 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 3s linear infinite;
+  /* Un solo destello al cargar, no un loop infinito — el loop eterno
+     es lo que hace que un texto se sienta "plantilla genérica". */
+  animation: shimmer 2.2s ease-out 1 forwards;
 }
 
 /* ─────────────────────────────────────────────────────────────
