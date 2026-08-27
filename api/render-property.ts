@@ -121,22 +121,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const url = `${SITE_URL}/propiedades/${property.id}`;
   const locality = property.barrio || property.ciudad || "Cali";
+  // Barrio + ciudad juntos para que el título y la descripción cubran
+  // siempre las 4 facetas por las que la gente busca: tipo de propiedad,
+  // tipo de negocio, barrio y ciudad — sin depender de que la descripción
+  // escrita a mano las mencione.
+  const localityFull = [property.barrio, property.ciudad || "Cali"].filter(Boolean).join(", ");
   const allPhotos = [property.foto_portada, ...(property.fotos || [])].filter(Boolean) as string[];
   const image = property.foto_portada || DEFAULT_IMAGE;
 
-  const title = `${property.nombre_inmueble} en ${tipoNegocioLabel(property.tipo_negocio)} | ${locality}`.slice(0, 60);
+  const title = `${property.tipo_inmueble} en ${tipoNegocioLabel(property.tipo_negocio)} en ${localityFull} | ${property.nombre_inmueble}`.slice(0, 70);
+  const facts = `${property.tipo_inmueble} en ${tipoNegocioLabel(property.tipo_negocio).toLowerCase()} en ${localityFull}.`;
   const description = (
-    property.descripcion?.slice(0, 155) ||
-    `${property.tipo_inmueble} en ${tipoNegocioLabel(property.tipo_negocio).toLowerCase()} en ${locality}. ${
-      property.area_m2 ? property.area_m2 + " m². " : ""
-    }${property.habitaciones ? property.habitaciones + " hab. " : ""}Precio: ${formatPrice(property.precio)}.`
+    property.descripcion
+      ? `${facts} ${property.descripcion}`
+      : `${facts} ${property.area_m2 ? property.area_m2 + " m². " : ""}${property.habitaciones ? property.habitaciones + " hab. " : ""}Precio: ${formatPrice(property.precio)}.`
   ).slice(0, 160);
 
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: property.nombre_inmueble,
-    description: property.descripcion || description,
+    description,
     image: allPhotos.length ? allPhotos : [DEFAULT_IMAGE],
     offers: property.precio
       ? {
@@ -156,7 +161,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     "@id": `${url}#listing`,
     url,
     name: property.nombre_inmueble,
-    description: property.descripcion || description,
+    description,
     datePosted: property.fecha_creacion,
     dateModified: property.fecha_actualizacion,
     image: allPhotos.length ? allPhotos : [DEFAULT_IMAGE],
@@ -250,7 +255,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     </nav>
     <article>
       <h1>${escapeHtml(property.nombre_inmueble)}</h1>
-      <p><strong>${escapeHtml(tipoNegocioLabel(property.tipo_negocio))}</strong> — ${escapeHtml(property.tipo_inmueble)} en ${escapeHtml(locality)}, Cali, Colombia</p>
+      <p><strong>${escapeHtml(tipoNegocioLabel(property.tipo_negocio))}</strong> — ${escapeHtml(property.tipo_inmueble)} en ${escapeHtml(localityFull)}, Colombia</p>
       <p><strong>Precio:</strong> ${escapeHtml(formatPrice(property.precio))}</p>
       ${specs.length ? `<ul>\n        ${specs.map((s) => `<li>${escapeHtml(s)}</li>`).join("\n        ")}\n      </ul>` : ""}
       ${property.direccion ? `<p><strong>Dirección:</strong> ${escapeHtml(property.direccion)}</p>` : ""}

@@ -308,7 +308,11 @@ const PropertyDetail = () => {
 
   const SITE_URL = "https://inmobiliariaeo.com";
   const propertyUrl = `${SITE_URL}/propiedades/${property.id}`;
-  const locality = property.barrio || property.ciudad || "Cali";
+  // Barrio + ciudad juntos (cuando hay barrio) para que el título y la
+  // descripción cubran siempre las 4 facetas por las que la gente busca:
+  // tipo de propiedad, tipo de negocio, barrio y ciudad — sin depender de
+  // que la descripción escrita a mano las mencione.
+  const localityFull = [property.barrio, property.ciudad || "Cali"].filter(Boolean).join(", ");
   const SCHEMA_TYPE_BY_TIPO_INMUEBLE: Record<string, string> = {
     Apartamento: "Apartment",
     Apartaestudio: "Apartment",
@@ -320,15 +324,19 @@ const PropertyDetail = () => {
     Oficina: "Place",
   };
 
-  const seoTitle = `${property.nombre_inmueble} en ${property.tipo_negocio} | ${locality}`.slice(0, 60);
-  const seoDesc = (property.descripcion?.slice(0, 155) ||
-    `${property.tipo_inmueble} en ${property.tipo_negocio.toLowerCase()} en ${locality}. ${property.area_m2 ? property.area_m2 + " m². " : ""}${property.habitaciones ? property.habitaciones + " hab. " : ""}Precio: ${formatPrice(property.precio)}.`).slice(0, 160);
+  const seoTitle = `${property.tipo_inmueble} en ${property.tipo_negocio} en ${localityFull} | ${property.nombre_inmueble}`.slice(0, 70);
+  const seoFacts = `${property.tipo_inmueble} en ${property.tipo_negocio.toLowerCase()} en ${localityFull}.`;
+  const seoDesc = (
+    property.descripcion
+      ? `${seoFacts} ${property.descripcion}`
+      : `${seoFacts} ${property.area_m2 ? property.area_m2 + " m². " : ""}${property.habitaciones ? property.habitaciones + " hab. " : ""}Precio: ${formatPrice(property.precio)}.`
+  ).slice(0, 160);
 
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: property.nombre_inmueble,
-    description: property.descripcion || seoDesc,
+    description: seoDesc,
     image: allPhotos,
     offers: property.precio
       ? {
@@ -352,7 +360,7 @@ const PropertyDetail = () => {
     "@id": `${propertyUrl}#listing`,
     url: propertyUrl,
     name: property.nombre_inmueble,
-    description: property.descripcion || seoDesc,
+    description: seoDesc,
     datePosted: property.fecha_creacion,
     dateModified: property.fecha_actualizacion,
     image: allPhotos,
