@@ -37,8 +37,11 @@ function xmlEscape(value: string): string {
     .replace(/'/g, "&apos;");
 }
 
-function urlEntry(loc: string, lastmod: string, changefreq: string, priority: string): string {
-  return `  <url>\n    <loc>${xmlEscape(loc)}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+function urlEntry(loc: string, lastmod: string, changefreq: string, priority: string, image?: { url: string; title: string }): string {
+  const imageTag = image
+    ? `\n    <image:image>\n      <image:loc>${xmlEscape(image.url)}</image:loc>\n      <image:title>${xmlEscape(image.title)}</image:title>\n    </image:image>`
+    : "";
+  return `  <url>\n    <loc>${xmlEscape(loc)}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>${imageTag}\n  </url>`;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -58,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
       const { data, error } = await supabase
         .from("propiedades")
-        .select("id, fecha_actualizacion, barrio, tipo_negocio")
+        .select("id, fecha_actualizacion, barrio, tipo_negocio, foto_portada, nombre_inmueble")
         .eq("estado", "Disponible");
 
       if (!error && data) {
@@ -67,9 +70,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           fecha_actualizacion: string | null;
           barrio: string | null;
           tipo_negocio: string | null;
+          foto_portada: string | null;
+          nombre_inmueble: string | null;
         }[]) {
           const lastmod = row.fecha_actualizacion ? row.fecha_actualizacion.split("T")[0] : today;
-          entries.push(urlEntry(`${SITE_URL}/propiedades/${row.id}`, lastmod, "weekly", "0.85"));
+          // La extensión de imágenes del sitemap es una señal explícita para que
+          // Google considere esta foto como miniatura del resultado de búsqueda.
+          const image = row.foto_portada
+            ? { url: row.foto_portada, title: row.nombre_inmueble || "Propiedad en Cali" }
+            : undefined;
+          entries.push(urlEntry(`${SITE_URL}/propiedades/${row.id}`, lastmod, "weekly", "0.85", image));
 
           // Cualquier barrio con inventario real obtiene su propia página en
           // el sitemap, aunque no esté en la lista curada — así una
@@ -90,7 +100,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     entries.push(urlEntry(`${SITE_URL}/${page}`, today, "weekly", "0.75"));
   }
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</urlset>\n`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${entries.join("\n")}\n</urlset>\n`;
 
   res.setHeader("Content-Type", "application/xml; charset=utf-8");
   res.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
