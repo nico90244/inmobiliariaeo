@@ -1,15 +1,36 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
-import { barrios, slugify } from "../src/data/barrios";
 
 /**
  * Sitemap dinámico: además de las páginas estáticas del sitio, incluye una
  * <url> por cada propiedad disponible en Supabase. Sin esto, Google y los
  * crawlers de IA (que no ejecutan JavaScript) no tienen forma confiable de
  * descubrir las fichas de propiedad individuales.
+ *
+ * Esta función serverless se empaqueta sola (Vercel no sigue imports
+ * relativos que salen de api/ bajo Node ESM: falla en runtime con
+ * ERR_MODULE_NOT_FOUND aunque el build local no lo detecte), así que los
+ * barrios curados y slugify() se duplican aquí en vez de importarse desde
+ * src/data/barrios.ts — igual que hacen render-property.ts y render-page.ts.
  */
 
 const SITE_URL = "https://inmobiliariaeo.com";
+
+// Debe mantenerse en sync con src/data/barrios.ts (lista `barrios`).
+const BARRIOS_SLUGS = [
+  "ciudad-jardin", "el-penon", "bochalema", "chipichape", "san-fernando",
+  "granada", "alameda", "limonar", "valle-del-lili", "san-antonio",
+];
+
+function slugify(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
 const SUPABASE_KEY =
@@ -51,9 +72,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Los barrios curados siempre tienen página, tengan o no inventario activo
   // en este momento (el catálogo rota a diario).
   const barrioPages = new Set<string>();
-  for (const barrio of barrios) {
-    barrioPages.add(`venta/${barrio.slug}`);
-    barrioPages.add(`alquiler/${barrio.slug}`);
+  for (const slug of BARRIOS_SLUGS) {
+    barrioPages.add(`venta/${slug}`);
+    barrioPages.add(`alquiler/${slug}`);
   }
 
   if (SUPABASE_URL && SUPABASE_KEY) {
