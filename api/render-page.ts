@@ -89,6 +89,107 @@ const BENEFICIOS_CAPTACION = [
   "Sin costos ocultos",
 ];
 
+interface FaqEntry {
+  question: string;
+  answer?: string;
+  intro?: string;
+  bullets?: string[];
+  outro?: string;
+}
+
+const FAQS: FaqEntry[] = [
+  {
+    question: "¿Cobran algo por mostrarme un apartamento o hacer el estudio de arrendatario?",
+    answer:
+      "No, no cobramos nada por mostrarte el inmueble. Lo único que tiene costo es el estudio de arrendamiento, que se hace a través de una afianzadora — trabajamos con Fianzacrédito, Sura, Bolívar y El Libertador — y corresponde a un porcentaje del canon, entre el 5,95% y el 10%, según la entidad con la que se radique tu solicitud.",
+  },
+  {
+    question: "¿Qué garantía tengo de que el precio de arriendo no fue inflado tras la emergencia?",
+    answer:
+      "El valor del canon suele ser impuesto por el propietario del inmueble; sin embargo, hacemos un estudio de mercado para analizar precios de referencia y sugerir un valor según las condiciones del inmueble y los detalles que le agregan valor. Y hay algo que la ley ya protege: según la Ley 820 de 2003, el aumento del canon de un contrato vigente solo puede hacerse una vez al año y como máximo según el IPC — nunca por encima, sin importar la coyuntura. Si tienes dudas sobre un precio específico, con gusto te mostramos cómo llegamos a ese valor.",
+  },
+  {
+    question: "¿Qué requisitos necesito para arrendar un apartamento con Inmobiliaria EO?",
+    answer:
+      "En general pedimos cédula, soporte de ingresos y, casi siempre, un codeudor — aunque hay casos donde no se requiere. El arrendatario y/o el codeudor deben certificar ingresos equivalentes al doble del canon. Cuando el canon supera cierto valor, se exige que el codeudor tenga finca raíz; este umbral varía según la afianzadora con la que se radique la solicitud.",
+  },
+  {
+    question: "¿Cómo protegen mi inmueble si decido arrendarlo con ustedes?",
+    intro: "Nos encargamos de todo el proceso para que tú no tengas que preocuparte por nada:",
+    bullets: [
+      "Tomamos fotos y video profesional del inmueble",
+      "Hacemos un estudio de mercado para fijar el precio correcto",
+      "Revisamos las condiciones del inmueble",
+      "Gestionamos las citas y visitas",
+      "Elaboramos el contrato de arrendamiento y el inventario",
+      "Realizamos el estudio de arrendamiento a través de más de 3 aliados",
+      "Aseguramos el arrendamiento, garantizando el pago oportuno del canon aunque el arrendatario incurra en mora",
+      "Te acompañamos jurídicamente, tanto en procesos de alquiler como de venta",
+    ],
+    outro:
+      "También ofrecemos coberturas adicionales: fianza de servicios públicos (cubre consumos no pagados al momento de la entrega), fianza integral (protege frente a deterioros o faltantes en el inventario), y acompañamiento legal para procesos de restitución si hay incumplimiento grave del contrato.",
+  },
+  {
+    question: "¿Puedo comprar una propiedad en Cali si vivo en el exterior y no tengo crédito colombiano?",
+    answer:
+      "Sí, es completamente posible. Varios bancos colombianos (Bancolombia, BBVA, Banco de Bogotá, Davivienda) tienen líneas de crédito hipotecario diseñadas específicamente para colombianos en el exterior, con financiación de hasta el 70-90% del valor según el banco, y sin exigir historial crediticio en Colombia — validan tu comportamiento financiero en el país donde vives. Todo el proceso puede hacerse virtualmente, sin viajar, y con un poder notarial autorizas a alguien de confianza a firmar los documentos físicos que se requieran acá. Las condiciones exactas (tasa, porcentaje, plazos) siempre las confirma directamente el banco según el perfil de cada persona.",
+  },
+];
+
+const FAQ_HTML = `<dl>\n${FAQS.map((f) => {
+  const body = f.answer
+    ? `<p>${escapeHtml(f.answer)}</p>`
+    : `<p>${escapeHtml(f.intro!)}</p>\n        <ul>\n${f.bullets!.map((b) => `          <li>${escapeHtml(b)}</li>`).join("\n")}\n        </ul>\n        <p>${escapeHtml(f.outro!)}</p>`;
+  return `        <dt><h2>${escapeHtml(f.question)}</h2></dt>\n        <dd>${body}</dd>`;
+}).join("\n")}\n      </dl>\n      <p><a href="https://wa.me/573186531598?text=${encodeURIComponent("Hola, tengo una pregunta que no vi en el FAQ de la página web")}">¿Tienes otra pregunta? Escríbenos por WhatsApp</a></p>`;
+
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "¿Cobran algo por mostrarme un apartamento o hacer el estudio de arrendatario?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No, no cobramos nada por mostrarte el inmueble. Lo único que tiene costo es el estudio de arrendamiento, que se hace a través de una afianzadora (trabajamos con Fianzacrédito, Sura, Bolívar y El Libertador) y corresponde a un porcentaje del canon, entre el 5,95% y el 10%, según la entidad con la que se radique la solicitud.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Qué garantía tengo de que el precio de arriendo no fue inflado tras la emergencia?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "El valor del canon suele ser impuesto por el propietario del inmueble; sin embargo, hacemos un estudio de mercado para analizar precios de referencia y sugerir un valor según las condiciones del inmueble. Además, según la Ley 820 de 2003, el aumento del canon de un contrato vigente solo puede hacerse una vez al año y como máximo según el IPC, nunca por encima.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Qué requisitos necesito para arrendar un apartamento con Inmobiliaria EO?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "En general se piden cédula, soporte de ingresos y, casi siempre, un codeudor que certifique ingresos equivalentes al doble del canon. Cuando el canon supera cierto valor, se exige que el codeudor cuente con finca raíz, según la política de cada afianzadora.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Cómo protegen mi inmueble si decido arrendarlo con Inmobiliaria EO?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Tomamos fotos y video profesional, hacemos estudio de mercado, revisamos las condiciones del inmueble, gestionamos citas y visitas, elaboramos el contrato de arrendamiento y el inventario, realizamos el estudio de arrendamiento a través de más de 3 aliados, y aseguramos el arrendamiento garantizando el pago oportuno del canon aunque el arrendatario incurra en mora. También ofrecemos acompañamiento jurídico en procesos de alquiler y venta, fianza de servicios públicos, fianza integral y acompañamiento legal en procesos de restitución.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Puedo comprar una propiedad en Cali si vivo en el exterior y no tengo crédito colombiano?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, es completamente posible. Varios bancos colombianos (Bancolombia, BBVA, Banco de Bogotá, Davivienda) tienen líneas de crédito hipotecario diseñadas para colombianos en el exterior, con financiación de hasta el 70-90% del valor según el banco, y sin exigir historial crediticio en Colombia. Todo el proceso puede hacerse virtualmente, y con un poder notarial autorizas a alguien de confianza a firmar los documentos físicos que se requieran.",
+      },
+    },
+  ],
+};
+
 const PAGES: Record<string, PageConfig> = {
   propiedades: {
     slug: "propiedades",
@@ -179,6 +280,16 @@ const PAGES: Record<string, PageConfig> = {
         ],
       },
     ],
+  },
+  "preguntas-frecuentes": {
+    slug: "preguntas-frecuentes",
+    path: "/preguntas-frecuentes",
+    title: "Preguntas Frecuentes | Inmobiliaria Eliana Osorio | Cali, Colombia",
+    description: "Resolvemos tus dudas sobre arriendo, compra, requisitos, protección de tu inmueble y crédito hipotecario desde el exterior. Todo lo que necesitas saber antes de contactarnos.",
+    h1: "Preguntas Frecuentes",
+    intro: "Resolvemos las dudas más comunes sobre arrendar, comprar o consignar tu propiedad con nosotros.",
+    extraHtml: FAQ_HTML,
+    extraJsonLd: [FAQ_JSON_LD],
   },
 };
 
