@@ -18,6 +18,7 @@ const navLinks = [
 { label: "Propiedades", to: "/propiedades" },
 { label: "Servicios", to: "/servicios" },
 { label: "Captar Inmueble", to: "/captacion" },
+{ label: "Preguntas Frecuentes", to: "/preguntas-frecuentes" },
 { label: "Contacto", to: "/contacto" }];
 
 

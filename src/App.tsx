@@ -14,6 +14,7 @@ import PropertyDetail from "./pages/PropertyDetail";
 import Servicios from "./pages/Servicios";
 import Captacion from "./pages/Captacion";
 import Contacto from "./pages/Contacto";
+import PreguntasFrecuentes from "./pages/PreguntasFrecuentes";
 import NotFound from "./pages/NotFound";
 
 // Cargadas bajo demanda: el panel de administración arrastra recharts (para
@@ -62,6 +63,7 @@ const App = () => (
                 <Route path="/servicios" element={<Servicios />} />
                 <Route path="/captacion" element={<Captacion />} />
                 <Route path="/contacto" element={<Contacto />} />
+                <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/emergencia-terremoto" element={<EmergenciaLanding />} />

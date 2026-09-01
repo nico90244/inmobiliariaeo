@@ -82,6 +82,17 @@
       "destination": "/api/render-page?page=captacion"
     },
     {
+      "source": "/preguntas-frecuentes",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(Googlebot|Bingbot|DuckDuckBot|Slurp|Baiduspider|YandexBot|Sogou|Applebot|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Pinterest|SkypeUriPreview|redditbot|Discordbot|Slackbot|GPTBot|ChatGPT-User|OAI-SearchBot|ClaudeBot|Claude-Web|Claude-SearchBot|anthropic-ai|PerplexityBot|Perplexity-User|Google-Extended|Applebot-Extended|CCBot|Amazonbot|Bytespider|meta-externalagent|Meta-ExternalAgent|Diffbot|SemrushBot|AhrefsBot|MJ12bot|YisouSpider).*"
+        }
+      ],
+      "destination": "/api/render-page?page=preguntas-frecuentes"
+    },
+    {
       "source": "/((?!assets|api|favicon.ico|robots.txt|sitemap.xml|hero-bg.jpg|emergencia-hero.mp4).*)",
       "destination": "/index.html"
     }
