@@ -188,6 +188,20 @@
   animation: slide-up 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.48s forwards;
 }
 
+/* Banner de iniciativa (terremoto): entra deslizándose desde arriba al
+   cargar la página. Anima solo "transform" a propósito — si animara
+   "opacity" con forwards, esa propiedad quedaría fijada por la animación
+   por encima del opacity en línea que pone EmergenciaBanner.tsx para
+   desvanecerlo al hacer scroll (depende de scrollY, no se puede expresar
+   en CSS puro), y el fundido dejaría de verse. */
+@keyframes emergencia-banner-slide-in {
+  from { transform: translateY(-14px); }
+  to   { transform: translateY(0); }
+}
+.emergencia-banner-enter {
+  animation: emergencia-banner-slide-in 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
 /* ─────────────────────────────────────────────────────────────
    NAV ANIMATIONS – menú móvil y dropdown de escritorio.
    ───────────────────────────────────────────────────────────── */
@@ -344,6 +358,7 @@
   .hero-animate-1 { animation: none; }
   .hero-animate-2 { animation: none; opacity: 1; }
   .hero-animate-3 { animation: none; opacity: 1; }
+  .emergencia-banner-enter { animation: none; opacity: 1; }
   /* Shimmer: mostrar el dorado de forma estática */
   .shimmer-gold {
     animation: none;

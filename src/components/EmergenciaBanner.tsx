@@ -1,10 +1,45 @@
+import { useEffect, useState } from "react";
 import { HeartHandshake, ArrowRight } from "lucide-react";
 
+// Distancia de scroll (px) en la que el banner pasa de opacidad 1 a 0.
+const FADE_DISTANCE = 220;
+
+const scrollOpacity = () => 1 - Math.min(window.scrollY / FADE_DISTANCE, 1);
+
 const EmergenciaBanner = () => {
+  // Arranca en 0 para el fundido de entrada; el efecto lo sube al valor
+  // real (normalmente 1) justo después del primer render.
+  const [opacity, setOpacity] = useState(0);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setOpacity(scrollOpacity());
+    if (reducedMotion) return;
+
+    let rafId: number | null = null;
+    const onScroll = () => {
+      if (rafId === null) rafId = requestAnimationFrame(() => {
+        rafId = null;
+        setOpacity(scrollOpacity());
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <section
       aria-label="Iniciativa terremoto Colombia"
-      className="sticky top-16 z-40 overflow-hidden bg-background/95 backdrop-blur-md border-b border-foreground/10 shadow-sm"
+      className="emergencia-banner-enter sticky top-16 z-40 overflow-hidden bg-background/95 backdrop-blur-md border-b border-foreground/10 shadow-sm"
+      style={{
+        opacity,
+        transition: "opacity 220ms ease-out",
+        pointerEvents: opacity < 0.05 ? "none" : undefined,
+      }}
     >
       {/* Franja nítida con los colores de la bandera de Colombia */}
       <div className="flex h-1.5 w-full" aria-hidden="true">
